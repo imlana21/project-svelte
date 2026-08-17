@@ -22,3 +22,20 @@ export interface FinanceTransaction {
   pocket?: FinancePocket;
   debt?: FinanceDebt;
 }
+
+export interface StoreFinanceTransactionPayload {
+  type: 'expense' | 'transfer';
+  pocket_id: number;
+  amount: number;
+  description: string;
+  category_tag?: string;
+  date: string;
+  note?: string;
+}
+
+export interface UpdateFinanceTransactionPayload {
+  description: string;
+  category_tag?: string;
+  date: string;
+  note?: string;
+}

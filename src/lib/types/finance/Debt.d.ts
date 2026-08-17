@@ -18,3 +18,23 @@ export interface FinanceDebt {
 
   pocket?: FinancePocket;
 }
+
+export interface StoreDebtPayload {
+  name: string;
+  amount_per_month: number;
+  due_date: number;
+  pocket_id: number;
+  category_tag?: string;
+  is_active?: boolean;
+  note?: string;
+}
+
+export interface UpdateDebtPayload {
+  name: string;
+  amount_per_month: number;
+  due_date: number;
+  pocket_id: number;
+  category_tag?: string;
+  is_active?: boolean;
+  note?: string;
+}
