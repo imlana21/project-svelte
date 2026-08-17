@@ -99,12 +99,3 @@ On every user command, follow in order:
 7. Self-check: no TS errors, no unused imports, style matches surrounding code
 8. Stay in scope — report unrelated bugs/issues found, don't fix unprompted
 9. End with brief summary: files changed, and any follow-up steps (install, migration, etc.)
-
-## 7. Project Details
-> Fill in per project:
-- Name:
-- Description:
-- Target users:
-- Core features:
-- Deployment:
-- Backend/API:

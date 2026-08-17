@@ -1,55 +1,60 @@
-// src/types/Api.d.ts
-import type { SortOrder } from '@/components/tables'
-
-export interface ApiResponse<T> {
-  status: boolean
-  message: string
-  data: T[]
-  links: PaginationLink
-  meta: PaginationMeta
-}
+export type SortOrder = 'asc' | 'desc'
 
 export interface PaginationLink {
-  first: string
-  last: string
-  prev: any
-  next: string
-}
-
-export interface PaginationMeta {
-  current_page: number
-  from: number
-  last_page: number
-  links: PaginationMetaLink[]
-  path: string
-  perPage: number
-  to: number
-  total: number
+	first: string | null
+	last: string | null
+	prev: string | null
+	next: string | null
 }
 
 export interface PaginationMetaLink {
-  url?: string
-  label: string
-  active: boolean
+	url: string | null
+	label: string
+	active: boolean
 }
 
-export interface ColumnDef<T> {
-  key: string
-  label: string
-  render?: (item: T) => ReactNode
-  className?: string
+export interface PaginationMeta {
+	current_page: number
+	from: number | null
+	last_page: number
+	links: PaginationMetaLink[]
+	path: string
+	perPage: number
+	to: number | null
+	total: number
 }
 
-export interface FieldDef {
-  key: string
-  label: string
-  required?: boolean
+/**
+ * Envelope konsisten dari `App\Http\Resources\ApiResources`.
+ * - Paginated → `data` berisi array + `meta` & `links` tersedia
+ * - Single/detail → `data` berisi object
+ */
+export interface ApiEnvelope<T> {
+	status: boolean
+	message: string
+	data: T
+	links?: PaginationLink
+	meta?: PaginationMeta
 }
 
+export type PaginatedResponse<T> = ApiEnvelope<T[]> & {
+	meta: PaginationMeta
+	links: PaginationLink
+}
+
+export interface ColumnDef {
+	key: string
+	label: string
+	className?: string
+	sortable?: boolean
+}
+
+/** Query params yang dipahami `HasApiIndex` di backend. */
 export interface RequestParams {
-  page: number
-  perPage: number
-  search?: string
-  orderBy?: string
-  orderDirection?: SortOrder
+	page: number
+	perPage: number
+	search?: string
+	orderBy?: string
+	orderDirection?: SortOrder
+	[key: string]: string | number | boolean | undefined
 }
