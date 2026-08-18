@@ -1,33 +1,41 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { Eye } from '@lucide/svelte';
-	import CrudPage from '$lib/components/ui/CrudPage.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
-	import { toastError } from '$lib/utils/toaster.svelte';
-	import { fetchPermissions } from '$lib/services/permission.service';
-	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { AuthPermission } from '$lib/types/Auth';
-	import { permissionColumns } from './-partials/columns';
-	import PermissionDetailDialog from './-partials/detail.dialog.svelte';
+	import { onMount } from "svelte";
+	import { Eye } from "@lucide/svelte";
+	import CrudPage from "$lib/components/ui/CrudPage.svelte";
+	import { useCrud } from "$lib/hooks/useCrud.svelte";
+	import { toastError } from "$lib/utils/toaster.svelte";
+	import { fetchPermissions } from "$lib/services/permission.service";
+	import type { ColumnDef, SortOrder } from "$lib/types/Api";
+	import type { AuthPermission } from "$lib/types/Auth";
+	import { permissionColumns } from "./-partials/columns";
+	import PermissionDetailDialog from "./-partials/detail.dialog.svelte";
 
-	const permissions = useCrud<AuthPermission>({
-		fetchAll: fetchPermissions,
-	});
+	const { fetchAll, items, meta, loading, setItem, item, fetchById } =
+		useCrud<AuthPermission>({
+			fetchAll: fetchPermissions,
+		});
 
 	let page = $state(1);
 	let perPage = $state(10);
-	let search = $state('');
-	let sortKey = $state('name');
-	let sortOrder = $state<SortOrder>('asc');
+	let search = $state("");
+	let sortKey = $state("name");
+	let sortOrder = $state<SortOrder>("asc");
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openDetail = $state(false);
 
 	async function load() {
 		try {
-			await permissions.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
+			const res = await fetchAll({
+				page,
+				perPage,
+				search,
+				orderBy: sortKey,
+				orderDirection: sortOrder,
+			});
+			return res;
 		} catch {
-			toastError('Gagal memuat data permission');
+			toastError("Gagal memuat data permission");
 		}
 	}
 
@@ -52,37 +60,42 @@
 
 	function handleSort(key: string) {
 		if (sortKey === key) {
-			sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+			sortOrder = sortOrder === "asc" ? "desc" : "asc";
 		} else {
 			sortKey = key;
-			sortOrder = 'asc';
+			sortOrder = "asc";
 		}
 		load();
 	}
 
 	async function openDetailFor(row: AuthPermission) {
-		permissions.setItem(row);
+		setItem(row);
 		openDetail = true;
 		try {
-			await permissions.fetchById(row.id);
+			await fetchById(row.id);
 		} catch {
-			toastError('Gagal memuat detail permission');
+			toastError("Gagal memuat detail permission");
 		}
 	}
 </script>
 
 {#snippet cell(item: AuthPermission, column: ColumnDef)}
-	{#if column.key === 'name'}
+	{#if column.key === "name"}
 		{item.name}
-	{:else if column.key === 'slug'}
+	{:else if column.key === "slug"}
 		<span class="badge font-mono">{item.slug}</span>
-	{:else if column.key === 'description'}
-		{item.description || '-'}
+	{:else if column.key === "description"}
+		{item.description || "-"}
 	{/if}
 {/snippet}
 
 {#snippet rowActions(item: AuthPermission)}
-	<button type="button" class="btn btn-icon" title="Detail" onclick={() => openDetailFor(item)}>
+	<button
+		type="button"
+		class="btn btn-icon"
+		title="Detail"
+		onclick={() => openDetailFor(item)}
+	>
 		<Eye size={16} />
 	</button>
 {/snippet}
@@ -91,21 +104,21 @@
 	title="Permissions"
 	description="Daftar permission yang tersedia di sistem (dikelola lewat backend/seed)"
 	columns={permissionColumns}
-	items={permissions.items}
-	meta={permissions.meta}
-	loading={permissions.loading}
+	{items}
+	{meta}
+	{loading}
 	{search}
 	{sortConfig}
 	onSearch={handleSearch}
 	onSort={handleSort}
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
-	cell={cell}
-	rowActions={rowActions}
+	{cell}
+	{rowActions}
 />
 
 <PermissionDetailDialog
 	open={openDetail}
-	item={permissions.item}
+	{item}
 	onOpenChange={(o) => (openDetail = o)}
 />

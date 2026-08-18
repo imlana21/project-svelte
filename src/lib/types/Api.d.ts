@@ -1,29 +1,5 @@
 export type SortOrder = 'asc' | 'desc'
 
-export interface PaginationLink {
-	first: string | null
-	last: string | null
-	prev: string | null
-	next: string | null
-}
-
-export interface PaginationMetaLink {
-	url: string | null
-	label: string
-	active: boolean
-}
-
-export interface PaginationMeta {
-	current_page: number
-	from: number | null
-	last_page: number
-	links: PaginationMetaLink[]
-	path: string
-	perPage: number
-	to: number | null
-	total: number
-}
-
 /**
  * Envelope konsisten dari `App\Http\Resources\ApiResources`.
  * - Paginated → `data` berisi array + `meta` & `links` tersedia
@@ -33,8 +9,6 @@ export interface ApiEnvelope<T> {
 	status: boolean
 	message: string
 	data: T
-	links?: PaginationLink
-	meta?: PaginationMeta
 }
 
 export type PaginatedResponse<T> = ApiEnvelope<T[]> & {
@@ -57,4 +31,28 @@ export interface RequestParams {
 	orderBy?: string
 	orderDirection?: SortOrder
 	[key: string]: string | number | boolean | undefined
+}
+
+export interface PaginationLink {
+	first: string | null
+	last: string | null
+	prev: string | null
+	next: string | null
+}
+
+export interface PaginationMeta {
+	current_page: number
+	from: number | null
+	last_page: number
+	links: PaginationMetaLink[]
+	path: string
+	perPage: number
+	to: number | null
+	total: number
+}
+
+export interface PaginationMetaLink {
+	url: string | null
+	label: string
+	active: boolean
 }

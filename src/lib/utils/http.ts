@@ -1,3 +1,4 @@
+import axios, { type AxiosError, type InternalAxiosRequestConfig, type AxiosResponse } from 'axios'
 import type { ApiEnvelope } from '$lib/types/Api'
 
 const BASE_URL: string = import.meta.env.VITE_BASE_API_URL ?? 'http://127.0.0.1:8000/api'
@@ -60,90 +61,62 @@ function browserSafe(): boolean {
 	return typeof window !== 'undefined'
 }
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-
-interface RequestOptions {
-	method?: HttpMethod
-	body?: unknown
-	query?: Record<string, string | number | boolean | undefined>
-}
-
-function buildUrl(path: string, query?: Record<string, string | number | boolean | undefined>): string {
-	const url = path.startsWith('http') ? path : `${BASE_URL}${path}`
-	if (!query) return url
-	const params = new URLSearchParams()
-	for (const [key, value] of Object.entries(query)) {
-		if (value !== undefined && value !== null && value !== '') {
-			params.set(key, String(value))
-		}
-	}
-	const qs = params.toString()
-	return qs ? `${url}?${qs}` : url
-}
-
-async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-	const { method = 'GET', body, query } = options
-
-	const headers: Record<string, string> = {
+const instance = axios.create({
+	baseURL: BASE_URL,
+	headers: {
 		Accept: 'application/json',
 		'Content-Type': 'application/json',
 		'X-Requested-With': 'XMLHttpRequest',
-	}
+	},
+	withCredentials: true,
+})
 
+instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 	const token = getStoredToken()
-	if (token) headers.Authorization = `Bearer ${token}`
-
-	const init: RequestInit = {
-		method,
-		headers,
-		credentials: 'include',
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`
 	}
+	return config
+})
 
-	if (body !== undefined) {
-		init.body = JSON.stringify(body)
-	}
-
-	let response: Response
-	try {
-		response = await fetch(buildUrl(path, query), init)
-	} catch {
-		throw new ApiError(0, 'Tidak dapat terhubung ke server.')
-	}
-
-	if (response.status === 401) {
-		clearStoredSession()
-		if (browserSafe() && !window.location.pathname.startsWith('/login')) {
-			window.location.href = '/login'
+instance.interceptors.response.use(
+	(response: AxiosResponse) => response,
+	(error: AxiosError<ApiEnvelope<unknown>>) => {
+		if (error.response?.status === 401) {
+			clearStoredSession()
+			if (browserSafe() && !window.location.pathname.startsWith('/login')) {
+				window.location.href = '/login'
+			}
+			throw new ApiError(401, 'Sesi berakhir, silakan login kembali.')
 		}
-		throw new ApiError(401, 'Sesi berakhir, silakan login kembali.')
+
+		const status = error.response?.status ?? 0
+		const data = error.response?.data
+		const message = data?.message || `Request gagal (${status})`
+		const errors = (data as { errors?: Record<string, string[]> })?.errors
+
+		if (status === 0) {
+			throw new ApiError(0, 'Tidak dapat terhubung ke server.')
+		}
+
+		throw new ApiError(status, message, errors)
 	}
-
-	const isJson = response.headers.get('content-type')?.includes('application/json')
-	const data: ApiEnvelope<unknown> | unknown = isJson ? await response.json() : await response.text()
-
-	if (!response.ok) {
-		const envelope = data as ApiEnvelope<unknown>
-		const errors = (envelope as { errors?: Record<string, string[]> }).errors
-		throw new ApiError(response.status, envelope?.message || `Request gagal (${response.status})`, errors)
-	}
-
-	return data as T
-}
+)
 
 export const http = {
-	get<T>(path: string, query?: RequestOptions['query']): Promise<T> {
-		return request<T>(path, { method: 'GET', query })
+	get<T>(path: string, query?: Record<string, string | number | boolean | undefined>): Promise<T> {
+		return instance.get<T>(path, { params: query }).then((res) => res.data as T)
 	},
 	post<T>(path: string, body?: unknown): Promise<T> {
-		return request<T>(path, { method: 'POST', body })
+		return instance.post<T>(path, body).then((res) => res.data as T)
 	},
 	put<T>(path: string, body?: unknown): Promise<T> {
-		return request<T>(path, { method: 'PUT', body })
+		return instance.put<T>(path, body).then((res) => res.data as T)
 	},
 	patch<T>(path: string, body?: unknown): Promise<T> {
-		return request<T>(path, { method: 'PATCH', body })
+		return instance.patch<T>(path, body).then((res) => res.data as T)
 	},
 	delete<T>(path: string): Promise<T> {
-		return request<T>(path, { method: 'DELETE' })
+		return instance.delete<T>(path).then((res) => res.data as T)
 	},
 }
