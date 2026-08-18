@@ -32,5 +32,24 @@ export function useUserAdmin() {
 		await assignUserRoles(id, { role_ids: roleIds })
 	}
 
-	return { ...crud, roles, rolesLoading, loadRoles, toggleStatus, assignRoles }
+	return {
+		get items() { return crud.items },
+		get item() { return crud.item },
+		get meta() { return crud.meta },
+		get loading() { return crud.loading },
+		get params() { return crud.params },
+		get roles() { return roles },
+		get rolesLoading() { return rolesLoading },
+		fetchAll: crud.fetchAll,
+		fetchById: crud.fetchById,
+		create: crud.create,
+		update: crud.update,
+		remove: crud.remove,
+		setItem: crud.setItem,
+		setParams: crud.setParams,
+		reset: crud.reset,
+		loadRoles,
+		toggleStatus,
+		assignRoles,
+	}
 }

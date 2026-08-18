@@ -41,5 +41,24 @@ export function useRoleAdmin() {
 		await syncRolePermissions(id, { permission_ids: permissionIds })
 	}
 
-	return { ...crud, permissions, permissionsLoading, loadPermissions, toggleStatus, syncPermissions }
+	return {
+		get items() { return crud.items },
+		get item() { return crud.item },
+		get meta() { return crud.meta },
+		get loading() { return crud.loading },
+		get params() { return crud.params },
+		get permissions() { return permissions },
+		get permissionsLoading() { return permissionsLoading },
+		fetchAll: crud.fetchAll,
+		fetchById: crud.fetchById,
+		create: crud.create,
+		update: crud.update,
+		remove: crud.remove,
+		setItem: crud.setItem,
+		setParams: crud.setParams,
+		reset: crud.reset,
+		loadPermissions,
+		toggleStatus,
+		syncPermissions,
+	}
 }

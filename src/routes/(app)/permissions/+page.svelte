@@ -10,10 +10,9 @@
 	import { permissionColumns } from "./-partials/columns";
 	import PermissionDetailDialog from "./-partials/detail.dialog.svelte";
 
-	const { fetchAll, items, meta, loading, setItem, item, fetchById } =
-		useCrud<AuthPermission>({
-			fetchAll: fetchPermissions,
-		});
+	const crud = useCrud<AuthPermission>({
+		fetchAll: fetchPermissions,
+	});
 
 	let page = $state(1);
 	let perPage = $state(10);
@@ -26,7 +25,7 @@
 
 	async function load() {
 		try {
-			const res = await fetchAll({
+			const res = await crud.fetchAll({
 				page,
 				perPage,
 				search,
@@ -69,10 +68,10 @@
 	}
 
 	async function openDetailFor(row: AuthPermission) {
-		setItem(row);
+		crud.setItem(row);
 		openDetail = true;
 		try {
-			await fetchById(row.id);
+			await crud.fetchById(row.id);
 		} catch {
 			toastError("Gagal memuat detail permission");
 		}
@@ -104,9 +103,9 @@
 	title="Permissions"
 	description="Daftar permission yang tersedia di sistem (dikelola lewat backend/seed)"
 	columns={permissionColumns}
-	{items}
-	{meta}
-	{loading}
+	items={crud.items}
+	meta={crud.meta}
+	loading={crud.loading}
 	{search}
 	{sortConfig}
 	onSearch={handleSearch}
@@ -119,6 +118,6 @@
 
 <PermissionDetailDialog
 	open={openDetail}
-	{item}
+	item={crud.item}
 	onOpenChange={(o) => (openDetail = o)}
 />

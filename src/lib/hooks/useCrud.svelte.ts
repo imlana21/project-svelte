@@ -103,5 +103,19 @@ export function useCrud<T, CreatePayload = Partial<T>, UpdatePayload = Partial<T
 		params = undefined
 	}
 
-	return { items, item, meta, loading, params, fetchAll, fetchById, create, update, remove, setItem, setParams, reset }
+	return {
+		get items() { return items },
+		get item() { return item },
+		get meta() { return meta },
+		get loading() { return loading },
+		get params() { return params },
+		fetchAll,
+		fetchById,
+		create,
+		update,
+		remove,
+		setItem,
+		setParams,
+		reset,
+	}
 }
