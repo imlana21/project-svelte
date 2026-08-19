@@ -5,6 +5,13 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="text-scale" content="scale" />
+	<script>
+		(function () {
+			var mode = localStorage.getItem('mode');
+			if (!mode) mode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			document.documentElement.setAttribute('data-mode', mode);
+		})();
+	</script>
 	%sveltekit.head%
 </head>
 

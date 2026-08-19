@@ -31,6 +31,12 @@ export const mainNav: NavItem[] = [
 	{ title: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, permission: PERMISSIONS.dashboard.read },
 	{ title: 'MARKET DATA', label: true },
 	{
+		title: 'Stocks Dashboard',
+		href: '/stocks/dashboard',
+		icon: Gauge,
+		permission: PERMISSIONS.stocksTransactions.read,
+	},
+	{
 		title: 'Transactions',
 		href: '/stocks/transactions',
 		icon: Building2,

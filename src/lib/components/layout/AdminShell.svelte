@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { Menu, X } from '@lucide/svelte';
+	import { Menu, Moon, Sun, X } from '@lucide/svelte';
 	import { cn } from '$lib/utils';
+	import { useMode } from '$lib/hooks/useMode.svelte';
 	import SidebarNav from './SidebarNav.svelte';
-	import UserFooter from './UserFooter.svelte';
+	import UserDropdown from './UserDropdown.svelte';
 
 	let { children }: { children: import('svelte').Snippet } = $props();
 
 	let sidebarOpen = $state(false);
+	const mode = useMode();
 </script>
 
 <div class="flex min-h-screen bg-surface-100 dark:bg-surface-900">
@@ -36,16 +38,31 @@
 		<div class="min-h-0 flex-1 overflow-y-auto">
 			<SidebarNav onNavigate={() => (sidebarOpen = false)} />
 		</div>
-		<UserFooter />
 	</aside>
 
 	<!-- Main -->
 	<div class="flex min-h-screen w-full flex-col lg:pl-64">
-		<header class="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-surface-300 bg-surface-50/80 px-4 backdrop-blur dark:border-surface-700 dark:bg-surface-950/80">
-			<button class="btn btn-icon lg:hidden" onclick={() => (sidebarOpen = true)}>
-				<Menu size={18} />
-			</button>
-			<h1 class="text-base font-semibold">Admin Panel</h1>
+		<header class="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-surface-300 bg-surface-50/80 px-4 backdrop-blur dark:border-surface-700 dark:bg-surface-950/80">
+			<div class="flex items-center gap-3">
+				<button class="btn btn-icon lg:hidden" onclick={() => (sidebarOpen = true)}>
+					<Menu size={18} />
+				</button>
+				<h1 class="text-base font-semibold">Admin Panel</h1>
+			</div>
+			<div class="flex items-center gap-1">
+				<button
+					class="btn btn-icon btn-sm bg-transparent text-surface-500 hover:text-surface-700 dark:text-surface-400 dark:hover:text-surface-200"
+					title={mode.mode === 'light' ? 'Dark mode' : 'Light mode'}
+					onclick={() => mode.toggle()}
+				>
+					{#if mode.mode === 'light'}
+						<Moon size={18} />
+					{:else}
+						<Sun size={18} />
+					{/if}
+				</button>
+				<UserDropdown />
+			</div>
 		</header>
 		<main class="flex-1 p-4 lg:p-6">
 			{@render children()}
