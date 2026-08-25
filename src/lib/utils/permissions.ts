@@ -8,10 +8,6 @@ export function getUserPermissionSlugs(user: User | null | undefined): Set<strin
 	return slugs
 }
 
-export function hasPermission(user: User | null | undefined, slug: string): boolean {
-	return getUserPermissionSlugs(user).has(slug)
-}
-
 /** true kalau user punya minimal salah satu permission. Array kosong = selalu boleh. */
 export function hasAnyPermission(user: User | null | undefined, slugs: string[]): boolean {
 	if (slugs.length === 0) return true

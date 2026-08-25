@@ -19,7 +19,7 @@ import {
 } from '@lucide/svelte'
 import { PERMISSIONS } from '$lib/utils/permission-registry'
 
-export interface NavItem {
+interface NavItem {
 	title: string
 	href?: string
 	icon?: Component

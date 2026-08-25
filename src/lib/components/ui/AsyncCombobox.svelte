@@ -3,7 +3,7 @@
 	import { Check, ChevronsUpDown, Loader2, X } from '@lucide/svelte';
 	import AppDialog from './AppDialog.svelte';
 
-	export interface ComboboxItem {
+	interface ComboboxItem {
 		value: string;
 		label: string;
 	}

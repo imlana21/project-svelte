@@ -3,13 +3,8 @@ import type { ApiEnvelope } from '$lib/types/Api'
 
 const BASE_URL: string = import.meta.env.VITE_BASE_API_URL ?? 'http://127.0.0.1:8000/api'
 
-export const TOKEN_KEY = 'token'
-export const USER_KEY = 'user'
-
-export interface ApiErrorBody {
-	message: string
-	errors?: Record<string, string[]>
-}
+const TOKEN_KEY = 'token'
+const USER_KEY = 'user'
 
 export class ApiError extends Error {
 	status: number

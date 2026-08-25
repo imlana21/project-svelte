@@ -89,5 +89,3 @@ export const PERMISSIONS = {
 		delete: 'finance-allocation.delete',
 	},
 } as const
-
-export type PermissionSlug = (typeof PERMISSIONS)[keyof typeof PERMISSIONS][keyof (typeof PERMISSIONS)[keyof typeof PERMISSIONS]]
