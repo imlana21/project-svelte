@@ -38,8 +38,8 @@
 	async function load() {
 		try {
 			await pockets.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data pocket');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -68,8 +68,8 @@
 			openForm = false;
 			toastSuccess('Data pocket berhasil disimpan');
 			load();
-		} catch {
-			toastError('Gagal menyimpan data pocket');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -80,8 +80,8 @@
 			deleteId = null;
 			toastSuccess('Pocket berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus pocket');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>

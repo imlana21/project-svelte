@@ -39,8 +39,8 @@
 	async function load() {
 		try {
 			await debts.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data utang');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -69,8 +69,8 @@
 			openForm = false;
 			toastSuccess('Data utang berhasil disimpan');
 			load();
-		} catch {
-			toastError('Gagal menyimpan data utang');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -85,8 +85,8 @@
 				toastSuccess('Utang ditandai lunas');
 			}
 			load();
-		} catch {
-			toastError('Gagal mengubah status pembayaran');
+		} catch (e) {
+			toastError(e);
 		} finally {
 			togglingId = null;
 		}
@@ -99,8 +99,8 @@
 			deleteId = null;
 			toastSuccess('Utang berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus utang');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>

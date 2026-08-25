@@ -27,8 +27,8 @@
 	async function load() {
 		try {
 			await incomes.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data distribusi pemasukan');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 

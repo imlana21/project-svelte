@@ -34,8 +34,8 @@
 	async function load() {
 		try {
 			await users.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data pengguna');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -86,8 +86,8 @@
 			await users.toggleStatus(row.id);
 			toastSuccess(row.is_active ? 'Pengguna dinonaktifkan' : 'Pengguna diaktifkan');
 			load();
-		} catch {
-			toastError('Gagal mengubah status pengguna');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -99,8 +99,8 @@
 			openEdit = false;
 			toastSuccess('Profil pengguna berhasil disimpan');
 			load();
-		} catch {
-			toastError('Gagal menyimpan profil pengguna');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -112,8 +112,8 @@
 			openAssign = false;
 			toastSuccess('Role pengguna berhasil diperbarui');
 			load();
-		} catch {
-			toastError('Gagal memperbarui role pengguna');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -124,8 +124,8 @@
 			deleteId = null;
 			toastSuccess('Pengguna berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus pengguna');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>

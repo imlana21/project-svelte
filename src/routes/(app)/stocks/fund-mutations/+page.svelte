@@ -36,8 +36,8 @@
 	async function load() {
 		try {
 			await mutations.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data mutasi dana');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -58,8 +58,8 @@
 			openForm = false;
 			toastSuccess('Mutasi dana berhasil dicatat');
 			load();
-		} catch {
-			toastError('Gagal mencatat mutasi dana');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -70,8 +70,8 @@
 			deleteId = null;
 			toastSuccess('Mutasi dana berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus mutasi dana');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>

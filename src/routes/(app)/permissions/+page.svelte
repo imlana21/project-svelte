@@ -33,8 +33,8 @@
 				orderDirection: sortOrder,
 			});
 			return res;
-		} catch {
-			toastError("Gagal memuat data permission");
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -72,8 +72,8 @@
 		openDetail = true;
 		try {
 			await crud.fetchById(row.id);
-		} catch {
-			toastError("Gagal memuat detail permission");
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>

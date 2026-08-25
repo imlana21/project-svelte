@@ -38,8 +38,8 @@
 	async function load() {
 		try {
 			await emitens.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data emiten');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -73,8 +73,8 @@
 			openForm = false;
 			toastSuccess('Data emiten berhasil disimpan');
 			load();
-		} catch {
-			toastError('Gagal menyimpan data emiten');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -85,8 +85,8 @@
 			deleteId = null;
 			toastSuccess('Emiten berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus emiten');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -102,8 +102,8 @@
 				const res = await emitenService.importEod(file);
 				toastSuccess(`Import selesai: ${res.data.updated} diperbarui, ${res.data.skipped} dilewati`);
 				load();
-			} catch {
-				toastError('Gagal mengimport data EOD');
+			} catch (e) {
+				toastError(e);
 			} finally {
 				importing = false;
 			}

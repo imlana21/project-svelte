@@ -37,8 +37,8 @@
 	async function load() {
 		try {
 			await transactions.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data transaksi keuangan');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -67,8 +67,8 @@
 			openForm = false;
 			toastSuccess('Transaksi keuangan berhasil disimpan');
 			load();
-		} catch {
-			toastError('Gagal menyimpan transaksi keuangan');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -79,8 +79,8 @@
 			deleteId = null;
 			toastSuccess('Transaksi berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus transaksi');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>

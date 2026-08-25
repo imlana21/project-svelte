@@ -29,8 +29,8 @@
 	async function load() {
 		try {
 			await positions.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data posisi');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -48,7 +48,7 @@
 	async function openDetailFor(row: StockPosition) {
 		positions.setItem(row);
 		openDetail = true;
-		try { await positions.fetchById(row.id); } catch { toastError('Gagal memuat detail posisi'); }
+		try { await positions.fetchById(row.id); } catch (e) { toastError(e); }
 	}
 </script>
 

@@ -31,8 +31,8 @@
 	async function load() {
 		try {
 			await roles.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data role');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -83,8 +83,8 @@
 		openDetail = true;
 		try {
 			await roles.fetchById(row.id);
-		} catch {
-			toastError('Gagal memuat detail role');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -99,8 +99,8 @@
 			openForm = false;
 			toastSuccess('Data role berhasil disimpan');
 			load();
-		} catch {
-			toastError('Gagal menyimpan data role');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -109,8 +109,8 @@
 			await roles.toggleStatus(row.id);
 			toastSuccess(row.is_active ? 'Role dinonaktifkan' : 'Role diaktifkan');
 			load();
-		} catch {
-			toastError('Gagal mengubah status role');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -122,8 +122,8 @@
 			toastSuccess('Permission role berhasil diperbarui');
 			openDetail = false;
 			load();
-		} catch {
-			toastError('Gagal memperbarui permission role');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -134,8 +134,8 @@
 			deleteId = null;
 			toastSuccess('Role berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus role');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>

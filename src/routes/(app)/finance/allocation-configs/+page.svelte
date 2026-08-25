@@ -37,8 +37,8 @@
 	async function load() {
 		try {
 			await allocationConfigs.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data alokasi');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -67,8 +67,8 @@
 			openForm = false;
 			toastSuccess('Data alokasi berhasil disimpan');
 			load();
-		} catch {
-			toastError('Gagal menyimpan data alokasi');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -79,8 +79,8 @@
 			deleteId = null;
 			toastSuccess('Alokasi berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus alokasi');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>

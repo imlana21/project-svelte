@@ -39,8 +39,8 @@
 	async function load() {
 		try {
 			await incomes.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data pemasukan');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -69,8 +69,8 @@
 			openForm = false;
 			toastSuccess('Data pemasukan berhasil disimpan');
 			load();
-		} catch {
-			toastError('Gagal menyimpan data pemasukan');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -80,8 +80,8 @@
 			await incomeService.distributeIncome(row.id);
 			toastSuccess('Pemasukan berhasil didistribusikan');
 			load();
-		} catch {
-			toastError('Gagal mendistribusikan pemasukan');
+		} catch (e) {
+			toastError(e);
 		} finally {
 			distributingId = null;
 		}
@@ -93,8 +93,8 @@
 			await incomeService.rollbackDistributeIncome(row.id);
 			toastSuccess('Distribusi pemasukan berhasil dibatalkan');
 			load();
-		} catch {
-			toastError('Gagal membatalkan distribusi pemasukan');
+		} catch (e) {
+			toastError(e);
 		} finally {
 			distributingId = null;
 		}
@@ -107,8 +107,8 @@
 			deleteId = null;
 			toastSuccess('Pemasukan berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus pemasukan');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>

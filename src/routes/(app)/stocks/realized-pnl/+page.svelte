@@ -27,8 +27,8 @@
 	async function load() {
 		try {
 			await realized.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data realized PnL');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 

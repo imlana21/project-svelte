@@ -37,8 +37,8 @@
 	async function load() {
 		try {
 			await sekuritas.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
-		} catch {
-			toastError('Gagal memuat data sekuritas');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -67,8 +67,8 @@
 			openForm = false;
 			toastSuccess('Data sekuritas berhasil disimpan');
 			load();
-		} catch {
-			toastError('Gagal menyimpan data sekuritas');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 
@@ -79,8 +79,8 @@
 			deleteId = null;
 			toastSuccess('Sekuritas berhasil dihapus');
 			load();
-		} catch {
-			toastError('Gagal menghapus sekuritas');
+		} catch (e) {
+			toastError(e);
 		}
 	}
 </script>
