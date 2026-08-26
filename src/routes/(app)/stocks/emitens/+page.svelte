@@ -3,25 +3,17 @@
 	import { Pencil, Plus, Trash2, Upload } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useEmitenAdmin } from '$lib/hooks/useEmitenAdmin.svelte';
 	import { usePermission } from '$lib/hooks/usePermission.svelte';
 	import { PERMISSIONS } from '$lib/utils/permission-registry';
 	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
 	import { formatNumber } from '$lib/utils/format';
-	import * as emitenService from '$lib/services/emiten.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { StockEmiten, StoreEmitenPayload } from '$lib/types/Stock';
+	import type { StockEmiten } from '$lib/types/Stock';
 	import { emitenColumns } from './-partials/columns';
 	import EmitenFormDialog, { type EmitenForm } from './-partials/form.dialog.svelte';
 
-	const emitens = useCrud<StockEmiten, StoreEmitenPayload>({
-		fetchAll: emitenService.fetchEmitens,
-		fetchById: emitenService.fetchEmiten,
-		create: emitenService.createEmiten,
-		update: emitenService.updateEmiten,
-		remove: emitenService.deleteEmiten,
-	});
-
+	const emitens = useEmitenAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);
@@ -33,7 +25,6 @@
 
 	let openForm = $state(false);
 	let deleteId = $state<number | null>(null);
-	let importing = $state(false);
 
 	async function load() {
 		try {
@@ -97,15 +88,12 @@
 		input.onchange = async () => {
 			const file = input.files?.[0];
 			if (!file) return;
-			importing = true;
 			try {
-				const res = await emitenService.importEod(file);
+				const res = await emitens.importEod(file);
 				toastSuccess(`Import selesai: ${res.data.updated} diperbarui, ${res.data.skipped} dilewati`);
 				load();
 			} catch (e) {
 				toastError(e);
-			} finally {
-				importing = false;
 			}
 		};
 		input.click();
@@ -162,8 +150,8 @@
 			<button type="button" class="btn bg-primary-500 text-primary-contrast-500" onclick={openCreate}>
 				<Plus size={16} /> Tambah
 			</button>
-			<button type="button" class="btn" onclick={handleImport} disabled={importing}>
-				<Upload size={16} /> {importing ? 'Importing...' : 'Import EOD'}
+			<button type="button" class="btn" onclick={handleImport} disabled={emitens.importing}>
+				<Upload size={16} /> {emitens.importing ? 'Importing...' : 'Import EOD'}
 			</button>
 		{/if}
 	{/snippet}

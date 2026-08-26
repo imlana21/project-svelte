@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { formatNumber, formatRupiah } from '$lib/utils/format'
-	import { cn } from '$lib/utils'
 	import type { TopGainer } from '$lib/hooks/useStockDashboard.svelte'
 
 	let {

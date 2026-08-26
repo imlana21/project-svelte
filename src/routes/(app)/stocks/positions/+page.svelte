@@ -3,19 +3,15 @@
 	import { Eye } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { usePositionAdmin } from '$lib/hooks/usePositionAdmin.svelte';
 	import { toastError } from '$lib/utils/toaster.svelte';
 	import { formatRupiah } from '$lib/utils/format';
-	import * as positionService from '$lib/services/position.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
 	import type { StockPosition } from '$lib/types/Stock';
 	import { positionColumns } from './-partials/columns';
 	import PositionDetailDialog from './-partials/detail.dialog.svelte';
 
-	const positions = useCrud<StockPosition>({
-		fetchAll: positionService.fetchPositions,
-		fetchById: positionService.fetchPosition,
-	});
+	const positions = usePositionAdmin();
 
 	let page = $state(1);
 	let perPage = $state(10);

@@ -4,25 +4,17 @@
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useIncomeAdmin } from '$lib/hooks/useIncomeAdmin.svelte';
 	import { usePermission } from '$lib/hooks/usePermission.svelte';
 	import { PERMISSIONS } from '$lib/utils/permission-registry';
 	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
 	import { formatRupiah } from '$lib/utils/format';
-	import * as incomeService from '$lib/services/income.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { FinanceIncome, StoreIncomePayload, UpdateIncomePayload } from '$lib/types/finance/Income';
+	import type { FinanceIncome } from '$lib/types/finance/Income';
 	import { incomeColumns } from './-partials/columns';
 	import IncomeFormDialog, { type IncomeForm } from './-partials/form.dialog.svelte';
 
-	const incomes = useCrud<FinanceIncome, StoreIncomePayload, UpdateIncomePayload>({
-		fetchAll: incomeService.fetchIncomes,
-		fetchById: incomeService.fetchIncome,
-		create: incomeService.createIncome,
-		update: incomeService.updateIncome,
-		remove: incomeService.deleteIncome,
-	});
-
+	const incomes = useIncomeAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);
@@ -77,7 +69,7 @@
 	async function handleDistribute(row: FinanceIncome) {
 		distributingId = row.id;
 		try {
-			await incomeService.distributeIncome(row.id);
+			await incomes.distribute(row.id);
 			toastSuccess('Pemasukan berhasil didistribusikan');
 			load();
 		} catch (e) {
@@ -90,7 +82,7 @@
 	async function handleRollback(row: FinanceIncome) {
 		distributingId = row.id;
 		try {
-			await incomeService.rollbackDistributeIncome(row.id);
+			await incomes.rollback(row.id);
 			toastSuccess('Distribusi pemasukan berhasil dibatalkan');
 			load();
 		} catch (e) {

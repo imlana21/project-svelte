@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { formatDate } from '$lib/utils/format'
-	import { cn } from '$lib/utils'
 	import PeriodTabs from './PeriodTabs.svelte'
 	import type { RangeKey, ReturnPoint } from '$lib/hooks/useStockDashboard.svelte'
 

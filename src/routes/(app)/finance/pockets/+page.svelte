@@ -4,25 +4,17 @@
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { usePocketAdmin } from '$lib/hooks/usePocketAdmin.svelte';
 	import { usePermission } from '$lib/hooks/usePermission.svelte';
 	import { PERMISSIONS } from '$lib/utils/permission-registry';
 	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
 	import { formatRupiah } from '$lib/utils/format';
-	import * as pocketService from '$lib/services/pocket.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { FinancePocket, StorePocketPayload, UpdatePocketPayload } from '$lib/types/finance/Pocket';
+	import type { FinancePocket } from '$lib/types/finance/Pocket';
 	import { pocketColumns } from './-partials/columns';
 	import PocketFormDialog, { type PocketForm } from './-partials/form.dialog.svelte';
 
-	const pockets = useCrud<FinancePocket, StorePocketPayload, UpdatePocketPayload>({
-		fetchAll: pocketService.fetchPockets,
-		fetchById: pocketService.fetchPocket,
-		create: pocketService.createPocket,
-		update: pocketService.updatePocket,
-		remove: pocketService.deletePocket,
-	});
-
+	const pockets = usePocketAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);

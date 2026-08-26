@@ -2,9 +2,8 @@
 	import { untrack } from 'svelte';
 	import AppDialog from '$lib/components/ui/AppDialog.svelte';
 	import Field from '$lib/components/ui/Field.svelte';
+	import { usePocketAdmin } from '$lib/hooks/usePocketAdmin.svelte';
 	import type { FinanceTransaction } from '$lib/types/finance/Transaction';
-	import type { FinancePocket } from '$lib/types/finance/Pocket';
-	import { fetchPockets } from '$lib/services/pocket.service';
 	import type { FinanceCategoryTag } from '$lib/types/finance/Transaction';
 
 	const categoryTags: FinanceCategoryTag[] = ['makan', 'jajan', 'transportasi', 'rumah', 'hiburan', 'lainnya'];
@@ -29,6 +28,8 @@
 
 	let { open, item, saving, onOpenChange, onSubmit }: Props = $props();
 
+	const pockets = usePocketAdmin();
+
 	let type = $state<'expense' | 'transfer'>('expense');
 	let pocketId = $state(0);
 	let amount = $state(0);
@@ -37,7 +38,6 @@
 	let date = $state(new Date().toISOString().split('T')[0]);
 	let note = $state('');
 	let errors = $state<Record<string, string>>({});
-	let pocketOptions = $state<FinancePocket[]>([]);
 
 	$effect(() => {
 		if (untrack(() => open)) {
@@ -65,8 +65,7 @@
 
 	async function loadPocketOptions() {
 		try {
-			const res = await fetchPockets({ page: 1, perPage: 100 });
-			pocketOptions = res.data;
+			await pockets.fetchAll({ page: 1, perPage: 100 });
 		} catch { /* silent */ }
 	}
 
@@ -120,7 +119,7 @@
 				<Field label="Pocket" required error={errors.pocket_id}>
 					<select class="input" bind:value={pocketId}>
 						<option value={0}>Pilih pocket...</option>
-						{#each pocketOptions as p (p.id)}
+						{#each pockets.items as p (p.id)}
 							<option value={p.id}>{p.name}</option>
 						{/each}
 					</select>

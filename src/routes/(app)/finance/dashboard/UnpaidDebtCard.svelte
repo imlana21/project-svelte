@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { formatRupiah } from '$lib/utils/format'
-	import { cn } from '$lib/utils'
 	import type { FinanceDebt } from '$lib/types/finance/Debt'
 	import { buildUnpaidDebts } from '$lib/hooks/useFinanceDashboard.svelte'
 

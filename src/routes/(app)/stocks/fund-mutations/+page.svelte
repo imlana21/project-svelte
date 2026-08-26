@@ -3,24 +3,17 @@
 	import { Plus, Trash2 } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useFundMutationAdmin } from '$lib/hooks/useFundMutationAdmin.svelte';
 	import { usePermission } from '$lib/hooks/usePermission.svelte';
 	import { PERMISSIONS } from '$lib/utils/permission-registry';
 	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
 	import { formatDate, formatRupiah } from '$lib/utils/format';
-	import * as fundMutationService from '$lib/services/fund-mutation.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
 	import type { StockFundMutation, StoreFundMutationPayload } from '$lib/types/Stock';
 	import { fundMutationColumns } from './-partials/columns';
 	import FundMutationFormDialog from './-partials/form.dialog.svelte';
 
-	const mutations = useCrud<StockFundMutation, StoreFundMutationPayload>({
-		fetchAll: fundMutationService.fetchFundMutations,
-		fetchById: fundMutationService.fetchFundMutation,
-		create: fundMutationService.createFundMutation,
-		remove: fundMutationService.deleteFundMutation,
-	});
-
+	const mutations = useFundMutationAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);

@@ -2,9 +2,8 @@
 	import { untrack } from 'svelte';
 	import AppDialog from '$lib/components/ui/AppDialog.svelte';
 	import Field from '$lib/components/ui/Field.svelte';
+	import { usePocketAdmin } from '$lib/hooks/usePocketAdmin.svelte';
 	import type { FinanceDebt } from '$lib/types/finance/Debt';
-	import type { FinancePocket } from '$lib/types/finance/Pocket';
-	import { fetchPockets } from '$lib/services/pocket.service';
 
 	export interface DebtForm {
 		name: string;
@@ -26,6 +25,8 @@
 
 	let { open, item, saving, onOpenChange, onSubmit }: Props = $props();
 
+	const pockets = usePocketAdmin();
+
 	let name = $state('');
 	let amountPerMonth = $state(0);
 	let dueDate = $state(1);
@@ -34,7 +35,6 @@
 	let isActive = $state(true);
 	let note = $state('');
 	let errors = $state<Record<string, string>>({});
-	let pocketOptions = $state<FinancePocket[]>([]);
 
 	$effect(() => {
 		if (untrack(() => open)) {
@@ -52,8 +52,7 @@
 
 	async function loadPocketOptions() {
 		try {
-			const res = await fetchPockets({ page: 1, perPage: 100 });
-			pocketOptions = res.data;
+			await pockets.fetchAll({ page: 1, perPage: 100 });
 		} catch { /* silent */ }
 	}
 
@@ -94,14 +93,14 @@
 			<Field label="Nama" required error={errors.name}>
 				<input class="input" type="text" placeholder="Kartu Kredit BCA" bind:value={name} />
 			</Field>
-			<Field label="Pocket" required error={errors.pocket_id}>
-				<select class="input" bind:value={pocketId}>
-					<option value={0}>Pilih pocket...</option>
-					{#each pocketOptions as p (p.id)}
-						<option value={p.id}>{p.name}</option>
-					{/each}
-				</select>
-			</Field>
+		<Field label="Pocket" required error={errors.pocket_id}>
+			<select class="input" bind:value={pocketId}>
+				<option value={0}>Pilih pocket...</option>
+				{#each pockets.items as p (p.id)}
+					<option value={p.id}>{p.name}</option>
+				{/each}
+			</select>
+		</Field>
 		</div>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 			<Field label="Jumlah/Bulan" required error={errors.amount_per_month}>

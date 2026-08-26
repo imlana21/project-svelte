@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { formatDate, formatRupiah } from '$lib/utils/format'
-	import { cn } from '$lib/utils'
+	import { formatRupiah } from '$lib/utils/format'
 	import type { RealizedGainSummary } from '$lib/hooks/useStockDashboard.svelte'
 
 	let {

@@ -2,8 +2,8 @@
 	import { untrack } from 'svelte';
 	import AppDialog from '$lib/components/ui/AppDialog.svelte';
 	import Field from '$lib/components/ui/Field.svelte';
-	import type { StockSekuritas, StoreFundMutationPayload } from '$lib/types/Stock';
-	import { fetchSekuritas } from '$lib/services/sekuritas.service';
+	import { useSekuritasAdmin } from '$lib/hooks/useSekuritasAdmin.svelte';
+	import type { StoreFundMutationPayload } from '$lib/types/Stock';
 
 	interface Props {
 		open: boolean;
@@ -14,13 +14,13 @@
 
 	let { open, saving, onOpenChange, onSubmit }: Props = $props();
 
+	const sekuritas = useSekuritasAdmin();
+
 	let type = $state<'topup' | 'withdraw' | 'adjust'>('topup');
 	let amount = $state(0);
 	let sekuritasId = $state(0);
 	let note = $state('');
 	let errors = $state<Record<string, string>>({});
-
-	let sekuritasOptions = $state<StockSekuritas[]>([]);
 
 	$effect(() => {
 		if (untrack(() => open)) {
@@ -35,8 +35,7 @@
 
 	async function loadSekuritas() {
 		try {
-			const res = await fetchSekuritas({ page: 1, perPage: 100 });
-			sekuritasOptions = res.data;
+			await sekuritas.fetchAll({ page: 1, perPage: 100 });
 		} catch { /* silent */ }
 	}
 
@@ -78,7 +77,7 @@
 		<Field label="Sekuritas" required error={errors.sekuritas_id}>
 			<select class="input" bind:value={sekuritasId}>
 				<option value={0}>Pilih sekuritas...</option>
-				{#each sekuritasOptions as s (s.id)}
+				{#each sekuritas.items as s (s.id)}
 					<option value={s.id}>[{s.code}] {s.name}</option>
 				{/each}
 			</select>

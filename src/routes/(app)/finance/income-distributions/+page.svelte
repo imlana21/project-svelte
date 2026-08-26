@@ -2,18 +2,15 @@
 	import { onMount } from 'svelte';
 	import { Eye } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useIncomeAdmin } from '$lib/hooks/useIncomeAdmin.svelte';
 	import { toastError } from '$lib/utils/toaster.svelte';
 	import { formatRupiah } from '$lib/utils/format';
-	import * as incomeService from '$lib/services/income.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
 	import type { FinanceIncome } from '$lib/types/finance/Income';
 	import { incomeDistributionColumns } from './-partials/columns';
 	import IncomeDistributionDetailDialog from './-partials/detail.dialog.svelte';
 
-	const incomes = useCrud<FinanceIncome>({
-		fetchAll: incomeService.fetchIncomes,
-	});
+	const incomes = useIncomeAdmin();
 
 	let page = $state(1);
 	let perPage = $state(10);

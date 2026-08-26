@@ -2,17 +2,14 @@
 	import { onMount } from "svelte";
 	import { Eye } from "@lucide/svelte";
 	import CrudPage from "$lib/components/ui/CrudPage.svelte";
-	import { useCrud } from "$lib/hooks/useCrud.svelte";
+	import { usePermissionAdmin } from "$lib/hooks/usePermissionAdmin.svelte";
 	import { toastError } from "$lib/utils/toaster.svelte";
-	import { fetchPermissions } from "$lib/services/permission.service";
 	import type { ColumnDef, SortOrder } from "$lib/types/Api";
 	import type { AuthPermission } from "$lib/types/Auth";
 	import { permissionColumns } from "./-partials/columns";
 	import PermissionDetailDialog from "./-partials/detail.dialog.svelte";
 
-	const crud = useCrud<AuthPermission>({
-		fetchAll: fetchPermissions,
-	});
+	const crud = usePermissionAdmin();
 
 	let page = $state(1);
 	let perPage = $state(10);

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Info } from '@lucide/svelte'
 	import { formatDate, formatRupiah } from '$lib/utils/format'
-	import { cn } from '$lib/utils'
 	import PeriodSelect from './PeriodSelect.svelte'
 	import type { EquityPoint, RangeKey, TradePeriodKey } from '$lib/hooks/useStockDashboard.svelte'
 	import { filterByRange } from '$lib/hooks/useStockDashboard.svelte'

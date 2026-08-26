@@ -3,25 +3,17 @@
 	import { Pencil, Plus, Trash2 } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useFinanceTransactionAdmin } from '$lib/hooks/useFinanceTransactionAdmin.svelte';
 	import { usePermission } from '$lib/hooks/usePermission.svelte';
 	import { PERMISSIONS } from '$lib/utils/permission-registry';
 	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
 	import { formatDate, formatRupiah } from '$lib/utils/format';
-	import * as financeTransactionService from '$lib/services/finance-transaction.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { FinanceTransaction, StoreFinanceTransactionPayload, UpdateFinanceTransactionPayload } from '$lib/types/finance/Transaction';
+	import type { FinanceTransaction } from '$lib/types/finance/Transaction';
 	import { transactionColumns } from './-partials/columns';
 	import TransactionFormDialog, { type TransactionForm } from './-partials/form.dialog.svelte';
 
-	const transactions = useCrud<FinanceTransaction, StoreFinanceTransactionPayload, UpdateFinanceTransactionPayload>({
-		fetchAll: financeTransactionService.fetchFinanceTransactions,
-		fetchById: financeTransactionService.fetchFinanceTransaction,
-		create: financeTransactionService.createFinanceTransaction,
-		update: financeTransactionService.updateFinanceTransaction,
-		remove: financeTransactionService.deleteFinanceTransaction,
-	});
-
+	const transactions = useFinanceTransactionAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);

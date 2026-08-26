@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Component } from 'svelte'
-	import { cn } from '$lib/utils'
 
 	type KpiTone = 'default' | 'success' | 'destructive' | 'warning'
 

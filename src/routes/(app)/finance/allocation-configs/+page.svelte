@@ -4,24 +4,16 @@
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useAllocationConfigAdmin } from '$lib/hooks/useAllocationConfigAdmin.svelte';
 	import { usePermission } from '$lib/hooks/usePermission.svelte';
 	import { PERMISSIONS } from '$lib/utils/permission-registry';
 	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
-	import * as allocationConfigService from '$lib/services/allocation-config.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { FinanceAllocationConfig, StoreAllocationConfigPayload, UpdateAllocationConfigPayload } from '$lib/types/finance/AllocationConfig';
+	import type { FinanceAllocationConfig } from '$lib/types/finance/AllocationConfig';
 	import { allocationConfigColumns } from './-partials/columns';
 	import AllocationConfigFormDialog, { type AllocationConfigForm } from './-partials/form.dialog.svelte';
 
-	const allocationConfigs = useCrud<FinanceAllocationConfig, StoreAllocationConfigPayload, UpdateAllocationConfigPayload>({
-		fetchAll: allocationConfigService.fetchAllocationConfigs,
-		fetchById: allocationConfigService.fetchAllocationConfig,
-		create: allocationConfigService.createAllocationConfig,
-		update: allocationConfigService.updateAllocationConfig,
-		remove: allocationConfigService.deleteAllocationConfig,
-	});
-
+	const allocationConfigs = useAllocationConfigAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);

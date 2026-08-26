@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { formatNumber, formatRupiah } from '$lib/utils/format'
-	import { cn } from '$lib/utils'
 	import type { StockPosition } from '$lib/types/Stock'
 	import type { AllocationMode } from '$lib/hooks/useStockDashboard.svelte'
 	import { buildAllocation, initialsOf } from '$lib/hooks/useStockDashboard.svelte'

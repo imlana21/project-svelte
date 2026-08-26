@@ -3,25 +3,17 @@
 	import { Pencil, Plus, Trash2 } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useSekuritasAdmin } from '$lib/hooks/useSekuritasAdmin.svelte';
 	import { usePermission } from '$lib/hooks/usePermission.svelte';
 	import { PERMISSIONS } from '$lib/utils/permission-registry';
 	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
 	import { formatRupiah } from '$lib/utils/format';
-	import * as sekuritasService from '$lib/services/sekuritas.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { StockSekuritas, StoreSekuritasPayload, UpdateSekuritasPayload } from '$lib/types/Stock';
+	import type { StockSekuritas } from '$lib/types/Stock';
 	import { sekuritasColumns } from './-partials/columns';
 	import SekuritasFormDialog, { type SekuritasForm } from './-partials/form.dialog.svelte';
 
-	const sekuritas = useCrud<StockSekuritas, StoreSekuritasPayload, UpdateSekuritasPayload>({
-		fetchAll: sekuritasService.fetchSekuritas,
-		fetchById: sekuritasService.fetchSekuritasById,
-		create: sekuritasService.createSekuritas,
-		update: sekuritasService.updateSekuritas,
-		remove: sekuritasService.deleteSekuritas,
-	});
-
+	const sekuritas = useSekuritasAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { formatDate, formatRupiah } from '$lib/utils/format'
-	import { cn } from '$lib/utils'
 	import type { FinanceTransaction, FinanceTransactionType } from '$lib/types/finance/Transaction'
 
 	let {

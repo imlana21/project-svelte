@@ -2,9 +2,8 @@
 	import { untrack } from 'svelte';
 	import AppDialog from '$lib/components/ui/AppDialog.svelte';
 	import Field from '$lib/components/ui/Field.svelte';
+	import { useAllocationConfigAdmin } from '$lib/hooks/useAllocationConfigAdmin.svelte';
 	import type { FinancePocket } from '$lib/types/finance/Pocket';
-	import type { FinanceAllocationConfig } from '$lib/types/finance/AllocationConfig';
-	import { fetchAllocationConfigs } from '$lib/services/allocation-config.service';
 
 	export interface PocketForm {
 		name: string;
@@ -23,12 +22,13 @@
 
 	let { open, item, saving, onOpenChange, onSubmit }: Props = $props();
 
+	const allocationConfigs = useAllocationConfigAdmin();
+
 	let name = $state('');
 	let description = $state('');
 	let allocationConfigId = $state(0);
 	let isActive = $state(true);
 	let errors = $state<Record<string, string>>({});
-	let allocationOptions = $state<FinanceAllocationConfig[]>([]);
 
 	$effect(() => {
 		if (untrack(() => open)) {
@@ -43,8 +43,7 @@
 
 	async function loadAllocationOptions() {
 		try {
-			const res = await fetchAllocationConfigs({ page: 1, perPage: 100 });
-			allocationOptions = res.data;
+			await allocationConfigs.fetchAll({ page: 1, perPage: 100 });
 		} catch { /* silent */ }
 	}
 
@@ -80,14 +79,14 @@
 			<Field label="Nama" required error={errors.name}>
 				<input class="input" type="text" placeholder="Tabungan Hari Tua" bind:value={name} />
 			</Field>
-			<Field label="Alokasi" required error={errors.allocation_config_id}>
-				<select class="input" bind:value={allocationConfigId}>
-					<option value={0}>Pilih alokasi...</option>
-					{#each allocationOptions as a (a.id)}
-						<option value={a.id}>{a.category_name} ({(a.percentage * 100).toFixed(1)}%)</option>
-					{/each}
-				</select>
-			</Field>
+		<Field label="Alokasi" required error={errors.allocation_config_id}>
+			<select class="input" bind:value={allocationConfigId}>
+				<option value={0}>Pilih alokasi...</option>
+				{#each allocationConfigs.items as a (a.id)}
+					<option value={a.id}>{a.category_name} ({(a.percentage * 100).toFixed(1)}%)</option>
+				{/each}
+			</select>
+		</Field>
 		</div>
 		<Field label="Deskripsi">
 			<textarea class="input min-h-16" placeholder="Opsional" bind:value={description}></textarea>

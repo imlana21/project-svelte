@@ -2,18 +2,15 @@
 	import { onMount } from 'svelte';
 	import { Eye } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useRealizedPnLAdmin } from '$lib/hooks/useRealizedPnLAdmin.svelte';
 	import { toastError } from '$lib/utils/toaster.svelte';
 	import { formatDate, formatNumber, formatRupiah } from '$lib/utils/format';
-	import * as transactionService from '$lib/services/transaction.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
 	import type { RealizedPnL } from '$lib/types/Stock';
 	import { realizedPnLColumns } from './-partials/columns';
 	import RealizedPnLDetailDialog from './-partials/detail.dialog.svelte';
 
-	const realized = useCrud<RealizedPnL>({
-		fetchAll: transactionService.fetchRealizedHistory,
-	});
+	const realized = useRealizedPnLAdmin();
 
 	let page = $state(1);
 	let perPage = $state(10);

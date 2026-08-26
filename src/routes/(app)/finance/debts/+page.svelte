@@ -4,25 +4,17 @@
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useDebtAdmin } from '$lib/hooks/useDebtAdmin.svelte';
 	import { usePermission } from '$lib/hooks/usePermission.svelte';
 	import { PERMISSIONS } from '$lib/utils/permission-registry';
 	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
 	import { formatRupiah } from '$lib/utils/format';
-	import * as debtService from '$lib/services/debt.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { FinanceDebt, StoreDebtPayload, UpdateDebtPayload } from '$lib/types/finance/Debt';
+	import type { FinanceDebt } from '$lib/types/finance/Debt';
 	import { debtColumns } from './-partials/columns';
 	import DebtFormDialog, { type DebtForm } from './-partials/form.dialog.svelte';
 
-	const debts = useCrud<FinanceDebt, StoreDebtPayload, UpdateDebtPayload>({
-		fetchAll: debtService.fetchDebts,
-		fetchById: debtService.fetchDebt,
-		create: debtService.createDebt,
-		update: debtService.updateDebt,
-		remove: debtService.deleteDebt,
-	});
-
+	const debts = useDebtAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);
@@ -77,13 +69,8 @@
 	async function handleTogglePaid(row: FinanceDebt) {
 		togglingId = row.id;
 		try {
-			if (row.is_paid_this_month) {
-				await debtService.unmarkDebtAsPaid(row.id);
-				toastSuccess('Utang ditandai belum lunas');
-			} else {
-				await debtService.markDebtAsPaid(row.id);
-				toastSuccess('Utang ditandai lunas');
-			}
+			await debts.togglePaid(row.id, row.is_paid_this_month);
+			toastSuccess(row.is_paid_this_month ? 'Utang ditandai belum lunas' : 'Utang ditandai lunas');
 			load();
 		} catch (e) {
 			toastError(e);

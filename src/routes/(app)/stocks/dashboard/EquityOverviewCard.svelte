@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { formatDate, formatRupiah } from '$lib/utils/format'
-	import { cn } from '$lib/utils'
+	import { formatRupiah } from '$lib/utils/format'
 	import PeriodTabs from './PeriodTabs.svelte'
 	import type { EquityPoint, RangeKey } from '$lib/hooks/useStockDashboard.svelte'
 

@@ -3,24 +3,17 @@
 	import { Download, Trash2, Upload } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import { useCrud } from '$lib/hooks/useCrud.svelte';
+	import { useTransactionAdmin } from '$lib/hooks/useTransactionAdmin.svelte';
 	import { usePermission } from '$lib/hooks/usePermission.svelte';
 	import { PERMISSIONS } from '$lib/utils/permission-registry';
 	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
 	import { formatDate, formatNumber, formatRupiah } from '$lib/utils/format';
-	import * as transactionService from '$lib/services/transaction.service';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
 	import type { StockTransaction, StoreTransactionPayload } from '$lib/types/Stock';
 	import { transactionColumns } from './-partials/columns';
 	import TransactionDialog from './-partials/transaction.dialog.svelte';
 
-	const transactions = useCrud<StockTransaction, StoreTransactionPayload>({
-		fetchAll: transactionService.fetchTransactions,
-		fetchById: transactionService.fetchTransaction,
-		create: transactionService.createTransaction,
-		remove: transactionService.deleteTransaction,
-	});
-
+	const transactions = useTransactionAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);

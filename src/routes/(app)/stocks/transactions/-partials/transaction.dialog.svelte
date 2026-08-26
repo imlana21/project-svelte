@@ -2,11 +2,10 @@
 	import { untrack } from 'svelte';
 	import AppDialog from '$lib/components/ui/AppDialog.svelte';
 	import Field from '$lib/components/ui/Field.svelte';
-	import type { StockEmiten, StockSekuritas, StoreTransactionPayload } from '$lib/types/Stock';
-	import { fetchEmitens } from '$lib/services/emiten.service';
-	import { fetchSekuritas } from '$lib/services/sekuritas.service';
-	import { fetchPositions } from '$lib/services/position.service';
-	import type { StockPosition } from '$lib/types/Stock';
+	import { useEmitenAdmin } from '$lib/hooks/useEmitenAdmin.svelte';
+	import { useSekuritasAdmin } from '$lib/hooks/useSekuritasAdmin.svelte';
+	import { usePositionAdmin } from '$lib/hooks/usePositionAdmin.svelte';
+	import type { StoreTransactionPayload } from '$lib/types/Stock';
 
 	interface Props {
 		open: boolean;
@@ -18,6 +17,10 @@
 
 	let { open, type, saving, onOpenChange, onSubmit }: Props = $props();
 
+	const emitens = useEmitenAdmin();
+	const sekuritas = useSekuritasAdmin();
+	const positions = usePositionAdmin();
+
 	let emitenId = $state(0);
 	let sekuritasId = $state(0);
 	let positionId = $state(0);
@@ -26,10 +29,6 @@
 	let lot = $state(0);
 	let fee = $state(0);
 	let errors = $state<Record<string, string>>({});
-
-	let emitenOptions = $state<StockEmiten[]>([]);
-	let sekuritasOptions = $state<StockSekuritas[]>([]);
-	let positionOptions = $state<StockPosition[]>([]);
 
 	$effect(() => {
 		if (untrack(() => open)) {
@@ -47,14 +46,11 @@
 
 	async function loadOptions() {
 		try {
-			const [emitensRes, sekRes, posRes] = await Promise.all([
-				fetchEmitens({ page: 1, perPage: 100 }),
-				fetchSekuritas({ page: 1, perPage: 100 }),
-				fetchPositions({ page: 1, perPage: 100, orderBy: 'created_at', orderDirection: 'asc' }),
+			await Promise.all([
+				emitens.fetchAll({ page: 1, perPage: 100 }),
+				sekuritas.fetchAll({ page: 1, perPage: 100 }),
+				positions.fetchAll({ page: 1, perPage: 100, orderBy: 'created_at', orderDirection: 'asc' }),
 			]);
-			emitenOptions = emitensRes.data;
-			sekuritasOptions = sekRes.data;
-			positionOptions = posRes.data.filter((p) => p.status === 'open');
 		} catch { /* silent */ }
 	}
 
@@ -79,7 +75,7 @@
 		if (type === 'buy') {
 			onSubmit({ sekuritas_id: sekuritasId, emiten_id: emitenId, type: 'buy', date, price, lot, fee });
 		} else {
-			const pos = positionOptions.find((p) => p.id === positionId);
+			const pos = positions.items.find((p) => p.id === positionId);
 			if (!pos) return;
 			onSubmit({ sekuritas_id: pos.sekuritas_id ?? 0, emiten_id: pos.emiten_id ?? 0, type: 'sell', date, price, lot, fee });
 		}
@@ -99,7 +95,7 @@
 				<Field label="Emiten" required error={errors.emiten_id}>
 					<select class="input" bind:value={emitenId}>
 						<option value={0}>Pilih emiten...</option>
-						{#each emitenOptions as e (e.id)}
+						{#each emitens.items as e (e.id)}
 							<option value={e.id}>{e.ticker} - {e.name}</option>
 						{/each}
 					</select>
@@ -107,7 +103,7 @@
 				<Field label="Sekuritas" required error={errors.sekuritas_id}>
 					<select class="input" bind:value={sekuritasId}>
 						<option value={0}>Pilih sekuritas...</option>
-						{#each sekuritasOptions as s (s.id)}
+						{#each sekuritas.items as s (s.id)}
 							<option value={s.id}>[{s.code}] {s.name}</option>
 						{/each}
 					</select>
@@ -117,7 +113,7 @@
 			<Field label="Posisi" required error={errors.position_id}>
 				<select class="input" bind:value={positionId}>
 					<option value={0}>Pilih posisi...</option>
-					{#each positionOptions as p (p.id)}
+					{#each positions.items.filter((p) => p.status === 'open') as p (p.id)}
 						<option value={p.id}>{p.emiten?.ticker ?? '?'} - Lot: {p.lot} @ {p.avg_price}</option>
 					{/each}
 				</select>
