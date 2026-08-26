@@ -15,8 +15,8 @@
 
 <Dialog {open} onOpenChange={(e) => onOpenChange?.(e.open)}>
 	<Dialog.Positioner class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 pt-16 sm:items-center">
-		<Dialog.Backdrop class="fixed inset-0 z-[-1] bg-black/60" />
-		<Dialog.Content class="card relative w-full max-w-lg overflow-hidden p-0 shadow-2xl">
+		<Dialog.Backdrop class="fixed inset-0 z-[-1] bg-black/40" />
+		<Dialog.Content class="card relative w-full max-w-lg overflow-hidden bg-surface-50 p-0 shadow-2xl dark:bg-surface-900">
 			<header class="flex items-start justify-between gap-4 border-b border-surface-300 px-5 py-4 dark:border-surface-700">
 				<div>
 					<Dialog.Title class="text-lg font-bold">{title}</Dialog.Title>

@@ -122,6 +122,11 @@ export interface StoreTransactionPayload {
 	price: number
 	lot: number
 	fee?: number | null
+	trend?: string | null
+	quadrant?: string | null
+	plan_sl?: number | null
+	plan_tp?: number | null
+	setup?: string | null
 }
 
 export interface StoreFundMutationPayload {

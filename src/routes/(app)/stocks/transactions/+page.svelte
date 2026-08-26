@@ -11,7 +11,8 @@
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
 	import type { StockTransaction, StoreTransactionPayload } from '$lib/types/Stock';
 	import { transactionColumns } from './-partials/columns';
-	import TransactionDialog from './-partials/transaction.dialog.svelte';
+	import BuyDialog from './-partials/buy.transaction.dialog.svelte';
+	import SellDialog from './-partials/sell.transaction.dialog.svelte';
 
 	const transactions = useTransactionAdmin();
 	const { can } = usePermission();
@@ -23,8 +24,8 @@
 	let sortOrder = $state<SortOrder>('desc');
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
-	let openForm = $state(false);
-	let formType = $state<'buy' | 'sell'>('buy');
+	let openBuyForm = $state(false);
+	let openSellForm = $state(false);
 	let deleteId = $state<number | null>(null);
 
 	async function load() {
@@ -46,13 +47,14 @@
 		load();
 	}
 
-	function openBuy() { formType = 'buy'; openForm = true; }
-	function openSell() { formType = 'sell'; openForm = true; }
+	function openBuy() { openBuyForm = true; }
+	function openSell() { openSellForm = true; }
 
 	async function handleSubmit(values: StoreTransactionPayload) {
 		try {
 			await transactions.create(values);
-			openForm = false;
+			openBuyForm = false;
+			openSellForm = false;
 			toastSuccess('Transaksi berhasil dicatat');
 			load();
 		} catch (e) {
@@ -129,11 +131,17 @@
 	{/snippet}
 </CrudPage>
 
-<TransactionDialog
-	open={openForm}
-	type={formType}
+<BuyDialog
+	open={openBuyForm}
 	saving={transactions.loading}
-	onOpenChange={(o) => (openForm = o)}
+	onOpenChange={(o) => (openBuyForm = o)}
+	onSubmit={handleSubmit}
+/>
+
+<SellDialog
+	open={openSellForm}
+	saving={transactions.loading}
+	onOpenChange={(o) => (openSellForm = o)}
 	onSubmit={handleSubmit}
 />
 
