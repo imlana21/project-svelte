@@ -1,5 +1,5 @@
 ﻿<script lang="ts">
-	import { untrack } from 'svelte';
+	import { Upload, X } from '@lucide/svelte';
 	import AppDialog from '$lib/components/ui/AppDialog.svelte';
 	import Field from '$lib/components/ui/Field.svelte';
 	import type { StockAnalysis, StoreAnalysisPayload } from '$lib/types/Stock';
@@ -9,7 +9,7 @@
 		item: StockAnalysis | undefined;
 		saving: boolean;
 		onOpenChange: (open: boolean) => void;
-		onSubmit: (values: StoreAnalysisPayload) => void;
+		onSubmit: (values: StoreAnalysisPayload, imageFile?: File) => void;
 	}
 
 	let { open, item, saving, onOpenChange, onSubmit }: Props = $props();
@@ -19,26 +19,71 @@
 	let tp1 = $state(0);
 	let tp2 = $state(0);
 	let sl = $state(0);
-	let image = $state('');
+	let imageFile = $state<File | undefined>(undefined);
+	let imagePreview = $state<string>('');
 	let description = $state('');
 	let source = $state('');
 	let isValid = $state(true);
 	let errors = $state<Record<string, string>>({});
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			ticker = item?.ticker ?? '';
-			rangeBuy = item?.range_buy ?? '';
-			tp1 = item?.tp1 ?? 0;
-			tp2 = item?.tp2 ?? 0;
-			sl = item?.sl ?? 0;
-			image = item?.image ?? '';
-			description = item?.description ?? '';
-			source = item?.source ?? '';
-			isValid = item?.is_valid ?? true;
+		if (open && item) {
+			ticker = item.ticker;
+			rangeBuy = item.range_buy;
+			tp1 = item.tp1;
+			tp2 = item.tp2;
+			sl = item.sl;
+			imageFile = undefined;
+			imagePreview = item.image_url || item.image || '';
+			description = item.description;
+			source = item.source;
+			isValid = item.is_valid;
+			errors = {};
+		}
+		if (!open) {
+			ticker = '';
+			rangeBuy = '';
+			tp1 = 0;
+			tp2 = 0;
+			sl = 0;
+			imageFile = undefined;
+			imagePreview = '';
+			description = '';
+			source = '';
+			isValid = true;
 			errors = {};
 		}
 	});
+
+	function handleFileSelect(e: Event) {
+		const target = e.target as HTMLInputElement;
+		const file = target.files?.[0];
+		if (!file) return;
+
+		if (!file.type.startsWith('image/')) {
+			errors = { ...errors, image: 'File harus berupa gambar' };
+			return;
+		}
+
+		if (file.size > 5 * 1024 * 1024) {
+			errors = { ...errors, image: 'Ukuran file maksimal 5MB' };
+			return;
+		}
+
+		imageFile = file;
+		errors = { ...errors, image: '' };
+
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			imagePreview = event.target?.result as string;
+		};
+		reader.readAsDataURL(file);
+	}
+
+	function removeImage() {
+		imageFile = undefined;
+		imagePreview = '';
+	}
 
 	function validate(): boolean {
 		const next: Record<string, string> = {};
@@ -62,11 +107,12 @@
 			tp1,
 			tp2,
 			sl,
-			image: image.trim() || null,
+			image: imageFile ? null : (imagePreview || null),
+			image_url: imageFile ? null : (item?.image_url || null),
 			description: description.trim(),
 			source: source.trim(),
 			is_valid: isValid,
-		});
+		}, imageFile);
 	}
 </script>
 
@@ -97,8 +143,28 @@
 				<input class="input" type="number" min="1" bind:value={sl} />
 			</Field>
 		</div>
-		<Field label="Image URL" error={errors.image}>
-			<input class="input" type="url" placeholder="https://example.com/image.jpg" bind:value={image} />
+		<Field label="Image" error={errors.image}>
+			<div class="flex flex-col gap-2">
+				{#if imagePreview}
+					<div class="relative overflow-hidden rounded-lg border border-surface-300 dark:border-surface-700">
+						<img src={imagePreview} alt="Preview" class="max-h-48 w-full object-cover" />
+						<button
+							type="button"
+							class="absolute right-2 top-2 rounded-full bg-surface-900/60 p-1 text-white transition-colors-fast hover:bg-surface-900/80"
+							onclick={removeImage}
+						>
+							<X size={14} />
+						</button>
+					</div>
+				{:else}
+					<label class="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-surface-300 py-6 transition-colors-fast hover:border-primary-400 hover:bg-surface-100 dark:border-surface-700 dark:hover:border-primary-500 dark:hover:bg-surface-800">
+						<Upload size={24} class="text-surface-400" />
+						<span class="text-sm text-surface-500 dark:text-surface-400">Pilih gambar</span>
+						<span class="text-xs text-surface-400 dark:text-surface-500">JPG, PNG, WebP (maks 5MB)</span>
+						<input type="file" accept="image/*" class="hidden" onchange={handleFileSelect} />
+					</label>
+				{/if}
+			</div>
 		</Field>
 		<Field label="Source" required error={errors.source}>
 			<input class="input" type="text" placeholder="TradingView" bind:value={source} />

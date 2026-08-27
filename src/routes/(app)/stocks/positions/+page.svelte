@@ -1,17 +1,21 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Eye } from '@lucide/svelte';
+	import { Eye, Pencil } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
 	import { usePositionAdmin } from '$lib/hooks/usePositionAdmin.svelte';
-	import { toastError } from '$lib/utils/toaster.svelte';
+	import { usePermission } from '$lib/hooks/usePermission.svelte';
+	import { PERMISSIONS } from '$lib/utils/permission-registry';
+	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
 	import { formatRupiah } from '$lib/utils/format';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
 	import type { StockPosition } from '$lib/types/Stock';
 	import { positionColumns } from './-partials/columns';
 	import PositionDetailDialog from './-partials/detail.dialog.svelte';
+	import PositionEditDialog, { type PositionEditForm } from './-partials/edit.dialog.svelte';
 
 	const positions = usePositionAdmin();
+	const { can } = usePermission();
 
 	let page = $state(1);
 	let perPage = $state(10);
@@ -21,6 +25,8 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openDetail = $state(false);
+	let openEdit = $state(false);
+	let editItem = $state<StockPosition | undefined>(undefined);
 
 	async function load() {
 		try {
@@ -41,10 +47,26 @@
 		load();
 	}
 
-	async function openDetailFor(row: StockPosition) {
+	function openDetailFor(row: StockPosition) {
 		positions.setItem(row);
 		openDetail = true;
-		try { await positions.fetchById(row.id); } catch (e) { toastError(e); }
+	}
+
+	function openEditFor(row: StockPosition) {
+		editItem = row;
+		openEdit = true;
+	}
+
+	async function handleSubmit(values: PositionEditForm) {
+		if (!editItem) return;
+		try {
+			await positions.update(editItem.id, values);
+			openEdit = false;
+			toastSuccess('Data posisi berhasil disimpan');
+			load();
+		} catch (e) {
+			toastError(e);
+		}
 	}
 </script>
 
@@ -65,9 +87,16 @@
 {/snippet}
 
 {#snippet rowActions(item: StockPosition)}
-	<button type="button" class="btn btn-icon" title="Detail" onclick={() => openDetailFor(item)}>
-		<Eye size={16} />
-	</button>
+	<div class="inline-flex items-center gap-1">
+		{#if can(PERMISSIONS.stocksPositions.update)}
+			<button type="button" class="btn btn-icon" title="Ubah" onclick={() => openEditFor(item)}>
+				<Pencil size={16} />
+			</button>
+		{/if}
+		<button type="button" class="btn btn-icon" title="Detail" onclick={() => openDetailFor(item)}>
+			<Eye size={16} />
+		</button>
+	</div>
 {/snippet}
 
 <CrudPage
@@ -91,4 +120,12 @@
 	open={openDetail}
 	item={positions.item}
 	onOpenChange={(o) => (openDetail = o)}
+/>
+
+<PositionEditDialog
+	open={openEdit}
+	item={editItem}
+	saving={positions.loading}
+	onOpenChange={(o) => (openEdit = o)}
+	onSubmit={handleSubmit}
 />

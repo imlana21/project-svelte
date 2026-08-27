@@ -144,6 +144,7 @@ export type StockAnalysis = {
 	tp2: number
 	sl: number
 	image: string
+	image_url: string | null
 	description: string
 	source: string
 	is_valid: boolean
@@ -160,6 +161,7 @@ export interface StoreAnalysisPayload {
 	tp2: number
 	sl: number
 	image?: string | null
+	image_url?: string | null
 	description: string
 	source: string
 	is_valid?: boolean
@@ -172,6 +174,7 @@ export interface UpdateAnalysisPayload {
 	tp2?: number
 	sl?: number
 	image?: string | null
+	image_url?: string | null
 	description?: string
 	source?: string
 	is_valid?: boolean

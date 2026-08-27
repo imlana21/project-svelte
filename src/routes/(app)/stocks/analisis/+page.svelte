@@ -58,19 +58,26 @@
 		openForm = true;
 	}
 
-	async function openDetailFor(row: StockAnalysis) {
+	function openDetailFor(row: StockAnalysis) {
 		analyses.setItem(row);
 		openDetail = true;
-		try { await analyses.fetchById(row.id); } catch (e) { toastError(e); }
 	}
 
-	async function handleSubmit(values: any) {
+	async function handleSubmit(values: any, imageFile?: File) {
 		try {
 			if (editItem) {
-				await analyses.update(editItem.id, values);
+				if (imageFile) {
+					await analyses.updateWithImage(editItem.id, values, imageFile);
+				} else {
+					await analyses.update(editItem.id, values);
+				}
 				toastSuccess('Analisis berhasil diperbarui');
 			} else {
-				await analyses.create(values);
+				if (imageFile) {
+					await analyses.createWithImage(values, imageFile);
+				} else {
+					await analyses.create(values);
+				}
 				toastSuccess('Analisis berhasil ditambahkan');
 			}
 			openForm = false;

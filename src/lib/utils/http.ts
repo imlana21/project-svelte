@@ -105,6 +105,11 @@ export const http = {
 	post<T>(path: string, body?: unknown): Promise<T> {
 		return instance.post<T>(path, body).then((res) => res.data as T)
 	},
+	postMultipart<T>(path: string, formData: FormData): Promise<T> {
+		return instance.post<T>(path, formData, {
+			headers: { 'Content-Type': 'multipart/form-data' },
+		}).then((res) => res.data as T)
+	},
 	put<T>(path: string, body?: unknown): Promise<T> {
 		return instance.put<T>(path, body).then((res) => res.data as T)
 	},

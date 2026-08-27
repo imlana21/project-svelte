@@ -15,9 +15,9 @@
 <AppDialog {open} {onOpenChange} title="Detail Analisis">
 	{#if item}
 		<div class="flex flex-col gap-4">
-			{#if item.image}
+			{#if item.image_url || item.image}
 				<div class="overflow-hidden rounded-lg border border-surface-300 dark:border-surface-700">
-					<img src={item.image} alt="Analisis {item.ticker}" class="w-full object-cover" />
+					<img src={item.image_url || item.image} alt="Analisis {item.ticker}" class="w-full object-cover" />
 				</div>
 			{/if}
 
