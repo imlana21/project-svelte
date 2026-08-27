@@ -26,6 +26,8 @@
 
 	let openForm = $state(false);
 	let openDetail = $state(false);
+	let editItem = $state<AuthRole | undefined>(undefined);
+	let detailItem = $state<AuthRole | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 
 	async function load() {
@@ -69,30 +71,24 @@
 	}
 
 	function openCreate() {
-		roles.setItem(undefined);
+		editItem = undefined;
 		openForm = true;
 	}
 
 	function openEditFor(row: AuthRole) {
-		roles.setItem(row);
+		editItem = row;
 		openForm = true;
 	}
 
-	async function openDetailFor(row: AuthRole) {
-		roles.setItem(row);
+	function openDetailFor(row: AuthRole) {
+		detailItem = row;
 		openDetail = true;
-		try {
-			await roles.fetchById(row.id);
-		} catch (e) {
-			toastError(e);
-		}
 	}
 
 	async function handleSubmit(values: RoleForm) {
-		const current = roles.item;
 		try {
-			if (current) {
-				await roles.update(current.id, values);
+			if (editItem) {
+				await roles.update(editItem.id, values);
 			} else {
 				await roles.create(values);
 			}
@@ -115,10 +111,9 @@
 	}
 
 	async function handleSyncPermissions(permissionIds: number[]) {
-		const current = roles.item;
-		if (!current) return;
+		if (!detailItem) return;
 		try {
-			await roles.syncPermissions(current.id, permissionIds);
+			await roles.syncPermissions(detailItem.id, permissionIds);
 			toastSuccess('Permission role berhasil diperbarui');
 			openDetail = false;
 			load();
@@ -213,7 +208,7 @@
 
 <RoleFormDialog
 	open={openForm}
-	item={roles.item}
+	item={editItem}
 	saving={roles.loading}
 	onOpenChange={(o) => (openForm = o)}
 	onSubmit={handleSubmit}
@@ -221,7 +216,7 @@
 
 <RoleDetailDialog
 	open={openDetail}
-	item={roles.item}
+	item={detailItem}
 	permissions={roles.permissions}
 	canManagePermissions={can(PERMISSIONS.roles.update)}
 	saving={roles.loading}

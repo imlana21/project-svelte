@@ -25,6 +25,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openForm = $state(false);
+	let editItem = $state<FinanceDebt | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 	let togglingId = $state<number | null>(null);
 
@@ -47,14 +48,13 @@
 		load();
 	}
 
-	function openCreate() { debts.setItem(undefined); openForm = true; }
-	function openEditFor(row: FinanceDebt) { debts.setItem(row); openForm = true; }
+	function openCreate() { editItem = undefined; openForm = true; }
+	function openEditFor(row: FinanceDebt) { editItem = row; openForm = true; }
 
 	async function handleSubmit(values: DebtForm) {
-		const current = debts.item;
 		try {
-			if (current) {
-				await debts.update(current.id, values);
+			if (editItem) {
+				await debts.update(editItem.id, values);
 			} else {
 				await debts.create(values);
 			}
@@ -165,7 +165,7 @@
 
 <DebtFormDialog
 	open={openForm}
-	item={debts.item}
+	item={editItem}
 	saving={debts.loading}
 	onOpenChange={(o) => (openForm = o)}
 	onSubmit={handleSubmit}

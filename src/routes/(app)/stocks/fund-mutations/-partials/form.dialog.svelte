@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
 	import AppDialog from '$lib/components/ui/AppDialog.svelte';
 	import Field from '$lib/components/ui/Field.svelte';
 	import { useSekuritasAdmin } from '$lib/hooks/useSekuritasAdmin.svelte';
@@ -23,7 +22,7 @@
 	let errors = $state<Record<string, string>>({});
 
 	$effect(() => {
-		if (untrack(() => open)) {
+		if (open) {
 			type = 'topup';
 			amount = 0;
 			sekuritasId = 0;

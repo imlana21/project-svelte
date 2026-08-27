@@ -24,6 +24,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openForm = $state(false);
+	let editItem = $state<FinanceAllocationConfig | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 
 	async function load() {
@@ -45,14 +46,13 @@
 		load();
 	}
 
-	function openCreate() { allocationConfigs.setItem(undefined); openForm = true; }
-	function openEditFor(row: FinanceAllocationConfig) { allocationConfigs.setItem(row); openForm = true; }
+	function openCreate() { editItem = undefined; openForm = true; }
+	function openEditFor(row: FinanceAllocationConfig) { editItem = row; openForm = true; }
 
 	async function handleSubmit(values: AllocationConfigForm) {
-		const current = allocationConfigs.item;
 		try {
-			if (current) {
-				await allocationConfigs.update(current.id, values);
+			if (editItem) {
+				await allocationConfigs.update(editItem.id, values);
 			} else {
 				await allocationConfigs.create(values);
 			}
@@ -131,7 +131,7 @@
 
 <AllocationConfigFormDialog
 	open={openForm}
-	item={allocationConfigs.item}
+	item={editItem}
 	saving={allocationConfigs.loading}
 	onOpenChange={(o) => (openForm = o)}
 	onSubmit={handleSubmit}

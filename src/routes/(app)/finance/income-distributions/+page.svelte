@@ -20,6 +20,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openDetail = $state(false);
+	let detailItem = $state<FinanceIncome | undefined>(undefined);
 
 	async function load() {
 		try {
@@ -58,7 +59,7 @@
 {/snippet}
 
 {#snippet rowActions(item: FinanceIncome)}
-	<button type="button" class="btn btn-icon" title="Detail" onclick={() => { incomes.setItem(item); openDetail = true; }}>
+	<button type="button" class="btn btn-icon" title="Detail" onclick={() => { detailItem = item; openDetail = true; }}>
 		<Eye size={16} />
 	</button>
 {/snippet}
@@ -82,6 +83,6 @@
 
 <IncomeDistributionDetailDialog
 	open={openDetail}
-	item={incomes.item?.distributions?.[0]}
+	item={detailItem?.distributions?.[0]}
 	onOpenChange={(o) => (openDetail = o)}
 />

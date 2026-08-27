@@ -25,6 +25,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openForm = $state(false);
+	let editItem = $state<FinancePocket | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 
 	async function load() {
@@ -46,14 +47,13 @@
 		load();
 	}
 
-	function openCreate() { pockets.setItem(undefined); openForm = true; }
-	function openEditFor(row: FinancePocket) { pockets.setItem(row); openForm = true; }
+	function openCreate() { editItem = undefined; openForm = true; }
+	function openEditFor(row: FinancePocket) { editItem = row; openForm = true; }
 
 	async function handleSubmit(values: PocketForm) {
-		const current = pockets.item;
 		try {
-			if (current) {
-				await pockets.update(current.id, values);
+			if (editItem) {
+				await pockets.update(editItem.id, values);
 			} else {
 				await pockets.create(values);
 			}
@@ -134,7 +134,7 @@
 
 <PocketFormDialog
 	open={openForm}
-	item={pockets.item}
+	item={editItem}
 	saving={pockets.loading}
 	onOpenChange={(o) => (openForm = o)}
 	onSubmit={handleSubmit}

@@ -24,6 +24,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openForm = $state(false);
+	let editItem = $state<StockSekuritas | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 
 	async function load() {
@@ -45,14 +46,13 @@
 		load();
 	}
 
-	function openCreate() { sekuritas.setItem(undefined); openForm = true; }
-	function openEditFor(row: StockSekuritas) { sekuritas.setItem(row); openForm = true; }
+	function openCreate() { editItem = undefined; openForm = true; }
+	function openEditFor(row: StockSekuritas) { editItem = row; openForm = true; }
 
 	async function handleSubmit(values: SekuritasForm) {
-		const current = sekuritas.item;
 		try {
-			if (current) {
-				await sekuritas.update(current.id, values);
+			if (editItem) {
+				await sekuritas.update(editItem.id, values);
 			} else {
 				await sekuritas.create(values);
 			}
@@ -129,7 +129,7 @@
 
 <SekuritasFormDialog
 	open={openForm}
-	item={sekuritas.item}
+	item={editItem}
 	saving={sekuritas.loading}
 	onOpenChange={(o) => (openForm = o)}
 	onSubmit={handleSubmit}

@@ -36,17 +36,32 @@
 	let note = $state('');
 	let errors = $state<Record<string, string>>({});
 
+	loadPocketOptions();
+
 	$effect(() => {
-		if (untrack(() => open)) {
-			name = item?.name ?? '';
-			amountPerMonth = item?.amount_per_month ?? 0;
-			dueDate = item?.due_date ?? 1;
-			pocketId = item?.pocket_id ?? 0;
-			categoryTag = item?.category_tag ?? '';
-			isActive = item?.is_active ?? true;
-			note = item?.note ?? '';
+		if (open) {
+			const currentItem = untrack(() => item);
+			if (currentItem) {
+				name = currentItem.name;
+				amountPerMonth = currentItem.amount_per_month;
+				dueDate = currentItem.due_date;
+				pocketId = currentItem.pocket_id;
+				categoryTag = currentItem.category_tag ?? '';
+				isActive = currentItem.is_active;
+				note = currentItem.note ?? '';
+			} else {
+				name = '';
+				amountPerMonth = 0;
+				dueDate = 1;
+				pocketId = 0;
+				categoryTag = '';
+				isActive = true;
+				note = '';
+			}
 			errors = {};
-			loadPocketOptions();
+		}
+		if (!open) {
+			errors = {};
 		}
 	});
 

@@ -19,6 +19,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openDetail = $state(false);
+	let detailItem = $state<AuthPermission | undefined>(undefined);
 
 	async function load() {
 		try {
@@ -64,14 +65,9 @@
 		load();
 	}
 
-	async function openDetailFor(row: AuthPermission) {
-		crud.setItem(row);
+	function openDetailFor(row: AuthPermission) {
+		detailItem = row;
 		openDetail = true;
-		try {
-			await crud.fetchById(row.id);
-		} catch (e) {
-			toastError(e);
-		}
 	}
 </script>
 
@@ -115,6 +111,6 @@
 
 <PermissionDetailDialog
 	open={openDetail}
-	item={crud.item}
+	item={detailItem}
 	onOpenChange={(o) => (openDetail = o)}
 />

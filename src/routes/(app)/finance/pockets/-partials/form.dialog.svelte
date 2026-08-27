@@ -30,14 +30,26 @@
 	let isActive = $state(true);
 	let errors = $state<Record<string, string>>({});
 
+	loadAllocationOptions();
+
 	$effect(() => {
-		if (untrack(() => open)) {
-			name = item?.name ?? '';
-			description = item?.description ?? '';
-			allocationConfigId = item?.allocation_config_id ?? 0;
-			isActive = item?.is_active ?? true;
+		if (open) {
+			const currentItem = untrack(() => item);
+			if (currentItem) {
+				name = currentItem.name;
+				description = currentItem.description ?? '';
+				allocationConfigId = currentItem.allocation_config_id;
+				isActive = currentItem.is_active;
+			} else {
+				name = '';
+				description = '';
+				allocationConfigId = 0;
+				isActive = true;
+			}
 			errors = {};
-			loadAllocationOptions();
+		}
+		if (!open) {
+			errors = {};
 		}
 	});
 

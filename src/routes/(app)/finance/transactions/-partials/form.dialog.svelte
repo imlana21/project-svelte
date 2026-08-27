@@ -39,16 +39,19 @@
 	let note = $state('');
 	let errors = $state<Record<string, string>>({});
 
+	loadPocketOptions();
+
 	$effect(() => {
-		if (untrack(() => open)) {
-			if (item) {
+		if (open) {
+			const currentItem = untrack(() => item);
+			if (currentItem) {
 				type = 'expense';
-				pocketId = item.pocket_id;
-				amount = item.amount;
-				description = item.description;
-				categoryTag = item.category_tag ?? '';
-				date = item.date;
-				note = item.note ?? '';
+				pocketId = currentItem.pocket_id;
+				amount = currentItem.amount;
+				description = currentItem.description;
+				categoryTag = currentItem.category_tag ?? '';
+				date = currentItem.date;
+				note = currentItem.note ?? '';
 			} else {
 				type = 'expense';
 				pocketId = 0;
@@ -59,7 +62,9 @@
 				note = '';
 			}
 			errors = {};
-			loadPocketOptions();
+		}
+		if (!open) {
+			errors = {};
 		}
 	});
 

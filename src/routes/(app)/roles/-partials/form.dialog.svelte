@@ -28,11 +28,22 @@
 	let errors = $state<{ name?: string; slug?: string; description?: string }>({});
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			name = item?.name ?? '';
-			slug = item?.slug ?? '';
-			description = item?.description ?? '';
-			isActive = item?.is_active ?? true;
+		if (open) {
+			const currentItem = untrack(() => item);
+			if (currentItem) {
+				name = currentItem.name;
+				slug = currentItem.slug;
+				description = currentItem.description ?? '';
+				isActive = currentItem.is_active;
+			} else {
+				name = '';
+				slug = '';
+				description = '';
+				isActive = true;
+			}
+			errors = {};
+		}
+		if (!open) {
 			errors = {};
 		}
 	});

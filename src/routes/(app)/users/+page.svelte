@@ -29,6 +29,8 @@
 	let openEdit = $state(false);
 	let openDetail = $state(false);
 	let openAssign = $state(false);
+	let editItem = $state<User | undefined>(undefined);
+	let detailItem = $state<User | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 
 	async function load() {
@@ -72,12 +74,12 @@
 	}
 
 	function openEditFor(row: User) {
-		users.setItem(row);
+		editItem = row;
 		openEdit = true;
 	}
 
 	function openDetailFor(row: User) {
-		users.setItem(row);
+		detailItem = row;
 		openDetail = true;
 	}
 
@@ -92,10 +94,9 @@
 	}
 
 	async function handleEditSubmit(values: EditUserForm) {
-		const current = users.item;
-		if (!current) return;
+		if (!editItem) return;
 		try {
-			await users.update(current.id, values);
+			await users.update(editItem.id, values);
 			openEdit = false;
 			toastSuccess('Profil pengguna berhasil disimpan');
 			load();
@@ -105,10 +106,9 @@
 	}
 
 	async function handleAssignRoles(roleIds: number[]) {
-		const current = users.item;
-		if (!current) return;
+		if (!detailItem) return;
 		try {
-			await users.assignRoles(current.id, roleIds);
+			await users.assignRoles(detailItem.id, roleIds);
 			openAssign = false;
 			toastSuccess('Role pengguna berhasil diperbarui');
 			load();
@@ -202,7 +202,7 @@
 
 <EditUserDialog
 	open={openEdit}
-	item={users.item}
+	item={editItem}
 	saving={users.loading}
 	onOpenChange={(o) => (openEdit = o)}
 	onSubmit={handleEditSubmit}
@@ -210,7 +210,7 @@
 
 <DetailDialog
 	open={openDetail}
-	item={users.item}
+	item={detailItem}
 	canManageRoles={can(PERMISSIONS.users.update)}
 	onOpenChange={(o) => (openDetail = o)}
 	onManageRoles={() => {
@@ -221,7 +221,7 @@
 
 <AssignRolesDialog
 	open={openAssign}
-	item={users.item}
+	item={detailItem}
 	roles={users.roles}
 	saving={users.loading}
 	onOpenChange={(o) => (openAssign = o)}

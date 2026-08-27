@@ -28,11 +28,22 @@
 	let errors = $state<Record<string, string>>({});
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			categoryName = item?.category_name ?? '';
-			percentage = item ? item.percentage * 100 : 0;
-			sortOrder = item?.sort_order ?? 0;
-			isActive = item?.is_active ?? true;
+		if (open) {
+			const currentItem = untrack(() => item);
+			if (currentItem) {
+				categoryName = currentItem.category_name;
+				percentage = currentItem.percentage * 100;
+				sortOrder = currentItem.sort_order;
+				isActive = currentItem.is_active;
+			} else {
+				categoryName = '';
+				percentage = 0;
+				sortOrder = 0;
+				isActive = true;
+			}
+			errors = {};
+		}
+		if (!open) {
 			errors = {};
 		}
 	});

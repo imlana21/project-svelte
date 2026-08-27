@@ -24,6 +24,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openForm = $state(false);
+	let editItem = $state<FinanceTransaction | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 
 	async function load() {
@@ -45,14 +46,13 @@
 		load();
 	}
 
-	function openCreate() { transactions.setItem(undefined); openForm = true; }
-	function openEditFor(row: FinanceTransaction) { transactions.setItem(row); openForm = true; }
+	function openCreate() { editItem = undefined; openForm = true; }
+	function openEditFor(row: FinanceTransaction) { editItem = row; openForm = true; }
 
 	async function handleSubmit(values: TransactionForm) {
-		const current = transactions.item;
 		try {
-			if (current) {
-				await transactions.update(current.id, { description: values.description, category_tag: values.category_tag, date: values.date, note: values.note });
+			if (editItem) {
+				await transactions.update(editItem.id, { description: values.description, category_tag: values.category_tag, date: values.date, note: values.note });
 			} else {
 				await transactions.create({ type: values.type, pocket_id: values.pocket_id, amount: values.amount, description: values.description, category_tag: values.category_tag, date: values.date, note: values.note });
 			}
@@ -143,7 +143,7 @@
 
 <TransactionFormDialog
 	open={openForm}
-	item={transactions.item}
+	item={editItem}
 	saving={transactions.loading}
 	onOpenChange={(o) => (openForm = o)}
 	onSubmit={handleSubmit}

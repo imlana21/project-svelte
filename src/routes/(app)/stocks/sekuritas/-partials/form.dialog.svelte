@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
 	import AppDialog from '$lib/components/ui/AppDialog.svelte';
 	import Field from '$lib/components/ui/Field.svelte';
 	import type { StockSekuritas } from '$lib/types/Stock';
@@ -26,10 +25,16 @@
 	let errors = $state<{ code?: string; name?: string; balance?: string }>({});
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			code = item?.code ?? '';
-			name = item?.name ?? '';
-			balance = item ? Number(item.balance) : 0;
+		if (open && item) {
+			code = item.code;
+			name = item.name;
+			balance = Number(item.balance);
+			errors = {};
+		}
+		if (!open) {
+			code = '';
+			name = '';
+			balance = 0;
 			errors = {};
 		}
 	});

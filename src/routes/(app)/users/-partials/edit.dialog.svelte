@@ -30,12 +30,22 @@
 	let errors = $state<{ name?: string; email?: string; password?: string; password_confirmation?: string }>({});
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			name = item?.name ?? '';
-			email = item?.email ?? '';
+		if (open) {
+			const currentItem = untrack(() => item);
+			if (currentItem) {
+				name = currentItem.name;
+				email = currentItem.email;
+				isActive = currentItem.is_active;
+			} else {
+				name = '';
+				email = '';
+				isActive = true;
+			}
 			password = '';
 			passwordConfirmation = '';
-			isActive = item?.is_active ?? true;
+			errors = {};
+		}
+		if (!open) {
 			errors = {};
 		}
 	});

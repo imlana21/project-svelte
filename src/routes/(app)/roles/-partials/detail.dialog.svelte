@@ -19,8 +19,9 @@
 	let selected = $state<number[]>([]);
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			selected = item?.permissions.map((p) => p.id) ?? [];
+		if (open) {
+			const currentItem = untrack(() => item);
+			selected = currentItem?.permissions.map((p) => p.id) ?? [];
 		}
 	});
 
