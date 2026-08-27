@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
 	import AppDialog from '$lib/components/ui/AppDialog.svelte';
 	import Field from '$lib/components/ui/Field.svelte';
 	import AsyncCombobox from '$lib/components/ui/AsyncCombobox.svelte';
@@ -34,7 +33,7 @@
 	);
 
 	$effect(() => {
-		if (untrack(() => open)) {
+		if (open) {
 			positionId = 0;
 			date = new Date().toISOString().split('T')[0];
 			price = 0;
@@ -43,6 +42,7 @@
 			errors = {};
 			loadOptions();
 		}
+		if (!open) { errors = {}; }
 	});
 
 	async function loadOptions() {

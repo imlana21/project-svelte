@@ -25,6 +25,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openForm = $state(false);
+	let editItem = $state<FinanceIncome | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 	let distributingId = $state<number | null>(null);
 
@@ -47,14 +48,13 @@
 		load();
 	}
 
-	function openCreate() { incomes.setItem(undefined); openForm = true; }
-	function openEditFor(row: FinanceIncome) { incomes.setItem(row); openForm = true; }
+	function openCreate() { editItem = undefined; openForm = true; }
+	function openEditFor(row: FinanceIncome) { editItem = row; openForm = true; }
 
 	async function handleSubmit(values: IncomeForm) {
-		const current = incomes.item;
 		try {
-			if (current) {
-				await incomes.update(current.id, { source: values.source, note: values.note });
+			if (editItem) {
+				await incomes.update(editItem.id, { source: values.source, note: values.note });
 			} else {
 				await incomes.create({ amount: values.amount, source: values.source, note: values.note, period: values.period });
 			}
@@ -182,7 +182,7 @@
 
 <IncomeFormDialog
 	open={openForm}
-	item={incomes.item}
+	item={editItem}
 	saving={incomes.loading}
 	onOpenChange={(o) => (openForm = o)}
 	onSubmit={handleSubmit}

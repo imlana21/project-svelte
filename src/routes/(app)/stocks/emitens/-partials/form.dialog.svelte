@@ -33,12 +33,14 @@
 	];
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			ticker = item?.ticker ?? '';
-			name = item?.name ?? '';
-			sector = item?.sector ?? 'Energy';
+		if (open) {
+			const currentItem = untrack(() => item);
+			ticker = currentItem?.ticker ?? '';
+			name = currentItem?.name ?? '';
+			sector = currentItem?.sector ?? 'Energy';
 			errors = {};
 		}
+		if (!open) { errors = {}; }
 	});
 
 	function validate(): boolean {

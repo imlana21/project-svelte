@@ -20,6 +20,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openDetail = $state(false);
+	let detailItem = $state<RealizedPnL | undefined>(undefined);
 
 	async function load() {
 		try {
@@ -41,7 +42,7 @@
 	}
 
 	function openDetailFor(row: RealizedPnL) {
-		realized.setItem(row);
+		detailItem = row;
 		openDetail = true;
 	}
 </script>
@@ -87,6 +88,6 @@
 
 <RealizedPnLDetailDialog
 	open={openDetail}
-	item={realized.item}
+	item={detailItem}
 	onOpenChange={(o) => (openDetail = o)}
 />

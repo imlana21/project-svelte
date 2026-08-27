@@ -17,9 +17,11 @@
 	let selected = $state<number[]>([]);
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			selected = item?.role_ids ?? [];
+		if (open) {
+			const currentItem = untrack(() => item);
+			selected = currentItem?.role_ids ?? [];
 		}
+		if (!open) { selected = []; }
 	});
 
 	function toggle(id: number) {

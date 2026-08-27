@@ -24,6 +24,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openForm = $state(false);
+	let editItem = $state<StockEmiten | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 
 	async function load() {
@@ -50,14 +51,13 @@
 		load();
 	}
 
-	function openCreate() { emitens.setItem(undefined); openForm = true; }
-	function openEditFor(row: StockEmiten) { emitens.setItem(row); openForm = true; }
+	function openCreate() { editItem = undefined; openForm = true; }
+	function openEditFor(row: StockEmiten) { editItem = row; openForm = true; }
 
 	async function handleSubmit(values: EmitenForm) {
-		const current = emitens.item;
 		try {
-			if (current) {
-				await emitens.update(current.id, values);
+			if (editItem) {
+				await emitens.update(editItem.id, values);
 			} else {
 				await emitens.create(values);
 			}
@@ -159,7 +159,7 @@
 
 <EmitenFormDialog
 	open={openForm}
-	item={emitens.item}
+	item={editItem}
 	saving={emitens.loading}
 	onOpenChange={(o) => (openForm = o)}
 	onSubmit={handleSubmit}

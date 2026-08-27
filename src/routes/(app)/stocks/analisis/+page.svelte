@@ -27,6 +27,7 @@
 	let openDetail = $state(false);
 	let openForm = $state(false);
 	let editItem = $state<StockAnalysis | undefined>(undefined);
+	let detailItem = $state<StockAnalysis | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 
 	async function load() {
@@ -59,7 +60,7 @@
 	}
 
 	function openDetailFor(row: StockAnalysis) {
-		analyses.setItem(row);
+		detailItem = row;
 		openDetail = true;
 	}
 
@@ -169,7 +170,7 @@
 
 <AnalysisDetailDialog
 	open={openDetail}
-	item={analyses.item}
+	item={detailItem}
 	onOpenChange={(o) => (openDetail = o)}
 />
 

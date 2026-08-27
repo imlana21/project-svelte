@@ -28,13 +28,15 @@
 	let errors = $state<Record<string, string>>({});
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			amount = item?.amount ?? 0;
-			source = item?.source ?? '';
-			note = item?.note ?? '';
-			period = item?.period?.slice(0, 7) ?? new Date().toISOString().slice(0, 7);
+		if (open) {
+			const currentItem = untrack(() => item);
+			amount = currentItem?.amount ?? 0;
+			source = currentItem?.source ?? '';
+			note = currentItem?.note ?? '';
+			period = currentItem?.period?.slice(0, 7) ?? new Date().toISOString().slice(0, 7);
 			errors = {};
 		}
+		if (!open) { errors = {}; }
 	});
 
 	function validate(): boolean {

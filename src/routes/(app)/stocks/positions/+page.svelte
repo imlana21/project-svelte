@@ -27,6 +27,7 @@
 	let openDetail = $state(false);
 	let openEdit = $state(false);
 	let editItem = $state<StockPosition | undefined>(undefined);
+	let detailItem = $state<StockPosition | undefined>(undefined);
 
 	async function load() {
 		try {
@@ -48,7 +49,7 @@
 	}
 
 	function openDetailFor(row: StockPosition) {
-		positions.setItem(row);
+		detailItem = row;
 		openDetail = true;
 	}
 
@@ -118,7 +119,7 @@
 
 <PositionDetailDialog
 	open={openDetail}
-	item={positions.item}
+	item={detailItem}
 	onOpenChange={(o) => (openDetail = o)}
 />
 
