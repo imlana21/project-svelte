@@ -129,7 +129,7 @@
 							<li>
 								<button
 									type="button"
-									class="flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm transition-colors hover:bg-surface-200/60 dark:hover:bg-surface-700/40 {item.value === value ? 'bg-primary-500/10 font-medium' : ''}"
+									class="flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm transition-colors-fast hover:bg-surface-200/60 dark:hover:bg-surface-700/40 {item.value === value ? 'bg-primary-500/10 font-medium' : ''}"
 									onclick={() => handleSelect(item.value)}
 								>
 									<span>{item.label}</span>

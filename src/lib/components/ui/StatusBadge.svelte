@@ -8,7 +8,7 @@
 </script>
 
 {#if value}
-	<span class="badge bg-success-500 text-success-contrast-500">{trueLabel}</span>
+	<span class="badge whitespace-nowrap bg-success-500 text-success-contrast-500">{trueLabel}</span>
 {:else}
-	<span class="badge bg-surface-300 text-surface-700 dark:bg-surface-700 dark:text-surface-200">{falseLabel}</span>
+	<span class="badge whitespace-nowrap bg-surface-300 text-surface-700 dark:bg-surface-700 dark:text-surface-200">{falseLabel}</span>
 {/if}

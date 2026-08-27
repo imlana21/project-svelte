@@ -24,7 +24,7 @@
 <AppDialog {open} {title} children={confirmSnippet} footer={footerSnippet} />
 
 {#snippet confirmSnippet()}
-	<p class="text-sm text-surface-600 dark:text-surface-300">{message}</p>
+	<p class="text-sm text-pretty text-surface-600 dark:text-surface-300">{message}</p>
 {/snippet}
 
 {#snippet footerSnippet()}

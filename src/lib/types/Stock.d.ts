@@ -135,3 +135,44 @@ export interface StoreFundMutationPayload {
 	amount: number
 	note?: string | null
 }
+
+export type StockAnalysis = {
+	id: number
+	ticker: string
+	range_buy: string
+	tp1: number
+	tp2: number
+	sl: number
+	image: string
+	description: string
+	source: string
+	is_valid: boolean
+	created_at: string
+	updated_at: string
+
+	emiten?: StockEmiten
+}
+
+export interface StoreAnalysisPayload {
+	ticker: string
+	range_buy: string
+	tp1: number
+	tp2: number
+	sl: number
+	image?: string | null
+	description: string
+	source: string
+	is_valid?: boolean
+}
+
+export interface UpdateAnalysisPayload {
+	ticker?: string
+	range_buy?: string
+	tp1?: number
+	tp2?: number
+	sl?: number
+	image?: string | null
+	description?: string
+	source?: string
+	is_valid?: boolean
+}

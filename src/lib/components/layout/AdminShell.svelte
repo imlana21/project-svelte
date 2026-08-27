@@ -37,22 +37,22 @@
 			sidebar.collapsed ? 'justify-center px-2' : 'justify-between px-4'
 		)}>
 			{#if !sidebar.collapsed}
-				<span class="text-lg font-black tracking-tight text-primary-600 dark:text-primary-400">Bestock</span>
+				<span class="text-lg font-black tracking-tight text-primary-600 dark:text-primary-400" style="text-wrap: balance;">Bestock</span>
 			{/if}
-			<button
-				class="hidden rounded-lg p-1.5 text-surface-500 hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800 lg:block"
-				onclick={() => sidebar.toggle()}
-				title={sidebar.collapsed ? 'Expand menu' : 'Minimize menu'}
-			>
+		<button
+			class="hidden rounded-lg p-1.5 text-surface-500 transition-colors-fast hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800 lg:block"
+			onclick={() => sidebar.toggle()}
+			title={sidebar.collapsed ? 'Expand menu' : 'Minimize menu'}
+		>
 				{#if sidebar.collapsed}
 					<PanelLeftOpen size={18} />
 				{:else}
 					<PanelLeftClose size={18} />
 				{/if}
 			</button>
-			<button class="rounded-lg p-1.5 text-surface-500 hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800 lg:hidden" onclick={() => (sidebarOpen = false)}>
-				<X size={18} />
-			</button>
+		<button class="rounded-lg p-1.5 text-surface-500 transition-colors-fast hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800 lg:hidden" onclick={() => (sidebarOpen = false)}>
+			<X size={18} />
+		</button>
 		</div>
 		<div class="min-h-0 flex-1 overflow-y-auto">
 			<SidebarNav collapsed={sidebar.collapsed} onNavigate={() => (sidebarOpen = false)} />
@@ -66,14 +66,14 @@
 	)}>
 		<header class="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-surface-200 bg-surface-50/80 px-4 backdrop-blur dark:border-surface-800 dark:bg-surface-950/80">
 			<div class="flex items-center gap-3">
-				<button class="rounded-lg p-1.5 text-surface-500 hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800 lg:hidden" onclick={() => (sidebarOpen = true)}>
+				<button class="rounded-lg p-1.5 text-surface-500 transition-colors-fast hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800 lg:hidden" onclick={() => (sidebarOpen = true)}>
 					<Menu size={18} />
 				</button>
 				<h1 class="text-base font-semibold text-surface-900 dark:text-surface-100">Admin Panel</h1>
 			</div>
 			<div class="flex items-center gap-1">
 				<button
-					class="rounded-lg p-1.5 text-surface-500 hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800"
+					class="rounded-lg p-1.5 text-surface-500 transition-colors-fast hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800"
 					title={mode.mode === 'light' ? 'Dark mode' : 'Light mode'}
 					onclick={() => mode.toggle()}
 				>

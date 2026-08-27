@@ -61,9 +61,9 @@
 <div class="flex flex-col gap-4">
 	<div class="flex flex-wrap items-end justify-between gap-3">
 		<div>
-			<h2 class="text-xl font-bold">{title}</h2>
+			<h2 class="text-xl font-bold text-balance">{title}</h2>
 			{#if description}
-				<p class="mt-0.5 text-sm text-surface-500 dark:text-surface-400">{description}</p>
+				<p class="mt-0.5 text-sm text-pretty text-surface-500 dark:text-surface-400">{description}</p>
 			{/if}
 		</div>
 		{#if actions}

@@ -6,8 +6,8 @@
 
 <div class="flex flex-col gap-4">
 	<div class="card p-6">
-		<h1 class="text-2xl font-black">Selamat datang, {auth.user?.name ?? 'Admin'}</h1>
-		<p class="mt-1 text-surface-600 dark:text-surface-300">
+		<h1 class="text-2xl font-black text-balance">Selamat datang, {auth.user?.name ?? 'Admin'}</h1>
+		<p class="mt-1 text-surface-600 text-pretty dark:text-surface-300">
 			Dashboard ringkasan portfolio saham dan keuangan. (Sedang dibangun)
 		</p>
 	</div>

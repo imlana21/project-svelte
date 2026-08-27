@@ -3,6 +3,7 @@ import {
 	Archive,
 	ArrowLeftRight,
 	Banknote,
+	BarChart3,
 	Building2,
 	Clipboard,
 	CreditCard,
@@ -59,6 +60,12 @@ export const mainNav: NavItem[] = [
 		href: '/stocks/emitens',
 		icon: Receipt,
 		permission: PERMISSIONS.stocksEmitens.read,
+	},
+	{
+		title: 'Analisis',
+		href: '/stocks/analisis',
+		icon: BarChart3,
+		permission: PERMISSIONS.stocksAnalyses.read,
 	},
 	{ title: 'PORTFOLIO', label: true },
 	{

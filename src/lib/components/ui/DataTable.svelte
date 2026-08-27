@@ -28,7 +28,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center gap-3 p-8 text-surface-500 dark:text-surface-400">
 			<span class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
-			Memuat data...
+			<span class="text-sm">Memuat data...</span>
 		</div>
 	{:else}
 		<table class="table">
@@ -39,7 +39,7 @@
 							{#if column.sortable && onSort}
 								<button
 									type="button"
-									class="inline-flex items-center gap-1 hover:text-surface-900 dark:hover:text-surface-50"
+									class="inline-flex items-center gap-1 transition-colors-fast hover:text-surface-900 dark:hover:text-surface-50"
 									onclick={() => onSort(column.key)}
 								>
 									{column.label}
@@ -66,13 +66,13 @@
 			<tbody>
 				{#if items.length === 0}
 					<tr>
-						<td colspan={columns.length + (rowActions ? 1 : 0)} class="py-8 text-center text-surface-500 dark:text-surface-400">
+						<td colspan={columns.length + (rowActions ? 1 : 0)} class="py-8 text-center text-sm text-surface-500 dark:text-surface-400">
 							{emptyMessage}
 						</td>
 					</tr>
 				{:else}
 					{#each items as item (item.id)}
-						<tr class="transition-colors hover:bg-surface-200/40 dark:hover:bg-surface-700/30">
+						<tr class="transition-colors-fast hover:bg-surface-200/40 dark:hover:bg-surface-700/30">
 							{#each columns as column (column.key)}
 								<td class="align-middle" class:font-medium={column.key === 'name'}>
 									{#if cell}

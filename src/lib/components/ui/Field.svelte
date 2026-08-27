@@ -10,15 +10,15 @@
 </script>
 
 <label class="label">
-	<span>
+	<span class="text-sm font-medium">
 		{label}
 		{#if required}<span class="text-error-500"> *</span>{/if}
 	</span>
 	{@render children()}
 	{#if hint}
-		<p class="text-xs text-surface-500 dark:text-surface-400">{hint}</p>
+		<p class="text-xs leading-relaxed text-surface-500 dark:text-surface-400">{hint}</p>
 	{/if}
 	{#if error}
-		<p class="text-xs text-error-600 dark:text-error-400">{error}</p>
+		<p class="text-xs leading-relaxed text-error-600 dark:text-error-400">{error}</p>
 	{/if}
 </label>

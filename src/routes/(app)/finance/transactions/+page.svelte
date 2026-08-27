@@ -81,7 +81,7 @@
 	{#if column.key === 'date'}
 		{formatDate(item.date)}
 	{:else if column.key === 'type'}
-		<span class="badge {item.type === 'income' ? 'bg-success-500 text-success-contrast-500' : item.type === 'expense' ? 'bg-error-500 text-error-contrast-500' : item.type === 'debt_payment' ? 'bg-warning-500 text-warning-contrast-500' : 'bg-blue-500 text-blue-contrast-500'} capitalize">
+		<span class="badge whitespace-nowrap {item.type === 'income' ? 'bg-success-500 text-success-contrast-500' : item.type === 'expense' ? 'bg-error-500 text-error-contrast-500' : item.type === 'debt_payment' ? 'bg-warning-500 text-warning-contrast-500' : 'bg-blue-500 text-blue-contrast-500'} capitalize">
 			{item.type}
 		</span>
 	{:else if column.key === 'description'}
@@ -91,7 +91,7 @@
 	{:else if column.key === 'category_tag'}
 		{item.category_tag ? item.category_tag : '-'}
 	{:else if column.key === 'amount'}
-		<span class="font-bold {item.type === 'income' ? 'text-success-600 dark:text-success-400' : 'text-error-600 dark:text-error-400'}">
+		<span class="font-bold tabular-nums {item.type === 'income' ? 'text-success-600 dark:text-success-400' : 'text-error-600 dark:text-error-400'}">
 			{item.type === 'income' ? '+' : '-'}{formatRupiah(item.amount)}
 		</span>
 	{/if}

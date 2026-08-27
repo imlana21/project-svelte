@@ -57,6 +57,12 @@ export const PERMISSIONS = {
 	stocksRealizedPnl: {
 		read: 'stocks-realized.read',
 	},
+	stocksAnalyses: {
+		read: 'stocks-analyses.read',
+		create: 'stocks-analyses.create',
+		update: 'stocks-analyses.update',
+		delete: 'stocks-analyses.delete',
+	},
 
 	financePockets: {
 		read: 'finance-pockets.read',
@@ -89,3 +95,5 @@ export const PERMISSIONS = {
 		delete: 'finance-allocation.delete',
 	},
 } as const
+
+

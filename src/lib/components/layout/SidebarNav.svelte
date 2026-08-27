@@ -17,7 +17,7 @@
 	{#each mainNav as item (item.title)}
 		{#if item.label}
 			{#if !collapsed}
-				<div class="px-2 pb-1 pt-4 text-[11px] font-bold uppercase tracking-wider text-surface-400 dark:text-surface-500">
+				<div class="px-2 pb-1 pt-4 text-[11px] font-bold uppercase tracking-widest text-surface-400 dark:text-surface-500">
 					{item.title}
 				</div>
 			{:else}
@@ -29,7 +29,7 @@
 				onclick={() => onNavigate()}
 				title={collapsed ? item.title : undefined}
 				class={cn(
-					'flex items-center rounded-lg text-sm font-medium transition-colors',
+					'flex items-center rounded-lg text-sm font-medium transition-colors-fast',
 					collapsed ? 'justify-center p-2' : 'gap-3 px-3 py-2',
 					page.url.pathname === item.href
 						? 'bg-primary-500 text-white'

@@ -42,7 +42,7 @@
 {#if auth.user}
 	<div class="relative" data-dropdown>
 		<button
-			class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-600 text-xs font-bold text-white hover:ring-2 hover:ring-primary-400 dark:bg-primary-500"
+			class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-600 text-xs font-bold text-white transition-all duration-150 hover:ring-2 hover:ring-primary-400 dark:bg-primary-500"
 			onclick={handleToggle}
 		>
 			{getInitials(auth.user.name)}
@@ -57,7 +57,7 @@
 					<a
 						href="/profile"
 						onclick={handleClose}
-						class="flex items-center gap-2 px-4 py-2 text-sm text-surface-600 hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800"
+						class="flex items-center gap-2 px-4 py-2 text-sm text-surface-600 transition-colors-fast hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800"
 					>
 						<User size={16} />
 						Profile
@@ -65,7 +65,7 @@
 					<a
 						href="/settings"
 						onclick={handleClose}
-						class="flex items-center gap-2 px-4 py-2 text-sm text-surface-600 hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800"
+						class="flex items-center gap-2 px-4 py-2 text-sm text-surface-600 transition-colors-fast hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800"
 					>
 						<Settings size={16} />
 						Settings
@@ -74,7 +74,7 @@
 				<div class="border-t border-surface-200 py-1 dark:border-surface-700">
 					<button
 						onclick={handleLogout}
-						class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-surface-100 dark:text-red-400 dark:hover:bg-surface-800"
+						class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-500 transition-colors-fast hover:bg-surface-100 dark:text-red-400 dark:hover:bg-surface-800"
 					>
 						<LogOut size={16} />
 						Logout

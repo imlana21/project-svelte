@@ -25,8 +25,8 @@
 	}
 </script>
 
-<h2 class="text-xl font-bold">Masuk</h2>
-<p class="mt-1 text-sm text-surface-500 dark:text-surface-400">Masuk untuk mengelola aplikasi</p>
+<h2 class="text-xl font-bold text-balance">Masuk</h2>
+<p class="mt-1 text-sm text-surface-500 text-pretty dark:text-surface-400">Masuk untuk mengelola aplikasi</p>
 
 <form class="mt-6 flex flex-col gap-4" onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
 	<label class="label">
@@ -69,5 +69,5 @@
 
 <p class="mt-4 text-center text-sm text-surface-500 dark:text-surface-400">
 	Belum punya akun?
-	<a class="font-medium underline underline-offset-2" href="/register">Daftar</a>
+	<a class="font-medium underline underline-from-font underline-offset-2" href="/register">Daftar</a>
 </p>

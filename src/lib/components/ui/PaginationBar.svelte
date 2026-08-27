@@ -23,7 +23,7 @@
 
 {#if meta}
 	<div class="flex flex-col items-center justify-between gap-3 sm:flex-row">
-		<p class="text-sm text-surface-500 dark:text-surface-400">
+		<p class="text-sm text-surface-500 tabular-nums dark:text-surface-400">
 			Menampilkan {meta.from ?? 0}–{meta.to ?? 0} dari {meta.total} data
 		</p>
 
