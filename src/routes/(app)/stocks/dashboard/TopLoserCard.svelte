@@ -4,17 +4,17 @@
 	import type { TopGainer } from '$lib/hooks/useStockDashboard.svelte'
 
 	let {
-		topGainers,
+		topLosers,
 		loading = false
 	}: {
-		topGainers: TopGainer[]
+		topLosers: TopGainer[]
 		loading?: boolean
 	} = $props()
 </script>
 
 <div class="flex flex-col gap-4 rounded-xl border border-surface-300 bg-surface-50 p-4 dark:border-surface-700 dark:bg-surface-800">
 	<div>
-		<h3 class="text-sm font-medium text-surface-500 dark:text-surface-400">Top Gainer (Rp)</h3>
+		<h3 class="text-sm font-medium text-surface-500 dark:text-surface-400">Top Loser (Rp)</h3>
 	</div>
 
 	{#if loading}
@@ -42,14 +42,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#if topGainers.length === 0}
+				{#if topLosers.length === 0}
 					<tr>
 						<td colspan="3" class="py-6 text-center text-surface-500 dark:text-surface-400">
 							Belum ada transaksi jual pada periode ini
 						</td>
 					</tr>
 				{/if}
-				{#each topGainers as row}
+				{#each topLosers as row}
 					{@const isUp = row.pnl >= 0}
 					<tr class="border-b border-surface-100 dark:border-surface-800">
 						<td class="py-2">

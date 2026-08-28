@@ -9,6 +9,7 @@
 	import PortfolioAllocationCard from './PortfolioAllocationCard.svelte'
 	import TradeSummaryCard from './TradeSummaryCard.svelte'
 	import TopGainerCard from './TopGainerCard.svelte'
+	import TopLoserCard from './TopLoserCard.svelte'
 	import RealizedGainCard from './RealizedGainCard.svelte'
 	import PeriodSelect from './PeriodSelect.svelte'
 
@@ -34,17 +35,19 @@
 				currentEquity={dashboard.totalEquity}
 				range={dashboard.equityRange}
 				onRangeChange={(v) => (dashboard.equityRange = v)}
+				loading={dashboard.loading}
 			/>
 			<PortfolioReturnCard
 				points={dashboard.returnPoints}
 				range={dashboard.returnRange}
 				onRangeChange={(v) => (dashboard.returnRange = v)}
+				loading={dashboard.loading}
 			/>
 		</div>
 
-		<EquityReturnTable points={dashboard.equity} />
+		<EquityReturnTable points={dashboard.equity} loading={dashboard.loading} />
 
-		<PortfolioAllocationCard positions={dashboard.positions} />
+		<PortfolioAllocationCard positions={dashboard.positions} loading={dashboard.loading} />
 	</div>
 
 	<div class="space-y-4">
@@ -55,10 +58,11 @@
 
 		<div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
 			<div class="flex flex-col gap-4">
-				<TradeSummaryCard summary={dashboard.tradeSummary} />
-				<TopGainerCard topGainers={dashboard.tradeSummary.topGainers} />
+				<TradeSummaryCard summary={dashboard.tradeSummary} loading={dashboard.loading} />
+				<TopGainerCard topGainers={dashboard.tradeSummary.topGainers} loading={dashboard.loading} />
+				<TopLoserCard topLosers={dashboard.tradeSummary.topLosers} loading={dashboard.loading} />
 			</div>
-			<RealizedGainCard summary={dashboard.realizedGain} periodLabel={dashboard.periodLabel} />
+			<RealizedGainCard summary={dashboard.realizedGain} periodLabel={dashboard.periodLabel} loading={dashboard.loading} />
 		</div>
 	</div>
 </div>

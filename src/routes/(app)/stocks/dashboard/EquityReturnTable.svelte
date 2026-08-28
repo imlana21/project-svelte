@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition'
 	import { Info } from '@lucide/svelte'
 	import { formatDate, formatRupiah } from '$lib/utils/format'
 	import PeriodSelect from './PeriodSelect.svelte'
@@ -8,9 +9,11 @@
 	type Granularity = 'daily' | 'monthly'
 
 	let {
-		points
+		points,
+		loading = false
 	}: {
 		points: EquityPoint[]
+		loading?: boolean
 	} = $props()
 
 	let granularity = $state<Granularity>('daily')
@@ -52,60 +55,81 @@
 		</span>
 	</div>
 
-	<div class="flex flex-col gap-3">
-		<div class="flex flex-wrap items-center justify-between gap-2">
-			<div class="inline-flex items-center gap-0.5 rounded-lg bg-surface-200 p-1 dark:bg-surface-700">
-				<button
-					type="button"
-					onclick={() => (granularity = 'daily')}
-					class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors {granularity === 'daily'
-						? 'bg-surface-50 text-surface-900 shadow-sm dark:bg-surface-600 dark:text-surface-100'
-						: 'text-surface-500 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100'}"
-				>
-					Daily
-				</button>
-				<button
-					type="button"
-					onclick={() => (granularity = 'monthly')}
-					class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors {granularity === 'monthly'
-						? 'bg-surface-50 text-surface-900 shadow-sm dark:bg-surface-600 dark:text-surface-100'
-						: 'text-surface-500 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100'}"
-				>
-					Monthly
-				</button>
+	{#if loading}
+		<div class="flex flex-col gap-3" in:fade={{ duration: 200 }}>
+			<div class="flex justify-between">
+				<div class="flex gap-1">
+					<div class="skeleton-shimmer h-7 w-16 rounded-md bg-surface-200 dark:bg-surface-700"></div>
+					<div class="skeleton-shimmer h-7 w-18 rounded-md bg-surface-200 dark:bg-surface-700"></div>
+				</div>
+				<div class="skeleton-shimmer h-7 w-28 rounded-md bg-surface-200 dark:bg-surface-700"></div>
 			</div>
-			<PeriodSelect value={period} onChange={(v) => (period = v)} />
+			<div class="flex flex-col gap-2">
+				{#each { length: 8 } as _}
+					<div class="flex justify-between py-2">
+						<div class="skeleton-shimmer h-4 w-24 rounded bg-surface-200 dark:bg-surface-700"></div>
+						<div class="skeleton-shimmer h-4 w-28 rounded bg-surface-200 dark:bg-surface-700"></div>
+						<div class="skeleton-shimmer h-4 w-32 rounded bg-surface-200 dark:bg-surface-700"></div>
+					</div>
+				{/each}
+			</div>
 		</div>
+	{:else}
+		<div class="flex flex-col gap-3" in:fade={{ duration: 300 }}>
+			<div class="flex flex-wrap items-center justify-between gap-2">
+				<div class="inline-flex items-center gap-0.5 rounded-lg bg-surface-200 p-1 dark:bg-surface-700">
+					<button
+						type="button"
+						onclick={() => (granularity = 'daily')}
+						class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors {granularity === 'daily'
+							? 'bg-surface-50 text-surface-900 shadow-sm dark:bg-surface-600 dark:text-surface-100'
+							: 'text-surface-500 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100'}"
+					>
+						Daily
+					</button>
+					<button
+						type="button"
+						onclick={() => (granularity = 'monthly')}
+						class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors {granularity === 'monthly'
+							? 'bg-surface-50 text-surface-900 shadow-sm dark:bg-surface-600 dark:text-surface-100'
+							: 'text-surface-500 hover:text-surface-900 dark:text-surface-400 dark:hover:text-surface-100'}"
+					>
+						Monthly
+					</button>
+				</div>
+				<PeriodSelect value={period} onChange={(v) => (period = v)} />
+			</div>
 
-		<div class="max-h-[360px] overflow-y-auto">
-			<table class="w-full text-sm">
-				<thead>
-					<tr class="border-b border-surface-200 dark:border-surface-700">
-						<th class="pb-2 text-left font-medium text-surface-500 dark:text-surface-400">Tanggal</th>
-						<th class="pb-2 text-right font-medium text-surface-500 dark:text-surface-400">Equity</th>
-						<th class="pb-2 text-right font-medium text-surface-500 dark:text-surface-400">P&L</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#if rows().length === 0}
-						<tr>
-							<td colspan="3" class="py-6 text-center text-surface-500 dark:text-surface-400">
-								Belum ada data pada periode ini
-							</td>
+			<div class="max-h-[360px] overflow-y-auto">
+				<table class="w-full text-sm">
+					<thead>
+						<tr class="border-b border-surface-200 dark:border-surface-700">
+							<th class="pb-2 text-left font-medium text-surface-500 dark:text-surface-400">Tanggal</th>
+							<th class="pb-2 text-right font-medium text-surface-500 dark:text-surface-400">Equity</th>
+							<th class="pb-2 text-right font-medium text-surface-500 dark:text-surface-400">P&L</th>
 						</tr>
-					{/if}
-					{#each rows() as row (row.date)}
-						{@const isUp = row.pnl >= 0}
-						<tr class="border-b border-surface-100 dark:border-surface-800">
-							<td class="py-2 text-surface-500 dark:text-surface-400">{formatDate(row.date)}</td>
-							<td class="py-2 text-right font-medium">{formatRupiah(row.equity)}</td>
-							<td class="py-2 text-right {isUp ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">
-								{isUp ? '+' : ''}{formatRupiah(row.pnl)} ({isUp ? '+' : ''}{row.pnlPercent.toFixed(2)}%)
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						{#if rows().length === 0}
+							<tr>
+								<td colspan="3" class="py-6 text-center text-surface-500 dark:text-surface-400">
+									Belum ada data pada periode ini
+								</td>
+							</tr>
+						{/if}
+						{#each rows() as row (row.date)}
+							{@const isUp = row.pnl >= 0}
+							<tr class="border-b border-surface-100 dark:border-surface-800">
+								<td class="py-2 text-surface-500 dark:text-surface-400">{formatDate(row.date)}</td>
+								<td class="py-2 text-right font-medium">{formatRupiah(row.equity)}</td>
+								<td class="py-2 text-right {isUp ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">
+									{isUp ? '+' : ''}{formatRupiah(row.pnl)} ({isUp ? '+' : ''}{row.pnlPercent.toFixed(2)}%)
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>

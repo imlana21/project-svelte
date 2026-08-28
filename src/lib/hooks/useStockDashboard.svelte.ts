@@ -70,6 +70,7 @@ export type TradeSummary = {
 	avgProfit: number
 	avgLoss: number
 	topGainers: TopGainer[]
+	topLosers: TopGainer[]
 }
 
 export type RealizedGainSummary = {
@@ -297,6 +298,11 @@ export function buildTradeSummary(transactions: StockTransaction[]): TradeSummar
 		.sort((a, b) => b.pnl - a.pnl)
 		.slice(0, 5)
 
+	const topLosers: TopGainer[] = Array.from(byTicker.entries())
+		.map(([ticker, v]) => ({ ticker, trades: v.trades, pnl: v.pnl }))
+		.sort((a, b) => a.pnl - b.pnl)
+		.slice(0, 5)
+
 	return {
 		totalTrades: sells.length,
 		wins: wins.length,
@@ -310,7 +316,8 @@ export function buildTradeSummary(transactions: StockTransaction[]): TradeSummar
 		maxLossPercent: maxLossTx ? pnlPercentOf(maxLossTx) : 0,
 		avgProfit: wins.length > 0 ? wins.reduce((s, t) => s + t.realized_pnl, 0) / wins.length : 0,
 		avgLoss: losses.length > 0 ? losses.reduce((s, t) => s + t.realized_pnl, 0) / losses.length : 0,
-		topGainers
+		topGainers,
+		topLosers
 	}
 }
 
