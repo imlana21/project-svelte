@@ -23,12 +23,6 @@ export interface ColumnDef {
 	sortable?: boolean
 }
 
-export interface FieldDef {
-	key: string
-	label: string
-	required?: boolean
-}
-
 /** Query params yang dipahami `HasApiIndex` di backend. */
 export interface RequestParams {
 	page: number

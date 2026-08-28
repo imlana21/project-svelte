@@ -1,7 +1,7 @@
 import type { User } from '$lib/types/Auth'
 
 /** Set slug permission milik user, di-flatten dari `user.permissions` (sudah di-backend). */
-export function getUserPermissionSlugs(user: User | null | undefined): Set<string> {
+function getUserPermissionSlugs(user: User | null | undefined): Set<string> {
 	const slugs = new Set<string>()
 	if (!user) return slugs
 	for (const slug of user.permissions ?? []) slugs.add(slug)

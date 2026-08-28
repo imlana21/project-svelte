@@ -6,9 +6,5 @@ export function usePermission() {
 		return hasAnyPermission(authStore.user, [slug])
 	}
 
-	function canAny(slugs: string[]): boolean {
-		return hasAnyPermission(authStore.user, slugs)
-	}
-
-	return { can, canAny }
+	return { can }
 }

@@ -47,31 +47,31 @@ const WINDOW_SIZE: Record<SpendingGranularity, number> = {
 	monthly: 6
 }
 
-export function totalBalance(pockets: FinancePocket[]): number {
+function totalBalance(pockets: FinancePocket[]): number {
 	return pockets.filter((p) => p.is_active).reduce((sum, p) => sum + p.balance, 0)
 }
 
-export function totalSpendingForMonth(transactions: FinanceTransaction[], reference: Date): number {
+function totalSpendingForMonth(transactions: FinanceTransaction[], reference: Date): number {
 	const key = reference.toISOString().slice(0, 7)
 	return transactions
 		.filter((t) => t.type === 'expense' && monthKeyOf(t.date) === key)
 		.reduce((sum, t) => sum + t.amount, 0)
 }
 
-export function totalIncomeForMonth(incomes: FinanceIncome[], reference: Date): number {
+function totalIncomeForMonth(incomes: FinanceIncome[], reference: Date): number {
 	const key = reference.toISOString().slice(0, 7)
 	return incomes.filter((i) => i.period === key).reduce((sum, i) => sum + i.amount, 0)
 }
 
-export function totalDebtPerMonth(debts: FinanceDebt[]): number {
+function totalDebtPerMonth(debts: FinanceDebt[]): number {
 	return debts.filter((d) => d.is_active).reduce((sum, d) => sum + d.amount_per_month, 0)
 }
 
-export function unpaidDebtCount(debts: FinanceDebt[]): number {
+function unpaidDebtCount(debts: FinanceDebt[]): number {
 	return debts.filter((d) => d.is_active && !d.is_paid_this_month).length
 }
 
-export function monthOverMonthDelta(current: number, previous: number): number | null {
+function monthOverMonthDelta(current: number, previous: number): number | null {
 	if (previous === 0) return current === 0 ? 0 : null
 	return ((current - previous) / Math.abs(previous)) * 100
 }

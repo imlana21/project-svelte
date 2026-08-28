@@ -5,7 +5,7 @@ import { fetchSekuritas } from '$lib/services/sekuritas.service'
 import { fetchPositions } from '$lib/services/position.service'
 import { fetchFundMutations } from '$lib/services/fund-mutation.service'
 
-export const LOT_SIZE = 100
+const LOT_SIZE = 100
 
 export type RangeKey = '1W' | '1M' | '3M' | 'YTD' | '1Y' | 'ALL'
 
@@ -42,7 +42,7 @@ export type ReturnPoint = {
 
 export type AllocationMode = 'stock' | 'sector'
 
-export type AllocationSlice = {
+type AllocationSlice = {
 	key: string
 	label: string
 	value: number
@@ -80,7 +80,7 @@ export type RealizedGainSummary = {
 	series: { date: string; cumulative: number }[]
 }
 
-export const CHART_COLORS = [
+const CHART_COLORS = [
 	'var(--color-primary)',
 	'var(--color-secondary)',
 	'#f97316',
@@ -97,7 +97,7 @@ function toDateKey(value: string | null | undefined): string | null {
 	return d.toISOString().slice(0, 10)
 }
 
-export function rangeStartDate(range: RangeKey | TradePeriodKey, reference: Date): Date | null {
+function rangeStartDate(range: RangeKey | TradePeriodKey, reference: Date): Date | null {
 	const d = new Date(reference)
 	switch (range) {
 		case '1W':
@@ -122,7 +122,7 @@ export function rangeStartDate(range: RangeKey | TradePeriodKey, reference: Date
 	}
 }
 
-export function buildDashboardTimeline(
+function buildDashboardTimeline(
 	fundMutations: StockFundMutation[],
 	transactions: StockTransaction[]
 ): { equity: EquityPoint[]; returns: ReturnPoint[] } {
@@ -218,7 +218,7 @@ export function buildDashboardTimeline(
 	return { equity, returns }
 }
 
-export function currentTotalEquity(
+function currentTotalEquity(
 	sekuritasList: StockSekuritas[],
 	positions: StockPosition[]
 ): number {
@@ -264,7 +264,7 @@ export function buildAllocation(positions: StockPosition[], mode: AllocationMode
 		.sort((a, b) => b.value - a.value)
 }
 
-export function buildTradeSummary(transactions: StockTransaction[]): TradeSummary {
+function buildTradeSummary(transactions: StockTransaction[]): TradeSummary {
 	const sells = transactions.filter((t) => t.type === 'sell')
 	const wins = sells.filter((t) => t.realized_pnl > 0)
 	const losses = sells.filter((t) => t.realized_pnl < 0)
@@ -321,7 +321,7 @@ export function buildTradeSummary(transactions: StockTransaction[]): TradeSummar
 	}
 }
 
-export function buildRealizedGain(transactions: StockTransaction[]): RealizedGainSummary {
+function buildRealizedGain(transactions: StockTransaction[]): RealizedGainSummary {
 	const sells = [...transactions.filter((t) => t.type === 'sell')].sort(
 		(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
 	)
