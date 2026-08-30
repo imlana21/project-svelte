@@ -1,10 +1,10 @@
 <script lang="ts" generics="T extends { id: number }">
-	import { untrack } from 'svelte';
-	import type { Snippet } from 'svelte';
-	import { Search } from '@lucide/svelte';
-	import DataTable from './DataTable.svelte';
-	import PaginationBar from './PaginationBar.svelte';
-	import type { ColumnDef, PaginationMeta, SortOrder } from '$lib/types/Api';
+	import { untrack } from "svelte";
+	import type { Snippet } from "svelte";
+	import { Search } from "@lucide/svelte";
+	import DataTable from "./DataTable.svelte";
+	import PaginationBar from "./PaginationBar.svelte";
+	import type { ColumnDef, PaginationMeta, SortOrder } from "$lib/types/Api";
 
 	let {
 		title,
@@ -13,7 +13,7 @@
 		items,
 		meta,
 		loading = false,
-		search = '',
+		search = "",
 		sortConfig = null,
 		onSearch,
 		onSort,
@@ -63,7 +63,11 @@
 		<div>
 			<h2 class="text-xl font-bold text-balance">{title}</h2>
 			{#if description}
-				<p class="mt-0.5 text-sm text-pretty text-surface-500 dark:text-surface-400">{description}</p>
+				<p
+					class="mt-0.5 text-sm text-pretty text-surface-500 dark:text-surface-400"
+				>
+					{description}
+				</p>
 			{/if}
 		</div>
 		{#if actions}
@@ -77,7 +81,10 @@
 		<div class="flex flex-wrap items-center gap-3">
 			{#if onSearch}
 				<div class="relative max-w-xs flex-1">
-					<Search size={16} class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-surface-500 dark:text-surface-400" />
+					<Search
+						size={16}
+						class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-surface-500 dark:text-surface-400"
+					/>
 					<input
 						class="input w-full pl-9"
 						type="search"

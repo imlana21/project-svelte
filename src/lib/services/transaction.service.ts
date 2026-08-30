@@ -21,3 +21,15 @@ export function deleteTransaction(id: number): Promise<ApiEnvelope<null>> {
 export function fetchRealizedHistory(params?: RequestParams): Promise<PaginatedResponse<RealizedPnL>> {
 	return http.get<PaginatedResponse<RealizedPnL>>('/stock/transactions/realized-history', params)
 }
+
+export interface ImportTransactionResult {
+	imported: number
+	skipped: number
+	errors: string[]
+}
+
+export function importTransactions(file: File): Promise<ApiEnvelope<ImportTransactionResult>> {
+	const formData = new FormData()
+	formData.append('file', file)
+	return http.post<ApiEnvelope<ImportTransactionResult>>('/stock/transactions/import', formData)
+}

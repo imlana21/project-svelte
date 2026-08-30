@@ -1,12 +1,3 @@
-/**
- * Daftar permission — disalin PERSIS dari middleware route backend
- * (`be/routes/auth.php` dan `be/routes/api.php`). Sumber kebenaran = backend.
- *
- * CATATAN penamaan backend yang tidak konsisten, dipertahankan apa adanya:
- *   - "stocks-emiten"  (singular)
- *   - "stocks-fundmutations" (tanpa underscore)
- *   - "finance-pockets" / "finance-debts" (plural)
- */
 export const PERMISSIONS = {
 	dashboard: { read: 'dashboard:read' },
 
