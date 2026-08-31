@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Eye, Pencil, Plus, Power, Trash2 } from '@lucide/svelte';
+	import { Plus, Power } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
@@ -149,37 +149,6 @@
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: AuthRole)}
-	<div class="inline-flex items-center gap-1">
-		<button type="button" class="btn btn-icon" title="Detail" onclick={() => openDetailFor(item)}>
-			<Eye size={16} />
-		</button>
-		{#if can(PERMISSIONS.roles.update)}
-			<button type="button" class="btn btn-icon" title="Ubah" onclick={() => openEditFor(item)}>
-				<Pencil size={16} />
-			</button>
-			<button
-				type="button"
-				class="btn btn-icon"
-				title={item.is_active ? 'Nonaktifkan' : 'Aktifkan'}
-				onclick={() => handleToggleStatus(item)}
-			>
-				<Power size={16} />
-			</button>
-		{/if}
-		{#if can(PERMISSIONS.roles.delete)}
-			<button
-				type="button"
-				class="btn btn-icon text-error-600 dark:text-error-400"
-				title="Hapus"
-				onclick={() => (deleteId = item.id)}
-			>
-				<Trash2 size={16} />
-			</button>
-		{/if}
-	</div>
-{/snippet}
-
 <CrudPage
 	title="Roles & Permissions"
 	description="Kelola role beserta akses permission-nya"
@@ -193,8 +162,12 @@
 	onSort={handleSort}
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
-	cell={cell}
-	rowActions={rowActions}
+	{cell}
+	canEdit={can(PERMISSIONS.roles.update)}
+	canDelete={can(PERMISSIONS.roles.delete)}
+	onDetail={openDetailFor}
+	onEdit={openEditFor}
+	onDelete={(item) => { deleteId = item.id; }}
 >
 	{#snippet actions()}
 		{#if can(PERMISSIONS.roles.create)}

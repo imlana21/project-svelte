@@ -1,9 +1,9 @@
 <script lang="ts">
-	import AppDialog from '$lib/components/ui/AppDialog.svelte';
-	import Field from '$lib/components/ui/Field.svelte';
-	import AsyncCombobox from '$lib/components/ui/AsyncCombobox.svelte';
-	import { usePositionAdmin } from '$lib/hooks/usePositionAdmin.svelte';
-	import type { StoreTransactionPayload } from '$lib/types/Stock';
+	import AppDialog from "$lib/components/ui/AppDialog.svelte";
+	import Field from "$lib/components/ui/Field.svelte";
+	import AsyncCombobox from "$lib/components/ui/AsyncCombobox.svelte";
+	import { usePositionAdmin } from "$lib/hooks/usePositionAdmin.svelte";
+	import type { StoreTransactionPayload } from "$lib/types/Stock";
 
 	interface Props {
 		open: boolean;
@@ -17,7 +17,7 @@
 	const positions = usePositionAdmin();
 
 	let positionId = $state(0);
-	let date = $state(new Date().toISOString().split('T')[0]);
+	let date = $state(new Date().toISOString().split("T")[0]);
 	let price = $state(0);
 	let lot = $state(0);
 	let fee = $state(0);
@@ -25,38 +25,47 @@
 
 	let positionItems = $derived(
 		positions.items
-			.filter((p) => p.status === 'open')
+			.filter((p) => p.status === "open")
 			.map((p) => ({
-				label: `${p.emiten?.ticker ?? '?'} - Lot: ${p.lot} @ ${p.avg_price}`,
+				label: `${p.emiten?.ticker ?? "?"} - Lot: ${p.lot} @ ${p.avg_price}`,
 				value: p.id.toString(),
-			}))
+			})),
 	);
 
 	$effect(() => {
 		if (open) {
 			positionId = 0;
-			date = new Date().toISOString().split('T')[0];
+			date = new Date().toISOString().split("T")[0];
 			price = 0;
 			lot = 0;
 			fee = 0;
 			errors = {};
 			loadOptions();
 		}
-		if (!open) { errors = {}; }
+		if (!open) {
+			errors = {};
+		}
 	});
 
 	async function loadOptions() {
 		try {
-			await positions.fetchAll({ page: 1, perPage: 100, orderBy: 'created_at', orderDirection: 'asc' });
-		} catch { /* silent */ }
+			await positions.fetchAll({
+				page: 1,
+				perPage: 100,
+				orderBy: "created_at",
+				orderDirection: "asc",
+			});
+		} catch {
+			/* silent */
+		}
 	}
 
 	function validate(): boolean {
 		const next: Record<string, string> = {};
-		if (!positionId) next.position_id = 'Posisi wajib dipilih';
-		if (price <= 0) next.price = 'Harga harus lebih dari 0';
-		if (lot <= 0) next.lot = 'Lot harus lebih dari 0';
-		if (!date) next.date = 'Tanggal wajib diisi';
+		if (!positionId) next.position_id = "Posisi wajib dipilih";
+		if (price <= 0) next.price = "Harga harus lebih dari 0";
+		if (lot <= 0) next.lot = "Lot harus lebih dari 0";
+		if (!date) next.date = "Tanggal wajib diisi";
 		errors = next;
 		return Object.keys(next).length === 0;
 	}
@@ -69,7 +78,7 @@
 		onSubmit({
 			sekuritas_id: pos.sekuritas_id ?? 0,
 			emiten_id: pos.emiten_id ?? 0,
-			type: 'sell',
+			type: "sell",
 			date,
 			price,
 			lot,
@@ -88,11 +97,18 @@
 	<form id="sell-form" class="flex flex-col gap-4" onsubmit={handleSubmit}>
 		<Field label="Posisi" required error={errors.position_id}>
 			<AsyncCombobox
-				value={positionId ? positionId.toString() : ''}
+				value={positionId ? positionId.toString() : ""}
 				items={positionItems}
 				placeholder="Pilih posisi..."
 				onChange={(val) => (positionId = Number(val))}
-				onSearch={(q) => positions.fetchAll({ page: 1, perPage: 100, search: q, orderBy: 'created_at', orderDirection: 'asc' })}
+				onSearch={(q) =>
+					positions.fetchAll({
+						page: 1,
+						perPage: 100,
+						search: q,
+						orderBy: "created_at",
+						orderDirection: "asc",
+					})}
 			/>
 		</Field>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -115,13 +131,18 @@
 </AppDialog>
 
 {#snippet footerSnippet()}
-	<button type="button" class="btn" onclick={() => onOpenChange(false)} disabled={saving}>Batal</button>
+	<button
+		type="button"
+		class="btn"
+		onclick={() => onOpenChange(false)}
+		disabled={saving}>Batal</button
+	>
 	<button
 		type="submit"
 		form="sell-form"
 		class="btn bg-error-500 text-error-contrast-500"
 		disabled={saving}
 	>
-		{saving ? 'Menyimpan...' : 'Jual'}
+		{saving ? "Menyimpan..." : "Jual"}
 	</button>
 {/snippet}

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
-	import AppDialog from '$lib/components/ui/AppDialog.svelte';
-	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
-	import type { AuthPermission, AuthRole } from '$lib/types/Auth';
+	import { untrack } from "svelte";
+	import AppDialog from "$lib/components/ui/AppDialog.svelte";
+	import StatusBadge from "$lib/components/ui/StatusBadge.svelte";
+	import type { AuthPermission, AuthRole } from "$lib/types/Auth";
 
 	interface Props {
 		open: boolean;
@@ -14,7 +14,15 @@
 		onSubmit: (permissionIds: number[]) => void;
 	}
 
-	let { open, item, permissions, canManagePermissions, saving, onOpenChange, onSubmit }: Props = $props();
+	let {
+		open,
+		item,
+		permissions,
+		canManagePermissions,
+		saving,
+		onOpenChange,
+		onSubmit,
+	}: Props = $props();
 
 	let selected = $state<number[]>([]);
 
@@ -26,7 +34,9 @@
 	});
 
 	function toggle(id: number) {
-		selected = selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id];
+		selected = selected.includes(id)
+			? selected.filter((x) => x !== id)
+			: [...selected, id];
 	}
 
 	function handleSubmit() {
@@ -46,19 +56,29 @@
 			<div class="flex flex-wrap items-center gap-2 text-sm">
 				<span class="badge font-mono">{item.slug}</span>
 				<StatusBadge value={item.is_active} />
-				{#if typeof item.users_count === 'number'}
-					<span class="text-surface-500 dark:text-surface-400">{item.users_count} pengguna</span>
+				{#if typeof item.users_count === "number"}
+					<span class="text-surface-500 dark:text-surface-400"
+						>{item.users_count} pengguna</span
+					>
 				{/if}
 			</div>
 			{#if item.description}
-				<p class="text-sm text-surface-600 dark:text-surface-300">{item.description}</p>
+				<p class="text-sm text-surface-600 dark:text-surface-300">
+					{item.description}
+				</p>
 			{/if}
 
 			<div>
-				<p class="mb-2 text-sm font-semibold text-surface-500 dark:text-surface-400">Permission</p>
+				<p
+					class="mb-2 text-sm font-semibold text-surface-500 dark:text-surface-400"
+				>
+					Permission
+				</p>
 				<div class="max-h-[45vh] space-y-2 overflow-y-auto">
 					{#if permissions.length === 0}
-						<p class="text-sm text-surface-500 dark:text-surface-400">Belum ada permission tersedia.</p>
+						<p class="text-sm text-surface-500 dark:text-surface-400">
+							Belum ada permission tersedia.
+						</p>
 					{/if}
 					{#each permissions as permission (permission.id)}
 						<label
@@ -75,10 +95,14 @@
 							<div class="min-w-0">
 								<div class="flex flex-wrap items-center gap-2">
 									<p class="text-sm font-medium">{permission.name}</p>
-									<span class="badge font-mono text-[10px]">{permission.slug}</span>
+									<span class="badge font-mono text-[10px]"
+										>{permission.slug}</span
+									>
 								</div>
 								{#if permission.description}
-									<p class="text-xs text-surface-500 dark:text-surface-400">{permission.description}</p>
+									<p class="text-xs text-surface-500 dark:text-surface-400">
+										{permission.description}
+									</p>
 								{/if}
 							</div>
 						</label>
@@ -90,10 +114,20 @@
 </AppDialog>
 
 {#snippet footerSnippet()}
-	<button type="button" class="btn" onclick={() => onOpenChange(false)} disabled={saving}>Tutup</button>
+	<button
+		type="button"
+		class="btn"
+		onclick={() => onOpenChange(false)}
+		disabled={saving}>Tutup</button
+	>
 	{#if canManagePermissions}
-		<button type="button" class="btn bg-primary-500 text-primary-contrast-500" disabled={saving} onclick={handleSubmit}>
-			{saving ? 'Menyimpan...' : 'Simpan Permission'}
+		<button
+			type="button"
+			class="btn bg-primary-500 text-primary-contrast-500"
+			disabled={saving}
+			onclick={handleSubmit}
+		>
+			{saving ? "Menyimpan..." : "Simpan Permission"}
 		</button>
 	{/if}
 {/snippet}

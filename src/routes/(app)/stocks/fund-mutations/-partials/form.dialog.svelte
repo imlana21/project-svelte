@@ -1,8 +1,8 @@
 <script lang="ts">
-	import AppDialog from '$lib/components/ui/AppDialog.svelte';
-	import Field from '$lib/components/ui/Field.svelte';
-	import { useSekuritasAdmin } from '$lib/hooks/useSekuritasAdmin.svelte';
-	import type { StoreFundMutationPayload } from '$lib/types/Stock';
+	import AppDialog from "$lib/components/ui/AppDialog.svelte";
+	import Field from "$lib/components/ui/Field.svelte";
+	import { useSekuritasAdmin } from "$lib/hooks/useSekuritasAdmin.svelte";
+	import type { StoreFundMutationPayload } from "$lib/types/Stock";
 
 	interface Props {
 		open: boolean;
@@ -15,18 +15,18 @@
 
 	const sekuritas = useSekuritasAdmin();
 
-	let type = $state<'topup' | 'withdraw' | 'adjust'>('topup');
+	let type = $state<"topup" | "withdraw" | "adjust">("topup");
 	let amount = $state(0);
 	let sekuritasId = $state(0);
-	let note = $state('');
+	let note = $state("");
 	let errors = $state<Record<string, string>>({});
 
 	$effect(() => {
 		if (open) {
-			type = 'topup';
+			type = "topup";
 			amount = 0;
 			sekuritasId = 0;
-			note = '';
+			note = "";
 			errors = {};
 			loadSekuritas();
 		}
@@ -35,13 +35,15 @@
 	async function loadSekuritas() {
 		try {
 			await sekuritas.fetchAll({ page: 1, perPage: 100 });
-		} catch { /* silent */ }
+		} catch {
+			/* silent */
+		}
 	}
 
 	function validate(): boolean {
 		const next: Record<string, string> = {};
-		if (!sekuritasId) next.sekuritas_id = 'Sekuritas wajib dipilih';
-		if (amount <= 0) next.amount = 'Jumlah harus lebih dari 0';
+		if (!sekuritasId) next.sekuritas_id = "Sekuritas wajib dipilih";
+		if (amount <= 0) next.amount = "Jumlah harus lebih dari 0";
 		errors = next;
 		return Object.keys(next).length === 0;
 	}
@@ -49,7 +51,12 @@
 	function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
 		if (!validate()) return;
-		onSubmit({ sekuritas_id: sekuritasId, type, amount, note: note.trim() || undefined });
+		onSubmit({
+			sekuritas_id: sekuritasId,
+			type,
+			amount,
+			note: note.trim() || undefined,
+		});
 	}
 </script>
 
@@ -82,14 +89,25 @@
 			</select>
 		</Field>
 		<Field label="Catatan">
-			<textarea class="input min-h-16" placeholder="Opsional" bind:value={note}></textarea>
+			<textarea class="input min-h-16" placeholder="Opsional" bind:value={note}
+			></textarea>
 		</Field>
 	</form>
 </AppDialog>
 
 {#snippet footerSnippet()}
-	<button type="button" class="btn" onclick={() => onOpenChange(false)} disabled={saving}>Batal</button>
-	<button type="submit" form="mutation-form" class="btn bg-primary-500 text-primary-contrast-500" disabled={saving}>
-		{saving ? 'Menyimpan...' : 'Simpan'}
+	<button
+		type="button"
+		class="btn"
+		onclick={() => onOpenChange(false)}
+		disabled={saving}>Batal</button
+	>
+	<button
+		type="submit"
+		form="mutation-form"
+		class="btn bg-primary-500 text-primary-contrast-500"
+		disabled={saving}
+	>
+		{saving ? "Menyimpan..." : "Simpan"}
 	</button>
 {/snippet}

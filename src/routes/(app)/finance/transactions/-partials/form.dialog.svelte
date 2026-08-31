@@ -1,15 +1,22 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
-	import AppDialog from '$lib/components/ui/AppDialog.svelte';
-	import Field from '$lib/components/ui/Field.svelte';
-	import { usePocketAdmin } from '$lib/hooks/usePocketAdmin.svelte';
-	import type { FinanceTransaction } from '$lib/types/finance/Transaction';
-	import type { FinanceCategoryTag } from '$lib/types/finance/Transaction';
+	import { untrack } from "svelte";
+	import AppDialog from "$lib/components/ui/AppDialog.svelte";
+	import Field from "$lib/components/ui/Field.svelte";
+	import { usePocketAdmin } from "$lib/hooks/usePocketAdmin.svelte";
+	import type { FinanceTransaction } from "$lib/types/finance/Transaction";
+	import type { FinanceCategoryTag } from "$lib/types/finance/Transaction";
 
-	const categoryTags: FinanceCategoryTag[] = ['makan', 'jajan', 'transportasi', 'rumah', 'hiburan', 'lainnya'];
+	const categoryTags: FinanceCategoryTag[] = [
+		"makan",
+		"jajan",
+		"transportasi",
+		"rumah",
+		"hiburan",
+		"lainnya",
+	];
 
 	export interface TransactionForm {
-		type: 'expense' | 'transfer';
+		type: "expense" | "transfer";
 		pocket_id: number;
 		amount: number;
 		description: string;
@@ -30,13 +37,13 @@
 
 	const pockets = usePocketAdmin();
 
-	let type = $state<'expense' | 'transfer'>('expense');
+	let type = $state<"expense" | "transfer">("expense");
 	let pocketId = $state(0);
 	let amount = $state(0);
-	let description = $state('');
-	let categoryTag = $state('');
-	let date = $state(new Date().toISOString().split('T')[0]);
-	let note = $state('');
+	let description = $state("");
+	let categoryTag = $state("");
+	let date = $state(new Date().toISOString().split("T")[0]);
+	let note = $state("");
 	let errors = $state<Record<string, string>>({});
 
 	loadPocketOptions();
@@ -45,21 +52,21 @@
 		if (open) {
 			const currentItem = untrack(() => item);
 			if (currentItem) {
-				type = 'expense';
+				type = "expense";
 				pocketId = currentItem.pocket_id;
 				amount = currentItem.amount;
 				description = currentItem.description;
-				categoryTag = currentItem.category_tag ?? '';
+				categoryTag = currentItem.category_tag ?? "";
 				date = currentItem.date;
-				note = currentItem.note ?? '';
+				note = currentItem.note ?? "";
 			} else {
-				type = 'expense';
+				type = "expense";
 				pocketId = 0;
 				amount = 0;
-				description = '';
-				categoryTag = '';
-				date = new Date().toISOString().split('T')[0];
-				note = '';
+				description = "";
+				categoryTag = "";
+				date = new Date().toISOString().split("T")[0];
+				note = "";
 			}
 			errors = {};
 		}
@@ -71,17 +78,19 @@
 	async function loadPocketOptions() {
 		try {
 			await pockets.fetchAll({ page: 1, perPage: 100 });
-		} catch { /* silent */ }
+		} catch {
+			/* silent */
+		}
 	}
 
 	function validate(): boolean {
 		const next: Record<string, string> = {};
 		if (!item) {
-			if (!pocketId) next.pocket_id = 'Pocket wajib dipilih';
-			if (amount <= 0) next.amount = 'Jumlah harus lebih dari 0';
+			if (!pocketId) next.pocket_id = "Pocket wajib dipilih";
+			if (amount <= 0) next.amount = "Jumlah harus lebih dari 0";
 		}
-		if (!description.trim()) next.description = 'Deskripsi wajib diisi';
-		if (!date) next.date = 'Tanggal wajib diisi';
+		if (!description.trim()) next.description = "Deskripsi wajib diisi";
+		if (!date) next.date = "Tanggal wajib diisi";
 		errors = next;
 		return Object.keys(next).length === 0;
 	}
@@ -90,7 +99,12 @@
 		e.preventDefault();
 		if (!validate()) return;
 		if (item) {
-			onSubmit({ description: description.trim(), category_tag: categoryTag || undefined, date, note: note.trim() || undefined } as TransactionForm);
+			onSubmit({
+				description: description.trim(),
+				category_tag: categoryTag || undefined,
+				date,
+				note: note.trim() || undefined,
+			} as TransactionForm);
 		} else {
 			onSubmit({
 				type,
@@ -108,11 +122,17 @@
 <AppDialog
 	{open}
 	{onOpenChange}
-	title={item ? 'Ubah Transaksi' : 'Catat Pengeluaran'}
-	description={item ? 'Ubah metadata transaksi' : 'Catat pengeluaran atau transfer antar pocket'}
+	title={item ? "Ubah Transaksi" : "Catat Pengeluaran"}
+	description={item
+		? "Ubah metadata transaksi"
+		: "Catat pengeluaran atau transfer antar pocket"}
 	footer={footerSnippet}
 >
-	<form id="transaction-form" class="flex flex-col gap-4" onsubmit={handleSubmit}>
+	<form
+		id="transaction-form"
+		class="flex flex-col gap-4"
+		onsubmit={handleSubmit}
+	>
 		{#if !item}
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<Field label="Tipe" required>
@@ -140,7 +160,12 @@
 			</div>
 		{/if}
 		<Field label="Deskripsi" required error={errors.description}>
-			<input class="input" type="text" placeholder="Makan siang, Beli kopi, dll." bind:value={description} />
+			<input
+				class="input"
+				type="text"
+				placeholder="Makan siang, Beli kopi, dll."
+				bind:value={description}
+			/>
 		</Field>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 			<Field label="Kategori">
@@ -158,14 +183,25 @@
 			{/if}
 		</div>
 		<Field label="Catatan">
-			<textarea class="input min-h-16" placeholder="Opsional" bind:value={note}></textarea>
+			<textarea class="input min-h-16" placeholder="Opsional" bind:value={note}
+			></textarea>
 		</Field>
 	</form>
 </AppDialog>
 
 {#snippet footerSnippet()}
-	<button type="button" class="btn" onclick={() => onOpenChange(false)} disabled={saving}>Batal</button>
-	<button type="submit" form="transaction-form" class="btn bg-primary-500 text-primary-contrast-500" disabled={saving}>
-		{saving ? 'Menyimpan...' : 'Simpan'}
+	<button
+		type="button"
+		class="btn"
+		onclick={() => onOpenChange(false)}
+		disabled={saving}>Batal</button
+	>
+	<button
+		type="submit"
+		form="transaction-form"
+		class="btn bg-primary-500 text-primary-contrast-500"
+		disabled={saving}
+	>
+		{saving ? "Menyimpan..." : "Simpan"}
 	</button>
 {/snippet}

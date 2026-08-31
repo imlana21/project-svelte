@@ -1,13 +1,24 @@
 <script lang="ts">
-	import AppDialog from '$lib/components/ui/AppDialog.svelte';
-	import Field from '$lib/components/ui/Field.svelte';
-	import AsyncCombobox from '$lib/components/ui/AsyncCombobox.svelte';
-	import { useEmitenAdmin } from '$lib/hooks/useEmitenAdmin.svelte';
-	import { useSekuritasAdmin } from '$lib/hooks/useSekuritasAdmin.svelte';
-	import type { StoreTransactionPayload } from '$lib/types/Stock';
+	import AppDialog from "$lib/components/ui/AppDialog.svelte";
+	import Field from "$lib/components/ui/Field.svelte";
+	import AsyncCombobox from "$lib/components/ui/AsyncCombobox.svelte";
+	import { useEmitenAdmin } from "$lib/hooks/useEmitenAdmin.svelte";
+	import { useSekuritasAdmin } from "$lib/hooks/useSekuritasAdmin.svelte";
+	import type { StoreTransactionPayload } from "$lib/types/Stock";
 
-	const TREND_OPTIONS = ['extreme', 'strong', 'medium', 'weak', 'down'] as const;
-	const QUADRANT_OPTIONS = ['leading', 'improving', 'weakening', 'lagging'] as const;
+	const TREND_OPTIONS = [
+		"extreme",
+		"strong",
+		"medium",
+		"weak",
+		"down",
+	] as const;
+	const QUADRANT_OPTIONS = [
+		"leading",
+		"improving",
+		"weakening",
+		"lagging",
+	] as const;
 
 	interface Props {
 		open: boolean;
@@ -23,41 +34,49 @@
 
 	let emitenId = $state(0);
 	let sekuritasId = $state(0);
-	let date = $state(new Date().toISOString().split('T')[0]);
+	let date = $state(new Date().toISOString().split("T")[0]);
 	let price = $state(0);
 	let lot = $state(0);
 	let fee = $state(0);
-	let trend = $state<string>('extreme');
-	let quadrant = $state<string>('leading');
+	let trend = $state<string>("extreme");
+	let quadrant = $state<string>("leading");
 	let planSL = $state(0);
 	let planTP = $state(0);
-	let setup = $state('');
+	let setup = $state("");
 	let errors = $state<Record<string, string>>({});
 
 	let emitenItems = $derived(
-		emitens.items.map((e) => ({ label: `${e.ticker} - ${e.name}`, value: e.id.toString() }))
+		emitens.items.map((e) => ({
+			label: `${e.ticker} - ${e.name}`,
+			value: e.id.toString(),
+		})),
 	);
 	let sekuritasItems = $derived(
-		sekuritas.items.map((s) => ({ label: `[${s.code}] ${s.name}`, value: s.id.toString() }))
+		sekuritas.items.map((s) => ({
+			label: `[${s.code}] ${s.name}`,
+			value: s.id.toString(),
+		})),
 	);
 
 	$effect(() => {
 		if (open) {
 			emitenId = 0;
 			sekuritasId = 0;
-			date = new Date().toISOString().split('T')[0];
+			date = new Date().toISOString().split("T")[0];
 			price = 0;
 			lot = 0;
 			fee = 0;
-			trend = 'extreme';
-			quadrant = 'leading';
+			trend = "extreme";
+			quadrant = "leading";
 			planSL = 0;
 			planTP = 0;
-			setup = '';
+			setup = "";
 			errors = {};
 			loadOptions();
 		}
-		if (!open) { errors = {}; }
+		if (!open) {
+			errors = {};
+		}
 	});
 
 	async function loadOptions() {
@@ -66,16 +85,18 @@
 				emitens.fetchAll({ page: 1, perPage: 100 }),
 				sekuritas.fetchAll({ page: 1, perPage: 100 }),
 			]);
-		} catch { /* silent */ }
+		} catch {
+			/* silent */
+		}
 	}
 
 	function validate(): boolean {
 		const next: Record<string, string> = {};
-		if (!emitenId) next.emiten_id = 'Emiten wajib dipilih';
-		if (!sekuritasId) next.sekuritas_id = 'Sekuritas wajib dipilih';
-		if (price <= 0) next.price = 'Harga harus lebih dari 0';
-		if (lot <= 0) next.lot = 'Lot harus lebih dari 0';
-		if (!date) next.date = 'Tanggal wajib diisi';
+		if (!emitenId) next.emiten_id = "Emiten wajib dipilih";
+		if (!sekuritasId) next.sekuritas_id = "Sekuritas wajib dipilih";
+		if (price <= 0) next.price = "Harga harus lebih dari 0";
+		if (lot <= 0) next.lot = "Lot harus lebih dari 0";
+		if (!date) next.date = "Tanggal wajib diisi";
 		errors = next;
 		return Object.keys(next).length === 0;
 	}
@@ -86,7 +107,7 @@
 		onSubmit({
 			sekuritas_id: sekuritasId,
 			emiten_id: emitenId,
-			type: 'buy',
+			type: "buy",
 			date,
 			price,
 			lot,
@@ -111,20 +132,22 @@
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 			<Field label="Emiten" required error={errors.emiten_id}>
 				<AsyncCombobox
-					value={emitenId ? emitenId.toString() : ''}
+					value={emitenId ? emitenId.toString() : ""}
 					items={emitenItems}
 					placeholder="Pilih emiten..."
 					onChange={(val) => (emitenId = Number(val))}
-					onSearch={(q) => emitens.fetchAll({ page: 1, perPage: 100, search: q })}
+					onSearch={(q) =>
+						emitens.fetchAll({ page: 1, perPage: 100, search: q })}
 				/>
 			</Field>
 			<Field label="Sekuritas" required error={errors.sekuritas_id}>
 				<AsyncCombobox
-					value={sekuritasId ? sekuritasId.toString() : ''}
+					value={sekuritasId ? sekuritasId.toString() : ""}
 					items={sekuritasItems}
 					placeholder="Pilih sekuritas..."
 					onChange={(val) => (sekuritasId = Number(val))}
-					onSearch={(q) => sekuritas.fetchAll({ page: 1, perPage: 100, search: q })}
+					onSearch={(q) =>
+						sekuritas.fetchAll({ page: 1, perPage: 100, search: q })}
 				/>
 			</Field>
 		</div>
@@ -169,19 +192,29 @@
 			</Field>
 		</div>
 		<Field label="Setup">
-			<textarea class="input" rows="3" placeholder="Deskripsikan setup..." bind:value={setup}></textarea>
+			<textarea
+				class="input"
+				rows="3"
+				placeholder="Deskripsikan setup..."
+				bind:value={setup}
+			></textarea>
 		</Field>
 	</form>
 </AppDialog>
 
 {#snippet footerSnippet()}
-	<button type="button" class="btn" onclick={() => onOpenChange(false)} disabled={saving}>Batal</button>
+	<button
+		type="button"
+		class="btn"
+		onclick={() => onOpenChange(false)}
+		disabled={saving}>Batal</button
+	>
 	<button
 		type="submit"
 		form="buy-form"
 		class="btn bg-success-500 text-success-contrast-500"
 		disabled={saving}
 	>
-		{saving ? 'Menyimpan...' : 'Beli'}
+		{saving ? "Menyimpan..." : "Beli"}
 	</button>
 {/snippet}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Pencil, Plus, Trash2, Upload } from '@lucide/svelte';
+	import { Plus, Upload } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { useEmitenAdmin } from '$lib/hooks/useEmitenAdmin.svelte';
@@ -114,21 +114,6 @@
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: StockEmiten)}
-	<div class="inline-flex items-center gap-1">
-		{#if can(PERMISSIONS.stocksEmitens.update)}
-			<button type="button" class="btn btn-icon" title="Ubah" onclick={() => openEditFor(item)}>
-				<Pencil size={16} />
-			</button>
-		{/if}
-		{#if can(PERMISSIONS.stocksEmitens.delete)}
-			<button type="button" class="btn btn-icon text-error-600 dark:text-error-400" title="Hapus" onclick={() => (deleteId = item.id)}>
-				<Trash2 size={16} />
-			</button>
-		{/if}
-	</div>
-{/snippet}
-
 <CrudPage
 	title="Emiten List"
 	description="Daftar emiten yang terdaftar di sistem"
@@ -142,8 +127,11 @@
 	onSort={handleSort}
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
-	cell={cell}
-	rowActions={rowActions}
+	{cell}
+	canEdit={can(PERMISSIONS.stocksEmitens.update)}
+	canDelete={can(PERMISSIONS.stocksEmitens.delete)}
+	onEdit={openEditFor}
+	onDelete={(item) => { deleteId = item.id; }}
 >
 	{#snippet actions()}
 		{#if can(PERMISSIONS.stocksEmitens.create)}

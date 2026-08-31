@@ -25,7 +25,7 @@
 			: []
 	)
 
-	const svgPath = $derived(() => {
+	const svgPath = $derived.by(() => {
 		if (chartPoints.length < 2) return ''
 		const minY = Math.min(...chartPoints.map((p) => p.y))
 		const maxY = Math.max(...chartPoints.map((p) => p.y))
@@ -77,7 +77,7 @@
 				{#if points.length > 1}
 					<svg viewBox="0 0 100 100" class="h-full w-full" preserveAspectRatio="none">
 						<path
-							d={svgPath()}
+							d={svgPath}
 							fill="none"
 							stroke="var(--color-secondary)"
 							stroke-width="0.5"

@@ -29,30 +29,30 @@ interface NavItem {
 }
 
 export const mainNav: NavItem[] = [
-	{ title: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, permission: PERMISSIONS.dashboard.read },
-	{ title: 'MARKET DATA', label: true },
+	{ title: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+	{ title: 'Investment', label: true },
 	{
-		title: 'Stocks Dashboard',
+		title: 'Resume Investment',
 		href: '/stocks/dashboard',
 		icon: Gauge,
 		permission: PERMISSIONS.stocksTransactions.read,
 	},
 	{
-		title: 'Transactions',
+		title: 'Stocks Analisis',
+		href: '/stocks/analisis',
+		icon: BarChart3,
+		permission: PERMISSIONS.stocksAnalyses.read,
+	},
+	{
+		title: 'Stocks Transactions',
 		href: '/stocks/transactions',
 		icon: Building2,
 		permission: PERMISSIONS.stocksTransactions.read,
 	},
 	{
-		title: 'Realized PnL',
-		href: '/stocks/realized-pnl',
-		icon: TrendingUp,
-		permission: PERMISSIONS.stocksRealizedPnl.read,
-	},
-	{
-		title: 'Positions',
+		title: 'Portfolio',
 		href: '/stocks/positions',
-		icon: Receipt,
+		icon: PieChart,
 		permission: PERMISSIONS.stocksPositions.read,
 	},
 	{
@@ -61,13 +61,6 @@ export const mainNav: NavItem[] = [
 		icon: Receipt,
 		permission: PERMISSIONS.stocksEmitens.read,
 	},
-	{
-		title: 'Analisis',
-		href: '/stocks/analisis',
-		icon: BarChart3,
-		permission: PERMISSIONS.stocksAnalyses.read,
-	},
-	{ title: 'PORTFOLIO', label: true },
 	{
 		title: 'Sekuritas',
 		href: '/stocks/sekuritas',
@@ -79,6 +72,12 @@ export const mainNav: NavItem[] = [
 		href: '/stocks/fund-mutations',
 		icon: Archive,
 		permission: PERMISSIONS.stocksFundMutations.read,
+	},
+	{
+		title: 'Realized PnL',
+		href: '/stocks/realized-pnl',
+		icon: TrendingUp,
+		permission: PERMISSIONS.stocksRealizedPnl.read,
 	},
 	{ title: 'FINANCE', label: true },
 	{

@@ -41,7 +41,7 @@
 	}
 
 	const filtered = $derived(filterByRange(points, toRangeKey(period), new Date()))
-	const rows = $derived(() => {
+	const rows = $derived.by(() => {
 		const base = granularity === 'monthly' ? toMonthly(points) : filtered
 		return [...base].reverse()
 	})
@@ -110,14 +110,14 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#if rows().length === 0}
+						{#if rows.length === 0}
 							<tr>
 								<td colspan="3" class="py-6 text-center text-surface-500 dark:text-surface-400">
 									Belum ada data pada periode ini
 								</td>
 							</tr>
 						{/if}
-						{#each rows() as row (row.date)}
+						{#each rows as row (row.date)}
 							{@const isUp = row.pnl >= 0}
 							<tr class="border-b border-surface-100 dark:border-surface-800">
 								<td class="py-2 text-surface-500 dark:text-surface-400">{formatDate(row.date)}</td>

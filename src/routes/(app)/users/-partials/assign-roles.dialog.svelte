@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
-	import AppDialog from '$lib/components/ui/AppDialog.svelte';
-	import type { AuthRole, User } from '$lib/types/Auth';
+	import { untrack } from "svelte";
+	import AppDialog from "$lib/components/ui/AppDialog.svelte";
+	import type { AuthRole, User } from "$lib/types/Auth";
 
 	interface Props {
 		open: boolean;
@@ -21,11 +21,15 @@
 			const currentItem = untrack(() => item);
 			selected = currentItem?.role_ids ?? [];
 		}
-		if (!open) { selected = []; }
+		if (!open) {
+			selected = [];
+		}
 	});
 
 	function toggle(id: number) {
-		selected = selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id];
+		selected = selected.includes(id)
+			? selected.filter((x) => x !== id)
+			: [...selected, id];
 	}
 
 	function handleSubmit() {
@@ -37,12 +41,16 @@
 	{open}
 	{onOpenChange}
 	title="Kelola Role"
-	description={item ? `Pilih role untuk ${item.name}` : 'Pilih role untuk pengguna ini'}
+	description={item
+		? `Pilih role untuk ${item.name}`
+		: "Pilih role untuk pengguna ini"}
 	footer={footerSnippet}
 >
 	<div class="max-h-[50vh] space-y-2 overflow-y-auto">
 		{#if roles.length === 0}
-			<p class="text-sm text-surface-500 dark:text-surface-400">Belum ada role tersedia.</p>
+			<p class="text-sm text-surface-500 dark:text-surface-400">
+				Belum ada role tersedia.
+			</p>
 		{/if}
 		{#each roles as role (role.id)}
 			<label
@@ -57,7 +65,9 @@
 				<div class="min-w-0">
 					<p class="text-sm font-medium capitalize">{role.name}</p>
 					{#if role.description}
-						<p class="text-xs text-surface-500 dark:text-surface-400">{role.description}</p>
+						<p class="text-xs text-surface-500 dark:text-surface-400">
+							{role.description}
+						</p>
 					{/if}
 				</div>
 			</label>
@@ -66,13 +76,18 @@
 </AppDialog>
 
 {#snippet footerSnippet()}
-	<button type="button" class="btn" onclick={() => onOpenChange(false)} disabled={saving}>Batal</button>
+	<button
+		type="button"
+		class="btn"
+		onclick={() => onOpenChange(false)}
+		disabled={saving}>Batal</button
+	>
 	<button
 		type="button"
 		class="btn bg-primary-500 text-primary-contrast-500"
 		disabled={saving || selected.length === 0}
 		onclick={handleSubmit}
 	>
-		{saving ? 'Menyimpan...' : 'Simpan'}
+		{saving ? "Menyimpan..." : "Simpan"}
 	</button>
 {/snippet}

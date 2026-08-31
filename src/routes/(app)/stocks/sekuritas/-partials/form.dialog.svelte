@@ -1,7 +1,7 @@
 <script lang="ts">
-	import AppDialog from '$lib/components/ui/AppDialog.svelte';
-	import Field from '$lib/components/ui/Field.svelte';
-	import type { StockSekuritas } from '$lib/types/Stock';
+	import AppDialog from "$lib/components/ui/AppDialog.svelte";
+	import Field from "$lib/components/ui/Field.svelte";
+	import type { StockSekuritas } from "$lib/types/Stock";
 
 	export interface SekuritasForm {
 		code: string;
@@ -19,8 +19,8 @@
 
 	let { open, item, saving, onOpenChange, onSubmit }: Props = $props();
 
-	let code = $state('');
-	let name = $state('');
+	let code = $state("");
+	let name = $state("");
 	let balance = $state(0);
 	let errors = $state<{ code?: string; name?: string; balance?: string }>({});
 
@@ -32,8 +32,8 @@
 			errors = {};
 		}
 		if (!open) {
-			code = '';
-			name = '';
+			code = "";
+			name = "";
 			balance = 0;
 			errors = {};
 		}
@@ -41,10 +41,10 @@
 
 	function validate(): boolean {
 		const next: typeof errors = {};
-		if (code.trim().length < 2) next.code = 'Kode minimal 2 karakter';
-		else if (code.trim().length > 5) next.code = 'Kode maksimal 5 karakter';
-		if (name.trim().length < 3) next.name = 'Nama minimal 3 karakter';
-		if (balance < 0) next.balance = 'Saldo tidak boleh negatif';
+		if (code.trim().length < 2) next.code = "Kode minimal 2 karakter";
+		else if (code.trim().length > 5) next.code = "Kode maksimal 5 karakter";
+		if (name.trim().length < 3) next.name = "Nama minimal 3 karakter";
+		if (balance < 0) next.balance = "Saldo tidak boleh negatif";
 		errors = next;
 		return Object.keys(next).length === 0;
 	}
@@ -60,16 +60,27 @@
 	{open}
 	{onOpenChange}
 	title="Sekuritas"
-	description={item ? 'Ubah data sekuritas' : 'Tambah sekuritas baru'}
+	description={item ? "Ubah data sekuritas" : "Tambah sekuritas baru"}
 	footer={footerSnippet}
 >
 	<form id="sekuritas-form" class="flex flex-col gap-4" onsubmit={handleSubmit}>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 			<Field label="Kode" required error={errors.code}>
-				<input class="input" type="text" placeholder="IPOT" maxlength="5" bind:value={code} />
+				<input
+					class="input"
+					type="text"
+					placeholder="IPOT"
+					maxlength="5"
+					bind:value={code}
+				/>
 			</Field>
 			<Field label="Nama" required error={errors.name}>
-				<input class="input" type="text" placeholder="PT Indo Premier Sekuritas" bind:value={name} />
+				<input
+					class="input"
+					type="text"
+					placeholder="PT Indo Premier Sekuritas"
+					bind:value={name}
+				/>
 			</Field>
 		</div>
 		<Field label="Saldo" error={errors.balance}>
@@ -79,8 +90,18 @@
 </AppDialog>
 
 {#snippet footerSnippet()}
-	<button type="button" class="btn" onclick={() => onOpenChange(false)} disabled={saving}>Batal</button>
-	<button type="submit" form="sekuritas-form" class="btn bg-primary-500 text-primary-contrast-500" disabled={saving}>
-		{saving ? 'Menyimpan...' : 'Simpan'}
+	<button
+		type="button"
+		class="btn"
+		onclick={() => onOpenChange(false)}
+		disabled={saving}>Batal</button
+	>
+	<button
+		type="submit"
+		form="sekuritas-form"
+		class="btn bg-primary-500 text-primary-contrast-500"
+		disabled={saving}
+	>
+		{saving ? "Menyimpan..." : "Simpan"}
 	</button>
 {/snippet}

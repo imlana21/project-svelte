@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Eye } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import { useIncomeAdmin } from '$lib/hooks/useIncomeAdmin.svelte';
 	import { toastError } from '$lib/utils/toaster.svelte';
@@ -58,12 +57,6 @@
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: FinanceIncome)}
-	<button type="button" class="btn btn-icon" title="Detail" onclick={() => { detailItem = item; openDetail = true; }}>
-		<Eye size={16} />
-	</button>
-{/snippet}
-
 <CrudPage
 	title="Distribusi Pemasukan"
 	description="Lihat distribusi pemasukan ke masing-masing pocket berdasarkan alokasi dana"
@@ -77,8 +70,10 @@
 	onSort={handleSort}
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
-	cell={cell}
-	rowActions={rowActions}
+	{cell}
+	canEdit={false}
+	canDelete={false}
+	onDetail={(item) => { detailItem = item; openDetail = true; }}
 />
 
 <IncomeDistributionDetailDialog

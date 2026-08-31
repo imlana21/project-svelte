@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
-	import { Check, ChevronsUpDown, Loader2, X } from '@lucide/svelte';
-	import AppDialog from './AppDialog.svelte';
+	import { untrack } from "svelte";
+	import { Check, ChevronsUpDown, Loader2, X } from "@lucide/svelte";
+	import AppDialog from "./AppDialog.svelte";
 
 	interface ComboboxItem {
 		value: string;
@@ -22,11 +22,11 @@
 	}
 
 	let {
-		value = '',
+		value = "",
 		items,
 		loading = false,
-		placeholder = 'Pilih item...',
-		searchPlaceholder = 'Cari...',
+		placeholder = "Pilih item...",
+		searchPlaceholder = "Cari...",
 		disabled = false,
 		error = null,
 		onChange,
@@ -35,10 +35,12 @@
 	}: Props = $props();
 
 	let open = $state(false);
-	let query = $state('');
+	let query = $state("");
 	let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
-	const selectedLabel = $derived(items.find((i) => i.value === value)?.label ?? '');
+	const selectedLabel = $derived(
+		items.find((i) => i.value === value)?.label ?? "",
+	);
 
 	function handleQueryChange(e: Event) {
 		const target = e.target as HTMLInputElement;
@@ -52,24 +54,24 @@
 	function handleSelect(itemValue: string) {
 		onChange(itemValue);
 		open = false;
-		query = '';
+		query = "";
 	}
 
 	function handleClear(e: MouseEvent) {
 		e.stopPropagation();
-		onChange('');
+		onChange("");
 	}
 
 	function handleOpenChange(o: boolean) {
 		open = o;
 		if (!o) {
-			query = '';
+			query = "";
 		}
 	}
 
 	$effect(() => {
 		if (untrack(() => open)) {
-			onSearch('');
+			onSearch("");
 		}
 	});
 </script>
@@ -78,11 +80,13 @@
 	<div class="relative">
 		<button
 			type="button"
-			class="input flex w-full items-center justify-between gap-2 text-left {error ? 'border-error-500' : ''}"
+			class="input flex w-full items-center justify-between gap-2 text-left {error
+				? 'border-error-500'
+				: ''}"
 			{disabled}
 			onclick={() => !disabled && (open = true)}
 		>
-			<span class={value ? '' : 'text-surface-500 dark:text-surface-400'}>
+			<span class={value ? "" : "text-surface-500 dark:text-surface-400"}>
 				{value ? selectedLabel : placeholder}
 			</span>
 			<ChevronsUpDown size={16} class="shrink-0 opacity-50" />
@@ -115,12 +119,16 @@
 
 			<div class="max-h-64 overflow-y-auto">
 				{#if loading}
-					<div class="flex items-center justify-center gap-2 py-6 text-surface-500 dark:text-surface-400">
+					<div
+						class="flex items-center justify-center gap-2 py-6 text-surface-500 dark:text-surface-400"
+					>
 						<Loader2 size={16} class="animate-spin" />
 						<span class="text-sm">Memuat data...</span>
 					</div>
 				{:else if items.length === 0}
-					<p class="py-6 text-center text-sm text-surface-500 dark:text-surface-400">
+					<p
+						class="py-6 text-center text-sm text-surface-500 dark:text-surface-400"
+					>
 						Tidak ada data ditemukan.
 					</p>
 				{:else}
@@ -129,7 +137,10 @@
 							<li>
 								<button
 									type="button"
-									class="flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm transition-colors-fast hover:bg-surface-200/60 dark:hover:bg-surface-700/40 {item.value === value ? 'bg-primary-500/10 font-medium' : ''}"
+									class="flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm transition-colors-fast hover:bg-surface-200/60 dark:hover:bg-surface-700/40 {item.value ===
+									value
+										? 'bg-primary-500/10 font-medium'
+										: ''}"
 									onclick={() => handleSelect(item.value)}
 								>
 									<span>{item.label}</span>

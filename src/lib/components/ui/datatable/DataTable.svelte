@@ -1,7 +1,8 @@
 <script lang="ts" generics="T extends { id: number }">
-	import type { Snippet } from 'svelte';
-	import { ArrowDown, ArrowUp, ChevronsUpDown } from '@lucide/svelte';
-	import type { ColumnDef, SortOrder } from '$lib/types/Api';
+	import type { Snippet } from "svelte";
+	import { ArrowDown, ArrowUp, ChevronsUpDown } from "@lucide/svelte";
+	import type { ColumnDef, SortOrder } from "$lib/types/Api";
+	import RowActions from "./RowActions.svelte";
 
 	let {
 		columns,
@@ -10,8 +11,14 @@
 		sortConfig = null,
 		onSort,
 		cell,
+		emptyMessage = "Tidak ada data.",
 		rowActions,
-		emptyMessage = 'Tidak ada data.',
+		canEdit = true,
+		canDelete = true,
+		canDetail = true,
+		onDelete,
+		onDetail,
+		onEdit,
 	}: {
 		columns: ColumnDef[];
 		items: T[];
@@ -19,15 +26,29 @@
 		sortConfig?: { key: string; order: SortOrder } | null;
 		onSort?: (key: string) => void;
 		cell?: Snippet<[T, ColumnDef]>;
-		rowActions?: Snippet<[T]>;
 		emptyMessage?: string;
+		rowActions?: Snippet<[T]>;
+		canEdit?: boolean;
+		canDelete?: boolean;
+		canDetail?: boolean;
+		onDelete?: (item: T) => void;
+		onDetail?: (item: T) => void;
+		onEdit?: (item: T) => void;
 	} = $props();
+
+	const havingAction = $derived(!!rowActions || onDelete || onDetail || onEdit);
 </script>
 
-<div class="table-wrap rounded-lg border border-surface-300 dark:border-surface-700">
+<div
+	class="table-wrap rounded-lg border border-surface-300 dark:border-surface-700"
+>
 	{#if loading}
-		<div class="flex items-center justify-center gap-3 p-8 text-surface-500 dark:text-surface-400">
-			<span class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
+		<div
+			class="flex items-center justify-center gap-3 p-8 text-surface-500 dark:text-surface-400"
+		>
+			<span
+				class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+			></span>
 			<span class="text-sm">Memuat data...</span>
 		</div>
 	{:else}
@@ -35,7 +56,7 @@
 			<thead>
 				<tr>
 					{#each columns as column (column.key)}
-						<th class="whitespace-nowrap">
+						<th class="whitespace-nowrap {column.className ?? ''}">
 							{#if column.sortable && onSort}
 								<button
 									type="button"
@@ -44,7 +65,7 @@
 								>
 									{column.label}
 									{#if sortConfig?.key === column.key}
-										{#if sortConfig.order === 'asc'}
+										{#if sortConfig.order === "asc"}
 											<ArrowUp size={14} />
 										{:else}
 											<ArrowDown size={14} />
@@ -58,7 +79,7 @@
 							{/if}
 						</th>
 					{/each}
-					{#if rowActions}
+					{#if havingAction}
 						<th class="w-10"></th>
 					{/if}
 				</tr>
@@ -66,23 +87,35 @@
 			<tbody>
 				{#if items.length === 0}
 					<tr>
-						<td colspan={columns.length + (rowActions ? 1 : 0)} class="py-8 text-center text-sm text-surface-500 dark:text-surface-400">
+						<td
+							colspan={columns.length + (havingAction ? 1 : 0)}
+							class="py-8 text-center text-sm text-surface-500 dark:text-surface-400"
+						>
 							{emptyMessage}
 						</td>
 					</tr>
 				{:else}
 					{#each items as item (item.id)}
-						<tr class="transition-colors-fast hover:bg-surface-200/40 dark:hover:bg-surface-700/30">
+						<tr
+							class="transition-colors-fast hover:bg-surface-200/40 dark:hover:bg-surface-700/30"
+						>
 							{#each columns as column (column.key)}
-								<td class="align-middle" class:font-medium={column.key === 'name'}>
+							<td
+								class="align-middle {column.className ?? ''}"
+								class:font-medium={column.key === "name"}
+							>
 									{#if cell}
 										{@render cell(item, column)}
 									{/if}
 								</td>
 							{/each}
-							{#if rowActions}
+							{#if havingAction}
 								<td class="whitespace-nowrap text-right">
-									{@render rowActions(item)}
+									{#if rowActions}
+										{@render rowActions(item)}
+									{:else}
+										<RowActions {item} {canEdit} {canDelete} {canDetail} {onDelete} {onDetail} {onEdit} />
+									{/if}
 								</td>
 							{/if}
 						</tr>

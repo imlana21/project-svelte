@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Eye, Pencil } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
 	import { usePositionAdmin } from '$lib/hooks/usePositionAdmin.svelte';
@@ -87,19 +86,6 @@
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: StockPosition)}
-	<div class="inline-flex items-center gap-1">
-		{#if can(PERMISSIONS.stocksPositions.update)}
-			<button type="button" class="btn btn-icon" title="Ubah" onclick={() => openEditFor(item)}>
-				<Pencil size={16} />
-			</button>
-		{/if}
-		<button type="button" class="btn btn-icon" title="Detail" onclick={() => openDetailFor(item)}>
-			<Eye size={16} />
-		</button>
-	</div>
-{/snippet}
-
 <CrudPage
 	title="Posisi"
 	description="Daftar posisi saham aktif dan tertutup"
@@ -113,8 +99,11 @@
 	onSort={handleSort}
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
-	cell={cell}
-	rowActions={rowActions}
+	{cell}
+	canEdit={can(PERMISSIONS.stocksPositions.update)}
+	canDelete={false}
+	onEdit={openEditFor}
+	onDetail={openDetailFor}
 />
 
 <PositionDetailDialog

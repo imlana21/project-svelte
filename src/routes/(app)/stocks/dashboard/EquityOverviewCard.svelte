@@ -29,7 +29,7 @@
 			: []
 	)
 
-	const svgPath = $derived(() => {
+	const svgPath = $derived.by(() => {
 		if (chartPoints.length < 2) return ''
 		const minY = Math.min(...chartPoints.map((p) => p.y))
 		const maxY = Math.max(...chartPoints.map((p) => p.y))
@@ -97,7 +97,7 @@
 							</linearGradient>
 						</defs>
 						<path
-							d={svgPath()}
+							d={svgPath}
 							fill="none"
 							stroke={isUp ? 'var(--color-green-500)' : 'var(--color-red-500)'}
 							stroke-width="0.5"
