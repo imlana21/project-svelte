@@ -19,7 +19,7 @@
 		<Dialog.Content class="card relative w-full max-w-lg overflow-hidden bg-surface-50 p-0 shadow-2xl dark:bg-surface-900">
 			<header class="flex items-start justify-between gap-4 border-b border-surface-300 px-5 py-4 dark:border-surface-700">
 				<div>
-					<Dialog.Title class="text-lg font-bold text-balance">{title}</Dialog.Title>
+					<Dialog.Title class="text-lg font-semibold text-balance">{title}</Dialog.Title>
 					{#if description}
 						<Dialog.Description class="mt-0.5 text-sm text-pretty text-surface-500 dark:text-surface-400">{description}</Dialog.Description>
 					{/if}

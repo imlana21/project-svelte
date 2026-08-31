@@ -22,7 +22,7 @@
 
 <div class="flex flex-col gap-4 rounded-xl border border-surface-300 bg-surface-50 p-4 dark:border-surface-700 dark:bg-surface-800">
 	<div>
-		<h3 class="text-sm font-medium text-surface-500 dark:text-surface-400">Trade Summary</h3>
+		<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Trade Summary</h3>
 	</div>
 
 	{#if loading}

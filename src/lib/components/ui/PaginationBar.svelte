@@ -32,7 +32,7 @@
 				<label class="flex items-center gap-2 text-sm text-surface-500 dark:text-surface-400">
 					<span>Per halaman</span>
 					<select
-						class="input w-auto py-1.5"
+						class="input w-auto py-1.5 text-base"
 						value={meta.perPage}
 						onchange={(e) => onPerPageChange(Number((e.currentTarget as HTMLSelectElement).value))}
 					>

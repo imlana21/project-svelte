@@ -21,7 +21,7 @@
 
 <div class="rounded-xl border border-surface-300 bg-surface-50 p-4 dark:border-surface-700 dark:bg-surface-800">
 	<div class="mb-4 flex items-center justify-between">
-		<h3 class="text-sm font-medium text-surface-500 dark:text-surface-400">Spending Chart</h3>
+		<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Spending Chart</h3>
 		<div class="inline-flex items-center gap-0.5 rounded-lg bg-surface-200 p-1 dark:bg-surface-700">
 			{#each GRANULARITY_OPTIONS as option}
 				<button
