@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { Download, FileSpreadsheet, Trash2, Upload } from "@lucide/svelte";
+	import { Download, FileSpreadsheet, Upload } from "@lucide/svelte";
 	import CrudPage from "$lib/components/ui/CrudPage.svelte";
 	import ConfirmDialog from "$lib/components/ui/ConfirmDialog.svelte";
 	import { useTransactionAdmin } from "$lib/hooks/useTransactionAdmin.svelte";
@@ -146,19 +146,6 @@
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: StockTransaction)}
-	{#if can(PERMISSIONS.stocksTransactions.delete)}
-		<button
-			type="button"
-			class="btn btn-icon text-error-600 dark:text-error-400"
-			title="Hapus"
-			onclick={() => (deleteId = item.id)}
-		>
-			<Trash2 size={16} />
-		</button>
-	{/if}
-{/snippet}
-
 <CrudPage
 	title="Transaksi"
 	description="Catat transaksi beli dan jual saham"
@@ -173,7 +160,9 @@
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
 	{cell}
-	{rowActions}
+	canEdit={false}
+	canDelete={can(PERMISSIONS.stocksTransactions.delete)}
+	onDelete={(item) => { deleteId = item.id; }}
 >
 	{#snippet actions()}
 		{#if can(PERMISSIONS.stocksTransactions.create)}

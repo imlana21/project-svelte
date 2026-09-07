@@ -11,7 +11,7 @@
 
 <div class="rounded-xl border border-surface-300 bg-surface-50 p-4 dark:border-surface-700 dark:bg-surface-800">
 	<div class="mb-4 flex items-center justify-between">
-		<h3 class="text-sm font-medium text-surface-500 dark:text-surface-400">Unpaid Debt</h3>
+		<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Unpaid Debt</h3>
 		<span class="inline-flex items-center rounded-full bg-surface-200 px-2 py-0.5 text-xs font-medium text-surface-700 dark:bg-surface-700 dark:text-surface-300">
 			{rows.length} belum bayar
 		</span>

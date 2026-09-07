@@ -21,7 +21,7 @@
 			: []
 	)
 
-	const svgPath = $derived(() => {
+	const svgPath = $derived.by(() => {
 		if (chartPoints.length < 2) return ''
 		const minY = Math.min(...chartPoints.map((p) => p.y))
 		const maxY = Math.max(...chartPoints.map((p) => p.y))
@@ -42,7 +42,7 @@
 
 <div class="flex flex-col gap-4 rounded-xl border border-surface-300 bg-surface-50 p-4 dark:border-surface-700 dark:bg-surface-800">
 	<div>
-		<h3 class="text-sm font-medium text-surface-500 dark:text-surface-400">Total Realized Gain</h3>
+		<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Total Realized Gain</h3>
 	</div>
 
 	{#if loading}
@@ -89,7 +89,7 @@
 							</linearGradient>
 						</defs>
 						<path
-							d={svgPath()}
+							d={svgPath}
 							fill="none"
 							stroke={isUp ? 'var(--color-green-500)' : 'var(--color-red-500)'}
 							stroke-width="0.5"

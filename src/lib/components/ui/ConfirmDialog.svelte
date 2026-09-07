@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AppDialog from './AppDialog.svelte';
+	import AppDialog from "./AppDialog.svelte";
 
 	interface Props {
 		open: boolean;
@@ -12,9 +12,9 @@
 	}
 	let {
 		open,
-		title = 'Konfirmasi',
+		title = "Konfirmasi",
 		message,
-		confirmLabel = 'Hapus',
+		confirmLabel = "Hapus",
 		loading = false,
 		onConfirm,
 		onClose,
@@ -24,7 +24,9 @@
 <AppDialog {open} {title} children={confirmSnippet} footer={footerSnippet} />
 
 {#snippet confirmSnippet()}
-	<p class="text-sm text-pretty text-surface-600 dark:text-surface-300">{message}</p>
+	<p class="text-sm text-pretty text-surface-600 dark:text-surface-300">
+		{message}
+	</p>
 {/snippet}
 
 {#snippet footerSnippet()}
@@ -35,6 +37,6 @@
 		disabled={loading}
 		onclick={() => onConfirm()}
 	>
-		{loading ? 'Memproses...' : confirmLabel}
+		{loading ? "Memproses..." : confirmLabel}
 	</button>
 {/snippet}

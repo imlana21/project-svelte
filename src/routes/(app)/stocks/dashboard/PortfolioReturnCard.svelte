@@ -25,7 +25,7 @@
 			: []
 	)
 
-	const svgPath = $derived(() => {
+	const svgPath = $derived.by(() => {
 		if (chartPoints.length < 2) return ''
 		const minY = Math.min(...chartPoints.map((p) => p.y))
 		const maxY = Math.max(...chartPoints.map((p) => p.y))
@@ -46,7 +46,7 @@
 
 <div class="flex flex-1 flex-col gap-4 rounded-xl border border-surface-300 bg-surface-50 p-4 dark:border-surface-700 dark:bg-surface-800">
 	<div class="flex items-center justify-between">
-		<h3 class="text-sm font-medium text-surface-500 dark:text-surface-400">Cumulative Portfolio Return</h3>
+		<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Cumulative Portfolio Return</h3>
 	</div>
 
 	{#if loading}
@@ -77,7 +77,7 @@
 				{#if points.length > 1}
 					<svg viewBox="0 0 100 100" class="h-full w-full" preserveAspectRatio="none">
 						<path
-							d={svgPath()}
+							d={svgPath}
 							fill="none"
 							stroke="var(--color-secondary)"
 							stroke-width="0.5"

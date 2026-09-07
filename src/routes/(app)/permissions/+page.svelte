@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { Eye } from "@lucide/svelte";
 	import CrudPage from "$lib/components/ui/CrudPage.svelte";
 	import { usePermissionAdmin } from "$lib/hooks/usePermissionAdmin.svelte";
 	import { toastError } from "$lib/utils/toaster.svelte";
@@ -81,17 +80,6 @@
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: AuthPermission)}
-	<button
-		type="button"
-		class="btn btn-icon"
-		title="Detail"
-		onclick={() => openDetailFor(item)}
-	>
-		<Eye size={16} />
-	</button>
-{/snippet}
-
 <CrudPage
 	title="Permissions"
 	description="Daftar permission yang tersedia di sistem (dikelola lewat backend/seed)"
@@ -106,7 +94,9 @@
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
 	{cell}
-	{rowActions}
+	canEdit={false}
+	canDelete={false}
+	onDetail={openDetailFor}
 />
 
 <PermissionDetailDialog

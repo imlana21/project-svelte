@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Trash2 } from '@lucide/svelte';
+	import { Plus } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { useFundMutationAdmin } from '$lib/hooks/useFundMutationAdmin.svelte';
@@ -85,14 +85,6 @@
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: StockFundMutation)}
-	{#if can(PERMISSIONS.stocksFundMutations.delete)}
-		<button type="button" class="btn btn-icon text-error-600 dark:text-error-400" title="Hapus" onclick={() => (deleteId = item.id)}>
-			<Trash2 size={16} />
-		</button>
-	{/if}
-{/snippet}
-
 <CrudPage
 	title="Mutasi Dana"
 	description="Catat mutasi dana masuk/keluar dari RDI"
@@ -106,8 +98,10 @@
 	onSort={handleSort}
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
-	cell={cell}
-	rowActions={rowActions}
+	{cell}
+	canEdit={false}
+	canDelete={can(PERMISSIONS.stocksFundMutations.delete)}
+	onDelete={(item) => { deleteId = item.id; }}
 >
 	{#snippet actions()}
 		{#if can(PERMISSIONS.stocksFundMutations.create)}

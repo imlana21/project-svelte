@@ -41,7 +41,7 @@
 	}
 
 	const filtered = $derived(filterByRange(points, toRangeKey(period), new Date()))
-	const rows = $derived(() => {
+	const rows = $derived.by(() => {
 		const base = granularity === 'monthly' ? toMonthly(points) : filtered
 		return [...base].reverse()
 	})
@@ -49,7 +49,7 @@
 
 <div class="flex flex-col gap-4 rounded-xl border border-surface-300 bg-surface-50 p-4 dark:border-surface-700 dark:bg-surface-800">
 	<div class="flex items-center gap-2">
-		<h3 class="text-sm font-medium text-surface-500 dark:text-surface-400">Total Equity Return</h3>
+		<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Total Equity Return</h3>
 		<span class="text-surface-400" title="Dihitung dari mutasi dana dan transaksi tercatat (basis biaya perolehan)">
 			<Info size={14} />
 		</span>
@@ -110,14 +110,14 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#if rows().length === 0}
+						{#if rows.length === 0}
 							<tr>
 								<td colspan="3" class="py-6 text-center text-surface-500 dark:text-surface-400">
 									Belum ada data pada periode ini
 								</td>
 							</tr>
 						{/if}
-						{#each rows() as row (row.date)}
+						{#each rows as row (row.date)}
 							{@const isUp = row.pnl >= 0}
 							<tr class="border-b border-surface-100 dark:border-surface-800">
 								<td class="py-2 text-surface-500 dark:text-surface-400">{formatDate(row.date)}</td>

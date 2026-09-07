@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Eye } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import { useRealizedPnLAdmin } from '$lib/hooks/useRealizedPnLAdmin.svelte';
 	import { toastError } from '$lib/utils/toaster.svelte';
@@ -63,12 +62,6 @@
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: RealizedPnL)}
-	<button type="button" class="btn btn-icon" title="Detail" onclick={() => openDetailFor(item)}>
-		<Eye size={16} />
-	</button>
-{/snippet}
-
 <CrudPage
 	title="Realized PnL"
 	description="Laporan realized profit and loss dari transaksi penjualan"
@@ -82,8 +75,10 @@
 	onSort={handleSort}
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
-	cell={cell}
-	rowActions={rowActions}
+	{cell}
+	canEdit={false}
+	canDelete={false}
+	onDetail={openDetailFor}
 />
 
 <RealizedPnLDetailDialog

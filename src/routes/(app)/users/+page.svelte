@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Eye, Pencil, Power, Trash2 } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
@@ -152,37 +151,6 @@
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: User)}
-	<div class="inline-flex items-center gap-1">
-		<button type="button" class="btn btn-icon" title="Detail" onclick={() => openDetailFor(item)}>
-			<Eye size={16} />
-		</button>
-		{#if can(PERMISSIONS.users.update)}
-			<button type="button" class="btn btn-icon" title="Ubah" onclick={() => openEditFor(item)}>
-				<Pencil size={16} />
-			</button>
-			<button
-				type="button"
-				class="btn btn-icon"
-				title={item.is_active ? 'Nonaktifkan' : 'Aktifkan'}
-				onclick={() => handleToggleStatus(item)}
-			>
-				<Power size={16} />
-			</button>
-		{/if}
-		{#if can(PERMISSIONS.users.delete)}
-			<button
-				type="button"
-				class="btn btn-icon text-error-600 dark:text-error-400"
-				title="Hapus"
-				onclick={() => (deleteId = item.id)}
-			>
-				<Trash2 size={16} />
-			</button>
-		{/if}
-	</div>
-{/snippet}
-
 <CrudPage
 	title="User Management"
 	description="Kelola akun pengguna dan role yang dimiliki"
@@ -196,8 +164,12 @@
 	onSort={handleSort}
 	onPageChange={handlePageChange}
 	onPerPageChange={handlePerPageChange}
-	cell={cell}
-	rowActions={rowActions}
+	{cell}
+	canEdit={can(PERMISSIONS.users.update)}
+	canDelete={can(PERMISSIONS.users.delete)}
+	onDetail={openDetailFor}
+	onEdit={openEditFor}
+	onDelete={(item) => { deleteId = item.id; }}
 />
 
 <EditUserDialog
