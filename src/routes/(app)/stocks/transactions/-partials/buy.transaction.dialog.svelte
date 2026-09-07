@@ -55,19 +55,9 @@
 			planTP = 0;
 			setup = '';
 			errors = {};
-			loadOptions();
 		}
 		if (!open) { errors = {}; }
 	});
-
-	async function loadOptions() {
-		try {
-			await Promise.all([
-				emitens.fetchAll({ page: 1, perPage: 100 }),
-				sekuritas.fetchAll({ page: 1, perPage: 100 }),
-			]);
-		} catch { /* silent */ }
-	}
 
 	function validate(): boolean {
 		const next: Record<string, string> = {};

@@ -2,29 +2,29 @@
 	import { onMount } from 'svelte';
 	import { Eye } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
-	import { useIncomeAdmin } from '$lib/hooks/useIncomeAdmin.svelte';
+	import { useIncomeDistributionAdmin } from '$lib/hooks/useIncomeDistributionAdmin.svelte';
 	import { toastError } from '$lib/utils/toaster.svelte';
 	import { formatRupiah } from '$lib/utils/format';
 	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { FinanceIncome } from '$lib/types/finance/Income';
+	import type { FinanceIncomeDistribution } from '$lib/types/finance/IncomeDistribution';
 	import { incomeDistributionColumns } from './-partials/columns';
 	import IncomeDistributionDetailDialog from './-partials/detail.dialog.svelte';
 
-	const incomes = useIncomeAdmin();
+	const distributions = useIncomeDistributionAdmin();
 
 	let page = $state(1);
 	let perPage = $state(10);
 	let search = $state('');
-	let sortKey = $state('period');
+	let sortKey = $state('created_at');
 	let sortOrder = $state<SortOrder>('desc');
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openDetail = $state(false);
-	let detailItem = $state<FinanceIncome | undefined>(undefined);
+	let detailItem = $state<FinanceIncomeDistribution | undefined>(undefined);
 
 	async function load() {
 		try {
-			await incomes.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
+			await distributions.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
 		} catch (e) {
 			toastError(e);
 		}
@@ -42,23 +42,21 @@
 	}
 </script>
 
-{#snippet cell(item: FinanceIncome, column: ColumnDef)}
-	{#if column.key === 'period'}
-		{new Date(item.period).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' })}
-	{:else if column.key === 'source'}
-		{item.source || '-'}
+{#snippet cell(item: FinanceIncomeDistribution, column: ColumnDef)}
+	{#if column.key === 'income_period'}
+		{item.income ? new Date(item.income.period).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) : '-'}
+	{:else if column.key === 'pocket'}
+		{item.pocket?.name ?? '-'}
+	{:else if column.key === 'category_name'}
+		<span class="badge bg-primary-500 text-primary-contrast-500">{item.category_name}</span>
+	{:else if column.key === 'percentage_snapshot'}
+		{(item.percentage_snapshot * 100).toFixed(1)}%
 	{:else if column.key === 'amount'}
 		{formatRupiah(item.amount)}
-	{:else if column.key === 'is_distributed'}
-		{#if item.is_distributed}
-			<span class="badge bg-success-500 text-success-contrast-500">Terdistribusi</span>
-		{:else}
-			<span class="badge bg-surface-300 text-surface-700 dark:bg-surface-700 dark:text-surface-200">Belum</span>
-		{/if}
 	{/if}
 {/snippet}
 
-{#snippet rowActions(item: FinanceIncome)}
+{#snippet rowActions(item: FinanceIncomeDistribution)}
 	<button type="button" class="btn btn-icon" title="Detail" onclick={() => { detailItem = item; openDetail = true; }}>
 		<Eye size={16} />
 	</button>
@@ -68,9 +66,9 @@
 	title="Distribusi Pemasukan"
 	description="Lihat distribusi pemasukan ke masing-masing pocket berdasarkan alokasi dana"
 	columns={incomeDistributionColumns}
-	items={incomes.items}
-	meta={incomes.meta}
-	loading={incomes.loading}
+	items={distributions.items}
+	meta={distributions.meta}
+	loading={distributions.loading}
 	{search}
 	{sortConfig}
 	onSearch={handleSearch}
@@ -83,6 +81,6 @@
 
 <IncomeDistributionDetailDialog
 	open={openDetail}
-	item={detailItem?.distributions?.[0]}
+	item={detailItem}
 	onOpenChange={(o) => (openDetail = o)}
 />

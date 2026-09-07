@@ -15,10 +15,10 @@
 <AppDialog {open} {onOpenChange} title="Detail Distribusi Pemasukan">
 	{#if item}
 		<div class="flex flex-col gap-4">
-			<div class="rounded-lg border border-surface-300 p-4 dark:border-surface-700">
-				<h4 class="mb-2 text-sm font-semibold text-surface-500 dark:text-surface-400">Informasi Pemasukan</h4>
-				<div class="divide-y divide-surface-200 dark:divide-surface-700">
-					{#if item.income}
+			{#if item.income}
+				<div class="rounded-lg border border-surface-300 p-4 dark:border-surface-700">
+					<h4 class="mb-2 text-sm font-semibold text-surface-500 dark:text-surface-400">Informasi Pemasukan</h4>
+					<div class="divide-y divide-surface-200 dark:divide-surface-700">
 						<div class="flex items-center justify-between py-2">
 							<span class="text-sm text-surface-500 dark:text-surface-400">Periode</span>
 							<span class="text-sm font-medium">{new Date(item.income.period).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' })}</span>
@@ -31,9 +31,9 @@
 							<span class="text-sm text-surface-500 dark:text-surface-400">Total Pemasukan</span>
 							<span class="text-sm font-bold">{formatRupiah(item.income.amount)}</span>
 						</div>
-					{/if}
+					</div>
 				</div>
-			</div>
+			{/if}
 
 			<div class="rounded-lg border border-surface-300 p-4 dark:border-surface-700">
 				<h4 class="mb-2 text-sm font-semibold text-surface-500 dark:text-surface-400">Informasi Distribusi</h4>

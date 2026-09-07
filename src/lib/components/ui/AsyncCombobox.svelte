@@ -68,8 +68,8 @@
 	}
 
 	$effect(() => {
-		if (untrack(() => open)) {
-			onSearch('');
+		if (open) {
+			untrack(() => onSearch(''));
 		}
 	});
 </script>

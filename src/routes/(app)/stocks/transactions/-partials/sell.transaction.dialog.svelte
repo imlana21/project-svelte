@@ -40,16 +40,9 @@
 			lot = 0;
 			fee = 0;
 			errors = {};
-			loadOptions();
 		}
 		if (!open) { errors = {}; }
 	});
-
-	async function loadOptions() {
-		try {
-			await positions.fetchAll({ page: 1, perPage: 100, orderBy: 'created_at', orderDirection: 'asc' });
-		} catch { /* silent */ }
-	}
 
 	function validate(): boolean {
 		const next: Record<string, string> = {};
