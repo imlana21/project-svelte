@@ -26,7 +26,7 @@
 			<p class="py-6 text-center text-sm text-surface-500 dark:text-surface-400">Semua cicilan bulan ini sudah lunas</p>
 		{:else}
 			<div class="divide-y divide-surface-200 dark:divide-surface-700">
-				{#each rows as row}
+				{#each rows as row (row.id)}
 					<div class="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
 						<div class="min-w-0 space-y-1">
 							<p class="truncate text-sm font-medium text-surface-900 dark:text-surface-100">{row.name}</p>

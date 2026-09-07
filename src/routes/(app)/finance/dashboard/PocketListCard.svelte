@@ -28,7 +28,7 @@
 		{#if active.length === 0}
 			<p class="py-6 text-center text-sm text-surface-500 dark:text-surface-400">Belum ada pocket aktif</p>
 		{:else}
-			{#each active.slice().sort((a, b) => b.balance - a.balance) as pocket, index}
+			{#each active.slice().sort((a, b) => b.balance - a.balance) as pocket, index (pocket.id)}
 				{@const percent = total > 0 ? (pocket.balance / total) * 100 : 0}
 				{@const color = CHART_PALETTE[index % CHART_PALETTE.length]}
 				<div class="space-y-1.5">

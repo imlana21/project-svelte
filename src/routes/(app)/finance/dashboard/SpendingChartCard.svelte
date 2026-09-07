@@ -23,7 +23,7 @@
 	<div class="mb-4 flex items-center justify-between">
 		<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Spending Chart</h3>
 		<div class="inline-flex items-center gap-0.5 rounded-lg bg-surface-200 p-1 dark:bg-surface-700">
-			{#each GRANULARITY_OPTIONS as option}
+			{#each GRANULARITY_OPTIONS as option (option.key)}
 				<button
 					type="button"
 					onclick={() => (granularity = option.key)}
@@ -47,7 +47,7 @@
 
 		{#if series.length > 0}
 			<div class="flex h-64 items-end gap-1">
-				{#each series as point}
+				{#each series as point (point.label)}
 					<div class="group flex flex-1 flex-col items-center gap-1">
 						<span class="text-xs text-surface-500 opacity-0 group-hover:opacity-100 dark:text-surface-400">
 							{formatRupiah(point.amount)}

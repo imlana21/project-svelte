@@ -256,7 +256,7 @@
 			<div
 				class="mb-3 rounded-lg bg-error-50 p-3 text-sm text-error-700 dark:bg-error-950 dark:text-error-300"
 			>
-				{#each globalErrors as err}
+				{#each globalErrors as err (err)}
 					<p>{err}</p>
 				{/each}
 			</div>
@@ -291,7 +291,7 @@
 							class="px-2 py-1.5 text-left font-medium text-surface-600 dark:text-surface-400"
 							>#</th
 						>
-						{#each parsedHeaders as header}
+						{#each parsedHeaders as header (header)}
 							<th
 								class="px-2 py-1.5 text-left font-medium text-surface-600 dark:text-surface-400"
 								>{header}</th
@@ -300,7 +300,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each parsedRows as row, i}
+					{#each parsedRows as row, i (i)}
 						{@const hasRowError = validationErrors[i] !== undefined}
 						<tr
 							class="border-t border-surface-100 dark:border-surface-800 {hasRowError
@@ -308,7 +308,7 @@
 								: ''}"
 						>
 							<td class="px-2 py-1 text-surface-400">{i + 2}</td>
-							{#each parsedHeaders as header}
+							{#each parsedHeaders as header (header)}
 								{@const cellError = validationErrors[i]?.[header]}
 								<td
 									class="px-2 py-1 {cellError
@@ -369,7 +369,7 @@
 						Detail error:
 					</p>
 					<ul class="mt-1 space-y-0.5 text-error-600 dark:text-error-400">
-						{#each result.errors as err}
+						{#each result.errors as err (err)}
 							<li>{err}</li>
 						{/each}
 					</ul>

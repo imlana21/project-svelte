@@ -158,14 +158,14 @@
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 			<Field label="Trend">
 				<select class="input" bind:value={trend}>
-					{#each TREND_OPTIONS as t}
+					{#each TREND_OPTIONS as t (t)}
 						<option value={t}>{t}</option>
 					{/each}
 				</select>
 			</Field>
 			<Field label="Quadrant">
 				<select class="input" bind:value={quadrant}>
-					{#each QUADRANT_OPTIONS as q}
+					{#each QUADRANT_OPTIONS as q (q)}
 						<option value={q}>{q}</option>
 					{/each}
 				</select>

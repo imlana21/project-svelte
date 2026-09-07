@@ -1,63 +1,81 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition'
-	import { formatRupiah } from '$lib/utils/format'
-	import type { RealizedGainSummary } from '$lib/hooks/useStockDashboard.svelte'
+	import { fade } from "svelte/transition";
+	import { formatRupiah } from "$lib/utils/format";
+	import type { RealizedGainSummary } from "$lib/hooks/useStockDashboard.svelte";
 
 	let {
 		summary,
 		periodLabel,
-		loading = false
+		loading = false,
 	}: {
-		summary: RealizedGainSummary
-		periodLabel: string
-		loading?: boolean
-	} = $props()
+		summary: RealizedGainSummary;
+		periodLabel: string;
+		loading?: boolean;
+	} = $props();
 
-	const isUp = $derived(summary.total >= 0)
+	const isUp = $derived(summary.total >= 0);
 
 	const chartPoints = $derived(
 		summary.series.length > 1
 			? summary.series.map((p, i) => ({ x: i, y: p.cumulative }))
-			: []
-	)
+			: [],
+	);
 
 	const svgPath = $derived.by(() => {
-		if (chartPoints.length < 2) return ''
-		const minY = Math.min(...chartPoints.map((p) => p.y))
-		const maxY = Math.max(...chartPoints.map((p) => p.y))
-		const range = maxY - minY || 1
-		const width = 100
-		const height = 100
-		const padding = 5
+		if (chartPoints.length < 2) return "";
+		const minY = Math.min(...chartPoints.map((p) => p.y));
+		const maxY = Math.max(...chartPoints.map((p) => p.y));
+		const range = maxY - minY || 1;
+		const width = 100;
+		const height = 100;
+		const padding = 5;
 
 		return chartPoints
 			.map((p, i) => {
-				const x = padding + (i / (chartPoints.length - 1)) * (width - padding * 2)
-				const y = height - padding - ((p.y - minY) / range) * (height - padding * 2)
-				return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+				const x =
+					padding + (i / (chartPoints.length - 1)) * (width - padding * 2);
+				const y =
+					height - padding - ((p.y - minY) / range) * (height - padding * 2);
+				return `${i === 0 ? "M" : "L"} ${x} ${y}`;
 			})
-			.join(' ')
-	})
+			.join(" ");
+	});
 </script>
 
-<div class="flex flex-col gap-4 rounded-xl border border-surface-300 bg-surface-50 p-4 dark:border-surface-700 dark:bg-surface-800">
+<div
+	class="flex flex-col gap-4 rounded-xl border border-surface-300 bg-surface-50 p-4 dark:border-surface-700 dark:bg-surface-800"
+>
 	<div>
-		<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Total Realized Gain</h3>
+		<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">
+			Total Realized Gain
+		</h3>
 	</div>
 
 	{#if loading}
 		<div class="flex flex-col gap-4" in:fade={{ duration: 200 }}>
 			<div class="flex flex-col gap-2">
-				<div class="skeleton-shimmer h-8 w-40 rounded bg-surface-200 dark:bg-surface-700"></div>
-				<div class="skeleton-shimmer h-4 w-28 rounded bg-surface-200 dark:bg-surface-700"></div>
+				<div
+					class="skeleton-shimmer h-8 w-40 rounded bg-surface-200 dark:bg-surface-700"
+				></div>
+				<div
+					class="skeleton-shimmer h-4 w-28 rounded bg-surface-200 dark:bg-surface-700"
+				></div>
 			</div>
-			<div class="skeleton-shimmer h-[190px] w-full rounded bg-surface-200 dark:bg-surface-700"></div>
-			<div class="skeleton-shimmer h-px w-full bg-surface-200 dark:bg-surface-700"></div>
+			<div
+				class="skeleton-shimmer h-47.5 w-full rounded bg-surface-200 dark:bg-surface-700"
+			></div>
+			<div
+				class="skeleton-shimmer h-px w-full bg-surface-200 dark:bg-surface-700"
+			></div>
 			<div class="flex flex-col gap-3">
-				{#each { length: 3 } as _}
+				{#each { length: 3 } as i (i)}
 					<div class="flex justify-between">
-						<div class="skeleton-shimmer h-4 w-36 rounded bg-surface-200 dark:bg-surface-700"></div>
-						<div class="skeleton-shimmer h-4 w-28 rounded bg-surface-200 dark:bg-surface-700"></div>
+						<div
+							class="skeleton-shimmer h-4 w-36 rounded bg-surface-200 dark:bg-surface-700"
+						></div>
+						<div
+							class="skeleton-shimmer h-4 w-28 rounded bg-surface-200 dark:bg-surface-700"
+						></div>
 					</div>
 				{/each}
 			</div>
@@ -65,25 +83,39 @@
 	{:else}
 		<div class="flex flex-col gap-4" in:fade={{ duration: 300 }}>
 			<div>
-				<p class="text-2xl font-bold {isUp ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">
-					{isUp ? '+' : ''}{formatRupiah(summary.total)}
+				<p
+					class="text-2xl font-bold {isUp
+						? 'text-green-600 dark:text-green-400'
+						: 'text-red-600 dark:text-red-400'}"
+				>
+					{isUp ? "+" : ""}{formatRupiah(summary.total)}
 				</p>
-				<p class="text-xs text-surface-500 dark:text-surface-400">{periodLabel}</p>
+				<p class="text-xs text-surface-500 dark:text-surface-400">
+					{periodLabel}
+				</p>
 			</div>
 
-			<div class="h-[190px]">
+			<div class="h-47.5">
 				{#if summary.series.length > 1}
-					<svg viewBox="0 0 100 100" class="h-full w-full" preserveAspectRatio="none">
+					<svg
+						viewBox="0 0 100 100"
+						class="h-full w-full"
+						preserveAspectRatio="none"
+					>
 						<defs>
 							<linearGradient id="realizedGainFill" x1="0" y1="0" x2="0" y2="1">
 								<stop
 									offset="0%"
-									stop-color={isUp ? 'var(--color-green-500)' : 'var(--color-red-500)'}
+									stop-color={isUp
+										? "var(--color-green-500)"
+										: "var(--color-red-500)"}
 									stop-opacity="0.35"
 								/>
 								<stop
 									offset="100%"
-									stop-color={isUp ? 'var(--color-green-500)' : 'var(--color-red-500)'}
+									stop-color={isUp
+										? "var(--color-green-500)"
+										: "var(--color-red-500)"}
 									stop-opacity="0"
 								/>
 							</linearGradient>
@@ -91,13 +123,15 @@
 						<path
 							d={svgPath}
 							fill="none"
-							stroke={isUp ? 'var(--color-green-500)' : 'var(--color-red-500)'}
+							stroke={isUp ? "var(--color-green-500)" : "var(--color-red-500)"}
 							stroke-width="0.5"
 							vector-effect="non-scaling-stroke"
 						/>
 					</svg>
 				{:else}
-					<div class="flex h-full items-center justify-center text-xs text-surface-500 dark:text-surface-400">
+					<div
+						class="flex h-full items-center justify-center text-xs text-surface-500 dark:text-surface-400"
+					>
 						Belum ada transaksi jual pada periode ini
 					</div>
 				{/if}
@@ -107,18 +141,32 @@
 
 			<div class="space-y-2 text-sm">
 				<div class="flex items-center justify-between">
-					<span class="text-surface-500 dark:text-surface-400">Total Stocks Realized Gain</span>
-					<span class="font-medium {isUp ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">
-						{isUp ? '+' : ''}{formatRupiah(summary.total)}
+					<span class="text-surface-500 dark:text-surface-400"
+						>Total Stocks Realized Gain</span
+					>
+					<span
+						class="font-medium {isUp
+							? 'text-green-600 dark:text-green-400'
+							: 'text-red-600 dark:text-red-400'}"
+					>
+						{isUp ? "+" : ""}{formatRupiah(summary.total)}
 					</span>
 				</div>
 				<div class="flex items-center justify-between pl-3">
-					<span class="text-surface-500 dark:text-surface-400">Realized Gain</span>
-					<span class="font-medium text-green-600 dark:text-green-400">{formatRupiah(summary.gain)}</span>
+					<span class="text-surface-500 dark:text-surface-400"
+						>Realized Gain</span
+					>
+					<span class="font-medium text-green-600 dark:text-green-400"
+						>{formatRupiah(summary.gain)}</span
+					>
 				</div>
 				<div class="flex items-center justify-between pl-3">
-					<span class="text-surface-500 dark:text-surface-400">Realized Loss</span>
-					<span class="font-medium text-red-600 dark:text-red-400">{formatRupiah(summary.loss)}</span>
+					<span class="text-surface-500 dark:text-surface-400"
+						>Realized Loss</span
+					>
+					<span class="font-medium text-red-600 dark:text-red-400"
+						>{formatRupiah(summary.loss)}</span
+					>
 				</div>
 			</div>
 		</div>

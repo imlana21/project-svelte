@@ -1,27 +1,29 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { Plus, Power } from '@lucide/svelte';
-	import CrudPage from '$lib/components/ui/CrudPage.svelte';
-	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import StatusBadge from '$lib/components/ui/StatusBadge.svelte';
-	import { useRoleAdmin } from '$lib/hooks/useRoleAdmin.svelte';
-	import { usePermission } from '$lib/hooks/usePermission.svelte';
-	import { PERMISSIONS } from '$lib/utils/permission-registry';
-	import { toastError, toastSuccess } from '$lib/utils/toaster.svelte';
-	import type { ColumnDef, SortOrder } from '$lib/types/Api';
-	import type { AuthRole } from '$lib/types/Auth';
-	import { roleColumns } from './-partials/columns';
-	import RoleFormDialog, { type RoleForm } from './-partials/form.dialog.svelte';
-	import RoleDetailDialog from './-partials/detail.dialog.svelte';
+	import { onMount } from "svelte";
+	import { Plus } from "@lucide/svelte";
+	import CrudPage from "$lib/components/ui/CrudPage.svelte";
+	import ConfirmDialog from "$lib/components/ui/ConfirmDialog.svelte";
+	import StatusBadge from "$lib/components/ui/StatusBadge.svelte";
+	import { useRoleAdmin } from "$lib/hooks/useRoleAdmin.svelte";
+	import { usePermission } from "$lib/hooks/usePermission.svelte";
+	import { PERMISSIONS } from "$lib/utils/permission-registry";
+	import { toastError, toastSuccess } from "$lib/utils/toaster.svelte";
+	import type { ColumnDef, SortOrder } from "$lib/types/Api";
+	import type { AuthRole } from "$lib/types/Auth";
+	import { roleColumns } from "./-partials/columns";
+	import RoleFormDialog, {
+		type RoleForm,
+	} from "./-partials/form.dialog.svelte";
+	import RoleDetailDialog from "./-partials/detail.dialog.svelte";
 
 	const roles = useRoleAdmin();
 	const { can } = usePermission();
 
 	let page = $state(1);
 	let perPage = $state(10);
-	let search = $state('');
-	let sortKey = $state('name');
-	let sortOrder = $state<SortOrder>('asc');
+	let search = $state("");
+	let sortKey = $state("name");
+	let sortOrder = $state<SortOrder>("asc");
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openForm = $state(false);
@@ -32,7 +34,13 @@
 
 	async function load() {
 		try {
-			await roles.fetchAll({ page, perPage, search, orderBy: sortKey, orderDirection: sortOrder });
+			await roles.fetchAll({
+				page,
+				perPage,
+				search,
+				orderBy: sortKey,
+				orderDirection: sortOrder,
+			});
 		} catch (e) {
 			toastError(e);
 		}
@@ -62,10 +70,10 @@
 
 	function handleSort(key: string) {
 		if (sortKey === key) {
-			sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+			sortOrder = sortOrder === "asc" ? "desc" : "asc";
 		} else {
 			sortKey = key;
-			sortOrder = 'asc';
+			sortOrder = "asc";
 		}
 		load();
 	}
@@ -93,17 +101,7 @@
 				await roles.create(values);
 			}
 			openForm = false;
-			toastSuccess('Data role berhasil disimpan');
-			load();
-		} catch (e) {
-			toastError(e);
-		}
-	}
-
-	async function handleToggleStatus(row: AuthRole) {
-		try {
-			await roles.toggleStatus(row.id);
-			toastSuccess(row.is_active ? 'Role dinonaktifkan' : 'Role diaktifkan');
+			toastSuccess("Data role berhasil disimpan");
 			load();
 		} catch (e) {
 			toastError(e);
@@ -114,7 +112,7 @@
 		if (!detailItem) return;
 		try {
 			await roles.syncPermissions(detailItem.id, permissionIds);
-			toastSuccess('Permission role berhasil diperbarui');
+			toastSuccess("Permission role berhasil diperbarui");
 			openDetail = false;
 			load();
 		} catch (e) {
@@ -127,7 +125,7 @@
 		try {
 			await roles.remove(deleteId);
 			deleteId = null;
-			toastSuccess('Role berhasil dihapus');
+			toastSuccess("Role berhasil dihapus");
 			load();
 		} catch (e) {
 			toastError(e);
@@ -136,15 +134,15 @@
 </script>
 
 {#snippet cell(item: AuthRole, column: ColumnDef)}
-	{#if column.key === 'name'}
+	{#if column.key === "name"}
 		{item.name}
-	{:else if column.key === 'slug'}
+	{:else if column.key === "slug"}
 		<span class="badge font-mono">{item.slug}</span>
-	{:else if column.key === 'description'}
-		{item.description || '-'}
-	{:else if column.key === 'permissions'}
+	{:else if column.key === "description"}
+		{item.description || "-"}
+	{:else if column.key === "permissions"}
 		{item.permissions?.length ?? 0} permission
-	{:else if column.key === 'is_active'}
+	{:else if column.key === "is_active"}
 		<StatusBadge value={item.is_active} />
 	{/if}
 {/snippet}
@@ -167,11 +165,17 @@
 	canDelete={can(PERMISSIONS.roles.delete)}
 	onDetail={openDetailFor}
 	onEdit={openEditFor}
-	onDelete={(item) => { deleteId = item.id; }}
+	onDelete={(item) => {
+		deleteId = item.id;
+	}}
 >
 	{#snippet actions()}
 		{#if can(PERMISSIONS.roles.create)}
-			<button type="button" class="btn bg-primary-500 text-primary-contrast-500" onclick={openCreate}>
+			<button
+				type="button"
+				class="btn bg-primary-500 text-primary-contrast-500"
+				onclick={openCreate}
+			>
 				<Plus size={16} />
 				Tambah
 			</button>

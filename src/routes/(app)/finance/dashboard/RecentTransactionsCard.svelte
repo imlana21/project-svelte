@@ -47,7 +47,7 @@
 		<p class="py-6 text-center text-sm text-surface-500 dark:text-surface-400">Belum ada transaksi</p>
 	{:else}
 		<div class="divide-y divide-surface-200 dark:divide-surface-700">
-			{#each rows as row}
+			{#each rows as row (row.id)}
 				{@const isPositive = AMOUNT_SIGN[row.type] === '+'}
 				<div class="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
 					<div class="min-w-0 space-y-1">

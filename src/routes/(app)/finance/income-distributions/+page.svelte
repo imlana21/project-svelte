@@ -8,6 +8,7 @@
 	import type { FinanceIncomeDistribution } from "$lib/types/finance/IncomeDistribution";
 	import { incomeDistributionColumns } from "./-partials/columns";
 	import { Eye } from "@lucide/svelte";
+	import IncomeDistributionDetailDialog from "./-partials/detail.dialog.svelte";
 
 	const distributions = useIncomeDistributionAdmin();
 
@@ -122,5 +123,5 @@
 <IncomeDistributionDetailDialog
 	open={openDetail}
 	item={detailItem}
-	onOpenChange={(o) => (openDetail = o)}
+	onOpenChange={(o: boolean) => (openDetail = o)}
 />
