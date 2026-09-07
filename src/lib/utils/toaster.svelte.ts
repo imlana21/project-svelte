@@ -20,7 +20,7 @@ const HTTP_MESSAGES: Record<number, string> = {
 	504: 'Server tidak merespons.',
 }
 
-function getErrorMessage(error: unknown): string {
+export function getErrorMessage(error: unknown): string {
 	if (error instanceof ApiError) {
 		if (isDev) {
 			const parts = [`[${error.status}] ${error.message}`]
