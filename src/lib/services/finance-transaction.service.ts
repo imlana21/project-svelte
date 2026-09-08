@@ -21,3 +21,17 @@ export function updateFinanceTransaction(id: number, payload: UpdateFinanceTrans
 export function deleteFinanceTransaction(id: number): Promise<ApiEnvelope<null>> {
 	return http.delete<ApiEnvelope<null>>(`/finance/transactions/${id}`)
 }
+
+export interface ImportFinanceTransactionResult {
+	total: number
+	success_count: number
+	error_count: number
+	success: any[]
+	errors: any[]
+}
+
+export function importFinanceTransactions(file: File): Promise<ApiEnvelope<ImportFinanceTransactionResult>> {
+	const formData = new FormData()
+	formData.append('file', file)
+	return http.postMultipart<ApiEnvelope<ImportFinanceTransactionResult>>('/finance/transactions/import', formData)
+}

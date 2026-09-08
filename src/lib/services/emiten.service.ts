@@ -25,5 +25,5 @@ export function deleteEmiten(id: number): Promise<ApiEnvelope<null>> {
 export function importEod(file: File): Promise<ApiEnvelope<{ updated: number; skipped: number; errors: string[] }>> {
 	const formData = new FormData()
 	formData.append('file', file)
-	return http.post<ApiEnvelope<{ updated: number; skipped: number; errors: string[] }>>('/stock/eod-import', formData)
+	return http.postMultipart<ApiEnvelope<{ updated: number; skipped: number; errors: string[] }>>('/stock/emitens/import-eod', formData)
 }

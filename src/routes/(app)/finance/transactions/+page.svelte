@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus } from '@lucide/svelte';
+	import { FileSpreadsheet, Plus } from '@lucide/svelte';
 	import CrudPage from '$lib/components/ui/CrudPage.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { useFinanceTransactionAdmin } from '$lib/hooks/useFinanceTransactionAdmin.svelte';
@@ -12,6 +12,8 @@
 	import type { FinanceTransaction } from '$lib/types/finance/Transaction';
 	import { transactionColumns } from './-partials/columns';
 	import TransactionFormDialog, { type TransactionForm } from './-partials/form.dialog.svelte';
+	import ImportDialog from './-partials/import.dialog.svelte';
+	import type { ImportFinanceTransactionResult } from '$lib/services/finance-transaction.service';
 
 	const transactions = useFinanceTransactionAdmin();
 	const { can } = usePermission();
@@ -24,6 +26,7 @@
 	let sortConfig = $derived({ key: sortKey, order: sortOrder });
 
 	let openForm = $state(false);
+	let openImportDialog = $state(false);
 	let editItem = $state<FinanceTransaction | undefined>(undefined);
 	let deleteId = $state<number | null>(null);
 
@@ -75,6 +78,13 @@
 			toastError(e);
 		}
 	}
+
+	async function handleImport(file: File): Promise<ImportFinanceTransactionResult> {
+		const res = await transactions.importFinanceTransactions(file);
+		toastSuccess(`Import selesai: ${res.data.success_count} berhasil, ${res.data.error_count} gagal`);
+		load();
+		return res.data;
+	}
 </script>
 
 {#snippet cell(item: FinanceTransaction, column: ColumnDef)}
@@ -118,6 +128,14 @@
 >
 	{#snippet actions()}
 		{#if can(PERMISSIONS.financeTransactions.create)}
+			<button
+				type="button"
+				class="btn"
+				onclick={() => (openImportDialog = true)}
+				disabled={transactions.importing}
+			>
+				<FileSpreadsheet size={16} /> {transactions.importing ? 'Importing...' : 'Import'}
+			</button>
 			<button type="button" class="btn bg-primary-500 text-primary-contrast-500" onclick={openCreate}>
 				<Plus size={16} /> Tambah Pengeluaran
 			</button>
@@ -131,6 +149,13 @@
 	saving={transactions.loading}
 	onOpenChange={(o) => (openForm = o)}
 	onSubmit={handleSubmit}
+/>
+
+<ImportDialog
+	open={openImportDialog}
+	saving={transactions.importing}
+	onOpenChange={(o) => (openImportDialog = o)}
+	onSubmit={handleImport}
 />
 
 <ConfirmDialog
