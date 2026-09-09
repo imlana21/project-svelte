@@ -1,5 +1,5 @@
 import type { ApiEnvelope } from '$lib/types/Api'
-import type { AuthSessionData, LoginPayload, RegisterPayload, User } from '$lib/types/Auth'
+import type { AuthSessionData, LoginPayload, RegisterPayload, UpdateUserPayload, User } from '$lib/types/Auth'
 import { http } from '$lib/utils/http'
 
 export async function login(payload: LoginPayload): Promise<AuthSessionData> {
@@ -18,4 +18,13 @@ export async function logout(): Promise<void> {
 export async function fetchMe(): Promise<User> {
 	const res = await http.get<ApiEnvelope<User>>('/auth/me')
 	return res.data
+}
+
+export async function updateProfile(payload: Pick<UpdateUserPayload, 'name' | 'email'>): Promise<User> {
+	const res = await http.put<ApiEnvelope<User>>('/auth/profile', payload)
+	return res.data
+}
+
+export async function changePassword(payload: { password: string; password_confirmation: string }): Promise<void> {
+	await http.put<ApiEnvelope<null>>('/auth/password', payload)
 }

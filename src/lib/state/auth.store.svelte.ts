@@ -68,6 +68,28 @@ class AuthStore {
 			this.loading = false
 		}
 	}
+
+	async updateProfile(payload: { name: string; email: string }): Promise<void> {
+		this.loading = true
+		try {
+			const user = await authService.updateProfile(payload)
+			this.user = user
+			if (this.token) {
+				setStoredSession(this.token, user, !!window?.localStorage?.getItem('token'))
+			}
+		} finally {
+			this.loading = false
+		}
+	}
+
+	async changePassword(payload: { password: string; password_confirmation: string }): Promise<void> {
+		this.loading = true
+		try {
+			await authService.changePassword(payload)
+		} finally {
+			this.loading = false
+		}
+	}
 }
 
 export const authStore = new AuthStore()
