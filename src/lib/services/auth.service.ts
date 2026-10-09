@@ -25,6 +25,6 @@ export async function updateProfile(payload: Pick<UpdateUserPayload, 'name' | 'e
 	return res.data
 }
 
-export async function changePassword(payload: { password: string; password_confirmation: string }): Promise<void> {
+export async function changePassword(payload: { current_password: string; password: string; password_confirmation: string }): Promise<void> {
 	await http.put<ApiEnvelope<null>>('/auth/password', payload)
 }

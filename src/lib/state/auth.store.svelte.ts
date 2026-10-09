@@ -82,7 +82,7 @@ class AuthStore {
 		}
 	}
 
-	async changePassword(payload: { password: string; password_confirmation: string }): Promise<void> {
+	async changePassword(payload: { current_password: string; password: string; password_confirmation: string }): Promise<void> {
 		this.loading = true
 		try {
 			await authService.changePassword(payload)

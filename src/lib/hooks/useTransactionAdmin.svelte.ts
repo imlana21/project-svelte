@@ -33,5 +33,6 @@ export function useTransactionAdmin() {
 		remove: crud.remove,
 		setItem: crud.setItem,
 		importTransactions,
+		fetchImportStatus: transactionService.fetchImportStatus,
 	}
 }

@@ -41,28 +41,10 @@ export function useAnalysisAdmin() {
 		}
 	}
 
-	async function createWithImage(payload: StoreAnalysisPayload, imageFile: File): Promise<void> {
-		loading = true
-		try {
-			await analysisService.createAnalysis(payload, imageFile)
-		} finally {
-			loading = false
-		}
-	}
-
 	async function update(id: number, payload: UpdateAnalysisPayload): Promise<void> {
 		loading = true
 		try {
 			await analysisService.updateAnalysis(id, payload)
-		} finally {
-			loading = false
-		}
-	}
-
-	async function updateWithImage(id: number, payload: UpdateAnalysisPayload, imageFile: File): Promise<void> {
-		loading = true
-		try {
-			await analysisService.updateAnalysis(id, payload, imageFile)
 		} finally {
 			loading = false
 		}
@@ -102,9 +84,7 @@ export function useAnalysisAdmin() {
 		fetchAll,
 		fetchById,
 		create,
-		createWithImage,
 		update,
-		updateWithImage,
 		remove,
 		setItem,
 		setParams,

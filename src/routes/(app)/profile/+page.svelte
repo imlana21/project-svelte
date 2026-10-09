@@ -10,11 +10,12 @@
 
 	let name = $state('');
 	let email = $state('');
+	let currentPassword = $state('');
 	let password = $state('');
 	let passwordConfirmation = $state('');
 
 	let profileErrors = $state<{ name?: string; email?: string }>({});
-	let passwordErrors = $state<{ password?: string; password_confirmation?: string }>({});
+	let passwordErrors = $state<{ current_password?: string; password?: string; password_confirmation?: string }>({});
 
 	onMount(() => {
 		if (auth.user) {
@@ -42,6 +43,7 @@
 
 	function validatePassword(): boolean {
 		const next: typeof passwordErrors = {};
+		if (!currentPassword) next.current_password = 'Password lama wajib diisi';
 		if (password.length < 8) next.password = 'Password minimal 8 karakter';
 		if (password !== passwordConfirmation) next.password_confirmation = 'Konfirmasi password tidak cocok';
 		passwordErrors = next;
@@ -63,7 +65,8 @@
 		e.preventDefault();
 		if (!validatePassword()) return;
 		try {
-			await auth.changePassword({ password, password_confirmation: passwordConfirmation });
+			await auth.changePassword({ current_password: currentPassword, password, password_confirmation: passwordConfirmation });
+			currentPassword = '';
 			password = '';
 			passwordConfirmation = '';
 			passwordErrors = {};
@@ -156,6 +159,9 @@
 				<h3 class="text-lg font-semibold text-surface-900 dark:text-surface-100">Ubah Password</h3>
 			</div>
 			<form class="flex flex-col gap-4" onsubmit={handleChangePassword}>
+				<Field label="Password Lama" required error={passwordErrors.current_password}>
+					<input class="input" type="password" autocomplete="current-password" bind:value={currentPassword} />
+				</Field>
 				<Field label="Password Baru" required error={passwordErrors.password}>
 					<input
 						class="input"

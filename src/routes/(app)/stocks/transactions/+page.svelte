@@ -17,7 +17,7 @@
 	import BuyDialog from "./-partials/buy.transaction.dialog.svelte";
 	import SellDialog from "./-partials/sell.transaction.dialog.svelte";
 	import ImportDialog from "./-partials/import.dialog.svelte";
-	import type { ImportTransactionResult } from "$lib/services/transaction.service";
+	import type { ImportTransactionResult, StockImportStatus } from "$lib/types/StockImport";
 
 	const transactions = useTransactionAdmin();
 	const { can } = usePermission();
@@ -106,14 +106,22 @@
 
 	async function handleImport(file: File): Promise<ImportTransactionResult> {
 		const res = await transactions.importTransactions(file);
-		toastSuccess(`Import selesai: ${res.data.imported} berhasil, ${res.data.skipped} dilewati`);
-		load();
+		toastSuccess(res.data.mode === 'async'
+			? `Import masuk antrean. ID: ${res.data.job_id}`
+			: `Import selesai: ${res.data.success_count} berhasil, ${res.data.error_count} gagal`);
+		if (res.data.mode === 'sync') await load();
+		return res.data;
+	}
+
+	async function checkImportStatus(jobId: number): Promise<StockImportStatus> {
+		const res = await transactions.fetchImportStatus(jobId);
+		if (res.data.status === 'completed') await load();
 		return res.data;
 	}
 
 	const transactionColumns: ColumnDef[] = [
 		{ key: "type", label: "Jenis", sortable: true, className: "text-center" },
-		{ key: "ticker", label: "Emiten", sortable: true },
+		{ key: "ticker", label: "Emiten" },
 		{ key: "lot", label: "Lot" },
 		{ key: "price", label: "Harga" },
 		{ key: "fee", label: "Fee" },
@@ -211,6 +219,7 @@
 	saving={transactions.importing}
 	onOpenChange={(o) => (openImportDialog = o)}
 	onSubmit={handleImport}
+	onCheckStatus={checkImportStatus}
 />
 
 <ConfirmDialog

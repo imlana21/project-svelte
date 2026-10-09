@@ -2,7 +2,7 @@ import type { FinanceTransaction } from '$lib/types/finance/Transaction'
 import type { FinancePocket } from '$lib/types/finance/Pocket'
 import type { FinanceDebt } from '$lib/types/finance/Debt'
 import type { FinanceIncome } from '$lib/types/finance/Income'
-import type { RequestParams } from '$lib/types/Api'
+import { fetchAllPages } from '$lib/services/pagination.service'
 import { fetchFinanceTransactions } from '$lib/services/finance-transaction.service'
 import { fetchPockets } from '$lib/services/pocket.service'
 import { fetchDebts } from '$lib/services/debt.service'
@@ -26,8 +26,6 @@ import {
 
 export type { SpendingGranularity, SpendingPoint, UnpaidDebtRow }
 
-const BULK_PARAMS: RequestParams = { page: 1, perPage: 1000 }
-
 export { buildUnpaidDebts, buildSpendingSeries, shiftMonth }
 
 export function useFinanceDashboard() {
@@ -41,15 +39,15 @@ export function useFinanceDashboard() {
 		loading = true
 		try {
 			const [pocketRes, debtRes, incomeRes, txRes] = await Promise.all([
-				fetchPockets(BULK_PARAMS),
-				fetchDebts(BULK_PARAMS),
-				fetchIncomes(BULK_PARAMS),
-				fetchFinanceTransactions(BULK_PARAMS)
+				fetchAllPages(fetchPockets),
+				fetchAllPages(fetchDebts),
+				fetchAllPages(fetchIncomes),
+				fetchAllPages(fetchFinanceTransactions)
 			])
-			pockets = pocketRes.data
-			debts = debtRes.data
-			incomes = incomeRes.data
-			transactions = txRes.data
+			pockets = pocketRes
+			debts = debtRes
+			incomes = incomeRes
+			transactions = txRes
 		} finally {
 			loading = false
 		}

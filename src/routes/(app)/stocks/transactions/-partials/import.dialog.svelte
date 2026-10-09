@@ -6,16 +6,31 @@
 		FileSpreadsheet,
 	} from "@lucide/svelte";
 	import AppDialog from "$lib/components/ui/AppDialog.svelte";
-	import type { ImportTransactionResult } from "$lib/services/transaction.service";
+	import type { ImportTransactionResult, StockImportStatus } from "$lib/types/StockImport";
+	import { toastError } from "$lib/utils/toaster.svelte";
 
 	interface Props {
 		open: boolean;
 		onOpenChange: (open: boolean) => void;
 		saving: boolean;
 		onSubmit: (file: File) => Promise<ImportTransactionResult>;
+		onCheckStatus: (jobId: number) => Promise<StockImportStatus>;
 	}
 
-	let { open, onOpenChange, saving, onSubmit }: Props = $props();
+	let { open, onOpenChange, saving, onSubmit, onCheckStatus }: Props = $props();
+	let job = $state<StockImportStatus | null>(null);
+	let checking = $state(false);
+	async function checkStatus() {
+		if (result?.mode !== 'async') return;
+		checking = true;
+		try {
+			job = await onCheckStatus(result.job_id);
+		} catch (error) {
+			toastError(error);
+		} finally {
+			checking = false;
+		}
+	}
 
 	const REQUIRED_COLUMNS = [
 		"sekuritas",
@@ -33,9 +48,11 @@
 	let validationErrors = $state<Record<number, Record<string, string>>>({});
 	let globalErrors = $state<string[]>([]);
 	let result = $state<ImportTransactionResult | null>(null);
+	const summary = $derived(result?.mode === 'sync' ? result : job?.result);
 	let step = $state<"pick" | "preview" | "result">("pick");
 
 	function reset() {
+		job = null;
 		file = null;
 		fileName = "";
 		parsedHeaders = [];
@@ -47,6 +64,7 @@
 	}
 
 	function handleOpenChange(o: boolean) {
+		if (saving || checking) return;
 		if (!o) reset();
 		onOpenChange(o);
 	}
@@ -194,8 +212,8 @@
 			const res = await onSubmit(file);
 			result = res;
 			step = "result";
-		} catch {
-			// error handled by parent toast
+		} catch (error) {
+			toastError(error);
 		}
 	}
 </script>
@@ -205,6 +223,7 @@
 	onOpenChange={handleOpenChange}
 	title="Import Transaksi"
 	description="Import transaksi dari file CSV"
+	footer={footerSnippet}
 >
 	{#if step === "pick"}
 		<div
@@ -341,27 +360,41 @@
 		</button>
 	{:else if step === "result"}
 		<div class="flex flex-col items-center gap-3 py-4 text-center">
-			<CheckCircle2 size={48} class="text-success-500" />
-			<h3 class="text-lg font-bold">Import Selesai</h3>
+			{#if job?.status === 'failed' || (summary?.error_count ?? 0) > 0}
+				<AlertTriangle size={48} class="text-warning-600" />
+			{:else if result?.mode === 'async' && job?.status !== 'completed'}
+				<Upload size={48} class="text-primary-500" />
+			{:else}
+				<CheckCircle2 size={48} class="text-success-500" />
+			{/if}
+			<h3 class="text-lg font-bold">{result?.mode === 'async' ? 'Status Import' : 'Import Selesai'}</h3>
+			{#if result?.mode === 'async'}
+				<p>Import #{result.job_id}: {job?.status ?? 'pending'}</p>
+				{#if job?.error_message}<p class="text-error-600">{job.error_message}</p>{/if}
+				<button type="button" class="btn" disabled={checking} onclick={checkStatus}>
+					{checking ? 'Memeriksa...' : 'Cek status'}
+				</button>
+			{/if}
+			{#if summary}
 			<div class="text-sm text-surface-600 dark:text-surface-400">
 				<p>
 					Diproses: <strong
-						>{(result?.imported ?? 0) + (result?.skipped ?? 0)}</strong
+						>{summary.total}</strong
 					> baris
 				</p>
 				<p>
 					Berhasil: <strong class="text-success-600"
-						>{result?.imported ?? 0}</strong
+						>{summary.success_count}</strong
 					>
 				</p>
-				{#if (result?.skipped ?? 0) > 0}
+				{#if summary.error_count > 0}
 					<p>
-						Dilewati: <strong class="text-warning-600">{result?.skipped}</strong
+						Gagal: <strong class="text-warning-600">{summary.error_count}</strong
 						>
 					</p>
 				{/if}
 			</div>
-			{#if result?.errors && result.errors.length > 0}
+			{#if summary.errors.length > 0}
 				<div
 					class="mt-2 w-full rounded-lg bg-error-50 p-3 text-left text-xs dark:bg-error-950"
 				>
@@ -369,11 +402,12 @@
 						Detail error:
 					</p>
 					<ul class="mt-1 space-y-0.5 text-error-600 dark:text-error-400">
-						{#each result.errors as err (err)}
-							<li>{err}</li>
+						{#each summary.errors as err, index (index)}
+							<li>Baris {err.row}: {err.message}</li>
 						{/each}
 					</ul>
 				</div>
+			{/if}
 			{/if}
 		</div>
 	{/if}

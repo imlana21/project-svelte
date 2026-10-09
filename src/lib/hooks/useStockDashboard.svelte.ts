@@ -1,5 +1,5 @@
 import type { StockPosition, StockTransaction, StockFundMutation, StockSekuritas } from '$lib/types/Stock'
-import type { RequestParams } from '$lib/types/Api'
+import { fetchAllPages } from '$lib/services/pagination.service'
 import { fetchTransactions } from '$lib/services/transaction.service'
 import { fetchSekuritas } from '$lib/services/sekuritas.service'
 import { fetchPositions } from '$lib/services/position.service'
@@ -56,8 +56,6 @@ const TRADE_PERIOD_OPTIONS: { key: TradePeriodKey; label: string }[] = [
 	{ key: 'ALL', label: 'Semua Waktu' }
 ]
 
-const BULK_PARAMS: RequestParams = { page: 1, perPage: 1000 }
-
 export { RANGE_OPTIONS, TRADE_PERIOD_OPTIONS }
 
 export function useStockDashboard() {
@@ -75,15 +73,15 @@ export function useStockDashboard() {
 		loading = true
 		try {
 			const [sekRes, posRes, txRes, fmRes] = await Promise.all([
-				fetchSekuritas(BULK_PARAMS),
-				fetchPositions(BULK_PARAMS),
-				fetchTransactions(BULK_PARAMS),
-				fetchFundMutations(BULK_PARAMS)
+				fetchAllPages(fetchSekuritas),
+				fetchAllPages(fetchPositions),
+				fetchAllPages(fetchTransactions),
+				fetchAllPages(fetchFundMutations)
 			])
-			sekuritasList = sekRes.data
-			positions = posRes.data
-			transactions = txRes.data
-			fundMutations = fmRes.data
+			sekuritasList = sekRes
+			positions = posRes
+			transactions = txRes
+			fundMutations = fmRes
 		} finally {
 			loading = false
 		}

@@ -1,6 +1,7 @@
 import type { ApiEnvelope, PaginatedResponse, RequestParams } from '$lib/types/Api'
 import type { RealizedPnL, StockTransaction, StoreTransactionPayload } from '$lib/types/Stock'
 import { http } from '$lib/utils/http'
+import type { ImportTransactionResult, StockImportStatus } from '$lib/types/StockImport'
 
 export function fetchTransactions(params?: RequestParams): Promise<PaginatedResponse<StockTransaction>> {
 	return http.get<PaginatedResponse<StockTransaction>>('/stock/transactions', params)
@@ -22,14 +23,12 @@ export function fetchRealizedHistory(params?: RequestParams): Promise<PaginatedR
 	return http.get<PaginatedResponse<RealizedPnL>>('/stock/transactions/realized-history', params)
 }
 
-export interface ImportTransactionResult {
-	imported: number
-	skipped: number
-	errors: string[]
-}
-
 export function importTransactions(file: File): Promise<ApiEnvelope<ImportTransactionResult>> {
 	const formData = new FormData()
 	formData.append('file', file)
-	return http.post<ApiEnvelope<ImportTransactionResult>>('/stock/transactions/import', formData)
+	return http.postMultipart<ApiEnvelope<ImportTransactionResult>>('/stock/transactions/import', formData)
+}
+
+export function fetchImportStatus(jobId: number): Promise<ApiEnvelope<StockImportStatus>> {
+	return http.get<ApiEnvelope<StockImportStatus>>(`/stock/transactions/import/${jobId}/status`)
 }

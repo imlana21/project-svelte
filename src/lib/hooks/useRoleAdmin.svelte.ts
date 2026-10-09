@@ -1,4 +1,5 @@
 import type { AuthPermission, AuthRole, StoreRolePayload, UpdateRolePayload } from '$lib/types/Auth'
+import { fetchAllPages } from '$lib/services/pagination.service'
 import { fetchPermissions } from '$lib/services/permission.service'
 import {
 	createRole,
@@ -26,8 +27,7 @@ export function useRoleAdmin() {
 	async function loadPermissions(): Promise<void> {
 		permissionsLoading = true
 		try {
-			const res = await fetchPermissions({ page: 1, perPage: 200 })
-			permissions = res.data
+			permissions = await fetchAllPages(fetchPermissions)
 		} finally {
 			permissionsLoading = false
 		}

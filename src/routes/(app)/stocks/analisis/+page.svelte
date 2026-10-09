@@ -84,21 +84,13 @@
 		openDetail = true;
 	}
 
-	async function handleSubmit(values: StoreAnalysisPayload, imageFile?: File) {
+	async function handleSubmit(values: StoreAnalysisPayload) {
 		try {
 			if (editItem) {
-				if (imageFile) {
-					await analyses.updateWithImage(editItem.id, values, imageFile);
-				} else {
-					await analyses.update(editItem.id, values);
-				}
+				await analyses.update(editItem.id, values);
 				toastSuccess("Analisis berhasil diperbarui");
 			} else {
-				if (imageFile) {
-					await analyses.createWithImage(values, imageFile);
-				} else {
-					await analyses.create(values);
-				}
+				await analyses.create(values);
 				toastSuccess("Analisis berhasil ditambahkan");
 			}
 			openForm = false;
